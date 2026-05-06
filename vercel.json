@@ -1,8 +1,11 @@
 {
-  "rewrites": [
-    { "source": "/", "destination": "/fr" },
-    { "source": "/fr", "destination": "/fr" },
-    { "source": "/en", "destination": "/en" },
-    { "source": "/de", "destination": "/de" }
+  "routes": [
+    { "src": "/", "dest": "/fr" },
+    { "src": "/fr", "dest": "/fr" },
+    { "src": "/en", "dest": "/en" },
+    { "src": "/de", "dest": "/de" },
+    { "src": "/fr/(.*)", "dest": "/fr/$1" },
+    { "src": "/en/(.*)", "dest": "/en/$1" },
+    { "src": "/de/(.*)", "dest": "/de/$1" }
   ]
 }
