@@ -1,0 +1,192 @@
+@import "tailwindcss";
+
+@theme {
+  --font-family-sans: var(--font-geist-sans), system-ui, sans-serif;
+  --font-family-serif: var(--font-serif), Georgia, serif;
+
+  --color-porcelain: #F3F2EF;
+  --color-stone: #D8D5CD;
+  --color-ink: #0C0C0A;
+  --color-wood: #2A1712;
+  --color-bordeaux: #2B1022;
+  --color-denim: #465364;
+}
+
+:root {
+  --bg-porcelain: #F3F2EF;
+  --ink: #0C0C0A;
+  --ink-80: rgba(12, 12, 10, 0.80);
+  --ink-60: rgba(12, 12, 10, 0.60);
+  --ink-40: rgba(12, 12, 10, 0.40);
+  --ink-20: rgba(12, 12, 10, 0.20);
+  --ink-10: rgba(12, 12, 10, 0.10);
+  --ink-06: rgba(12, 12, 10, 0.06);
+  --ink-04: rgba(12, 12, 10, 0.04);
+  --bordeaux: #2B1022;
+  --bordeaux-60: rgba(43, 16, 34, 0.60);
+  --bordeaux-30: rgba(43, 16, 34, 0.30);
+  --ease-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-smooth: cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+html {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #F3F2EF;
+  color: #0C0C0A;
+}
+
+::selection {
+  background-color: #2B1022;
+  color: #F3F2EF;
+}
+
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(12,12,10,0.20); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(12,12,10,0.40); }
+
+.max-w-container {
+  max-width: 1380px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 3vw;
+  padding-right: 3vw;
+}
+
+@media (min-width: 768px) {
+  .max-w-container {
+    padding-left: 3.5vw;
+    padding-right: 3.5vw;
+  }
+}
+
+@media (min-width: 1280px) {
+  .max-w-container {
+    padding-left: 4vw;
+    padding-right: 4vw;
+  }
+}
+
+/* ── Images fluides ─────────────────────────────────────────────────────────*/
+img {
+  transition: transform 1.8s cubic-bezier(0.16, 1, 0.3, 1),
+              filter    1.2s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity   0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Conteneur image avec overflow hidden pour le zoom */
+.img-zoom {
+  overflow: hidden;
+}
+.img-zoom img:hover {
+  transform: scale(1.04);
+}
+
+/* ── Scroll fluide ──────────────────────────────────────────────────────────*/
+html {
+  scroll-behavior: smooth;
+}
+
+/* ── Liens et boutons ───────────────────────────────────────────────────────*/
+a, button {
+  transition-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
+  transition-duration: 400ms;
+}
+
+/* ── Lisibilité globale ─────────────────────────────────────────────────────*/
+
+/* Base */
+html {
+  font-size: 17px;
+}
+
+/* Corps de texte */
+p, li, address {
+  font-size: 1rem;
+  line-height: 1.9;
+}
+
+/* Labels uppercase */
+.font-sans {
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Textes de navigation */
+nav a {
+  font-size: 0.75rem;
+}
+
+/* Titres */
+h1 { font-size: clamp(48px, 6vw, 96px); }
+h2 { font-size: clamp(36px, 4vw, 64px); }
+h3 { font-size: clamp(24px, 3vw, 42px); }
+h4 { font-size: clamp(18px, 2vw, 28px); }
+
+/* Italiques serif */
+em, i {
+  font-size: inherit;
+}
+
+/* Labels micro — minimum lisible */
+.text-\[7px\], .text-\[7\.5px\], .text-\[8px\], .text-\[8\.5px\] {
+  font-size: 10px !important;
+}
+
+.text-\[9px\], .text-\[9\.5px\] {
+  font-size: 11px !important;
+}
+
+.text-\[10px\], .text-\[11px\] {
+  font-size: 13px !important;
+}
+
+.text-\[12px\], .text-\[12\.5px\] {
+  font-size: 14px !important;
+}
+
+.text-\[13px\] {
+  font-size: 15px !important;
+}
+
+/* ── Grands titres — impact visuel ─────────────────────────────────────────*/
+
+/* Titres display larges — uppercase sans-serif */
+.text-\[15px\].uppercase,
+.text-\[1\.7vw\].uppercase {
+  font-size: clamp(22px, 2.8vw, 42px) !important;
+  letter-spacing: -0.02em;
+  line-height: 1.05;
+  font-weight: 400;
+}
+
+/* Grands titres serif — Cormorant */
+.font-serif {
+  letter-spacing: -0.02em;
+}
+
+/* Titres hero et manifest */
+.text-\[44px\], .text-\[100px\] {
+  font-weight: 300;
+  letter-spacing: -0.03em;
+  line-height: 0.88;
+}
+
+/* Contraste renforcé sur les titres sombres */
+h1, h2, h3 {
+  color: #0C0C0A;
+}
+
+/* Titres sur fond sombre */
+.bg-\[\#0C0C0A\] h1,
+.bg-\[\#0C0C0A\] h2,
+.bg-black h1,
+.bg-black h2 {
+  color: #F3F2EF;
+}

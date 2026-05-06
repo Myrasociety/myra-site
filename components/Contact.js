@@ -1,0 +1,127 @@
+'use client';
+
+import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useTranslations } from 'next-intl';
+
+const EASE = [0.16, 1, 0.3, 1];
+
+export default function ContactSection() {
+  const t = useTranslations('contact');
+  const [form,    setForm]    = useState({ name: '', email: '', message: '' });
+  const [sending, setSending] = useState(false);
+  const [sent,    setSent]    = useState(false);
+  const [focused, setFocused] = useState(null);
+
+  const set = (k) => (e) => setForm(f => ({ ...f, [k]: e.target.value }));
+
+  async function submit(e) {
+    e.preventDefault();
+    setSending(true);
+    try {
+      await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(form),
+      });
+      setForm({ name: '', email: '', message: '' });
+      setSent(true);
+      setTimeout(() => setSent(false), 6000);
+    } catch {} finally { setSending(false); }
+  }
+
+  const fields = [
+    { key: 'name',    label: t('name'),    type: 'text',  placeholder: t('name_placeholder') },
+    { key: 'email',   label: t('email'),   type: 'email', placeholder: t('email_placeholder') },
+    { key: 'message', label: t('message'), type: 'area',  placeholder: t('message_placeholder') },
+  ];
+
+  return (
+    <section className="bg-white py-24 md:py-36 border-t border-[rgba(12,12,10,0.05)]">
+      <div className="max-w-container mx-auto px-8 md:px-14 lg:px-20">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-16 md:gap-8">
+
+          {/* GAUCHE */}
+          <div className="md:col-span-4">
+            <div className="flex items-center gap-4 mb-12">
+              <div className="h-px w-8 bg-[rgba(43,16,34,0.35)]" />
+              <span className="font-sans text-[11px] uppercase tracking-[0.55em] text-[#2B1022]">{t('label')}</span>
+            </div>
+            <h2 className="font-serif font-light leading-[0.92] tracking-[-0.02em] text-[#0C0C0A] mb-8"
+              style={{ fontSize: 'clamp(34px, 4vw, 56px)' }}>
+              {t('title_line1')}<br /><em>{t('title_line2')}</em>
+            </h2>
+            <p className="font-sans text-[14px] leading-[2.2] font-light text-[rgba(12,12,10,0.45)] max-w-[300px] mb-14">
+              {t('desc')}
+            </p>
+            <div className="space-y-5 pt-10 border-t border-[rgba(12,12,10,0.06)]">
+              <a href="tel:+33637038677" className="flex items-center gap-4 group">
+                <div className="w-px h-4 bg-[rgba(43,16,34,0.35)]" />
+                <span className="font-sans text-[12px] uppercase tracking-[0.25em] text-[rgba(12,12,10,0.40)] group-hover:text-[#0C0C0A] transition-colors duration-400">
+                  +33 (0)6 37 03 86 77
+                </span>
+              </a>
+              <a href="mailto:contact@myrasociety.com" className="flex items-center gap-4 group">
+                <div className="w-px h-4 bg-[rgba(43,16,34,0.35)]" />
+                <span className="font-sans text-[12px] uppercase tracking-[0.25em] text-[rgba(12,12,10,0.40)] group-hover:text-[#0C0C0A] transition-colors duration-400">
+                  contact@myrasociety.com
+                </span>
+              </a>
+            </div>
+          </div>
+
+          {/* DROITE */}
+          <div className="md:col-span-7 md:col-start-6 border-l border-[rgba(12,12,10,0.05)] md:pl-16">
+            <AnimatePresence mode="wait">
+              {sent ? (
+                <motion.div key="sent"
+                  initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+                  transition={{ duration: 0.8, ease: EASE }}
+                  className="flex items-center justify-center min-h-[400px]">
+                  <div className="text-center space-y-6">
+                    <div className="w-8 h-px mx-auto bg-[rgba(43,16,34,0.35)]" />
+                    <p className="font-serif text-[28px] italic text-[rgba(12,12,10,0.60)]">{t('success')}</p>
+                    <p className="font-sans text-[11px] uppercase tracking-[0.40em] text-[rgba(43,16,34,0.50)]">{t('success_sub')}</p>
+                  </div>
+                </motion.div>
+              ) : (
+                <motion.form key="form" onSubmit={submit}
+                  initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                  transition={{ duration: 0.5 }} className="space-y-10">
+                  {fields.map(({ key, label, type, placeholder }) => (
+                    <div key={key} className="space-y-3">
+                      <label className="block font-sans text-[11px] uppercase tracking-[0.50em] text-[rgba(12,12,10,0.30)]">{label}</label>
+                      <div className="relative">
+                        {type === 'area' ? (
+                          <textarea required rows={4} value={form[key]} onChange={set(key)}
+                            onFocus={() => setFocused(key)} onBlur={() => setFocused(null)}
+                            placeholder={placeholder}
+                            className="w-full bg-transparent border-b pb-3 font-sans text-[14px] text-[#0C0C0A] placeholder:text-[rgba(12,12,10,0.18)] focus:outline-none transition-colors duration-500 resize-none"
+                            style={{ borderColor: focused === key ? 'rgba(43,16,34,0.40)' : 'rgba(12,12,10,0.10)' }} />
+                        ) : (
+                          <input type={type} required value={form[key]} onChange={set(key)}
+                            onFocus={() => setFocused(key)} onBlur={() => setFocused(null)}
+                            placeholder={placeholder}
+                            className="w-full bg-transparent border-b pb-3 font-sans text-[14px] text-[#0C0C0A] placeholder:text-[rgba(12,12,10,0.18)] focus:outline-none transition-colors duration-500"
+                            style={{ borderColor: focused === key ? 'rgba(43,16,34,0.40)' : 'rgba(12,12,10,0.10)' }} />
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                  <button type="submit" disabled={sending}
+                    className="relative overflow-hidden font-sans text-[11px] tracking-[0.55em] uppercase px-10 py-4 border text-[#0C0C0A] transition-all duration-500 disabled:opacity-40"
+                    style={{ borderColor: 'rgba(12,12,10,0.12)' }}
+                    onMouseEnter={e => { e.currentTarget.style.borderColor='#2B1022'; e.currentTarget.style.color='#F3F2EF'; }}
+                    onMouseLeave={e => { e.currentTarget.style.borderColor='rgba(12,12,10,0.12)'; e.currentTarget.style.color='#0C0C0A'; }}>
+                    <motion.span className="absolute inset-0 bg-[#2B1022]" initial={{ x: '-100%' }} whileHover={{ x: '0%' }} transition={{ duration: 0.5, ease: EASE }} />
+                    <span className="relative z-10">{sending ? t('sending') : t('send')}</span>
+                  </button>
+                </motion.form>
+              )}
+            </AnimatePresence>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
