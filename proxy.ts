@@ -2,18 +2,13 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 export function proxy(request: NextRequest) {
-  const pathname = request.nextUrl.pathname;
-  const locales = ['fr', 'en', 'de'];
+  const { pathname } = request.nextUrl;
   
-  const hasLocale = locales.some(l => 
-    pathname.startsWith(`/${l}/`) || pathname === `/${l}`
-  );
-  
-  if (!hasLocale) {
-    return NextResponse.redirect(new URL(`/fr${pathname === '/' ? '' : pathname}`, request.url));
+  if (pathname === '/' || pathname === '') {
+    return NextResponse.redirect(new URL('/fr', request.url));
   }
 }
 
 export const config = {
-  matcher: ['/((?!_next|_vercel|api|.*\\..*).*)'],
+  matcher: ['/'],
 };
