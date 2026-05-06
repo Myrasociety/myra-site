@@ -1,9 +1,13 @@
 import { NextResponse } from 'next/server';
-import { Resend } from 'resend';
-
-const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(req) {
+  if (!process.env.RESEND_API_KEY) {
+    return NextResponse.json({ error: 'Resend not configured' }, { status: 500 });
+  }
+
+  const { Resend } = await import('resend');
+  const resend = new Resend(process.env.RESEND_API_KEY);
+
   try {
     const { email } = await req.json();
 
@@ -11,19 +15,16 @@ export async function POST(req) {
       return NextResponse.json({ error: 'Email manquant' }, { status: 400 });
     }
 
-    // 1 — Créer le contact
     await resend.contacts.create({
       email,
       unsubscribed: false,
     });
 
-    // 2 — Ajouter au segment Newsletter MYRA
     await resend.contacts.segments.add({
       email,
       segmentId: process.env.RESEND_SEGMENT_ID,
     });
 
-    // 3 — Email de confirmation à l'abonné
     await resend.emails.send({
       from:    'MYRA Society <contact@myrasociety.com>',
       to:      email,
@@ -45,7 +46,6 @@ export async function POST(req) {
       `,
     });
 
-    // 4 — Notification interne à MYRA
     await resend.emails.send({
       from:    'MYRA Society <contact@myrasociety.com>',
       to:      'jeremy@myrasociety.com',

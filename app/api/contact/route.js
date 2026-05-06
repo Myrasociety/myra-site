@@ -1,9 +1,13 @@
 import { NextResponse } from 'next/server';
-import { Resend } from 'resend';
-
-const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function POST(req) {
+  if (!process.env.RESEND_API_KEY) {
+    return NextResponse.json({ error: 'Resend not configured' }, { status: 500 });
+  }
+
+  const { Resend } = await import('resend');
+  const resend = new Resend(process.env.RESEND_API_KEY);
+
   try {
     const { name, email, message } = await req.json();
 
@@ -12,7 +16,7 @@ export async function POST(req) {
     }
 
     await resend.emails.send({
-from: 'MYRA Society <contact@myrasociety.com>',
+      from: 'MYRA Society <contact@myrasociety.com>',
       to:      'jeremy@myrasociety.com',
       replyTo: email,
       subject: `Nouveau message de ${name}`,
