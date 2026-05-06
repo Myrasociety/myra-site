@@ -14,8 +14,10 @@ export async function generateStaticParams() {
   return [{ locale: 'fr' }, { locale: 'en' }, { locale: 'de' }];
 }
 
-export default async function LocaleLayout({ children, params }) {
-  const { locale } = await params;
+export const dynamic = 'force-static';
+
+export default function LocaleLayout({ children, params }) {
+  const { locale } = params;
 
   return (
     <html lang={locale}

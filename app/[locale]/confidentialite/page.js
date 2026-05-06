@@ -1,13 +1,13 @@
 import { getTranslations } from '@/lib/i18n';
 
 export async function generateMetadata({ params }) {
-  const { locale } = await params;
+  const { locale } = params;
   const t = getTranslations(locale, 'privacy');
   return { title: t('meta_title') };
 }
 
 export default async function Confidentialite({ params }) {
-  const { locale } = await params;
+  const { locale } = params;
   const t = getTranslations(locale, 'privacy');
 
   const sections = [
