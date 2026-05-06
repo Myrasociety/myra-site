@@ -14,24 +14,19 @@ export const metadata = {
 
 const LOCALES = ['fr', 'en', 'de'];
 
-export default async function RootLayout({ children, params }) {
+export default async function LocaleLayout({ children, params }) {
   const { locale } = await params;
   const safeLocale = LOCALES.includes(locale) ? locale : 'fr';
   const messages   = (await import(`../../messages/${safeLocale}.json`)).default;
 
   return (
-    <html lang={safeLocale} data-scroll-behavior="smooth"
-      className={`${GeistSans.variable} ${serif.variable}`}>
-      <body className="font-sans overflow-x-hidden">
-        <NextIntlClientProvider  locale={safeLocale} messages={messages}>
-          <PageLoader />
-          <Navbar />
-          <PageTransition>
-            {children}
-          </PageTransition>
-          <Footer />
-        </NextIntlClientProvider>
-      </body>
-    </html>
+    <NextIntlClientProvider locale={safeLocale} messages={messages}>
+      <PageLoader />
+      <Navbar />
+      <PageTransition>
+        {children}
+      </PageTransition>
+      <Footer />
+    </NextIntlClientProvider>
   );
 }
