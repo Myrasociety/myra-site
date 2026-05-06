@@ -3,7 +3,7 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
 import { motion, AnimatePresence, useInView } from 'framer-motion';
 import Link from 'next/link';
-import { useTranslations, useLocale } from 'next-intl';
+import { useTranslations, useLocale } from '@/lib/useTranslations';
 import { useRates, useAvailability, toKey } from '../../../lib/useSmoobu';
 import ContactSection from '../../../components/Contact';
 

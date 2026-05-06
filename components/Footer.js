@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import Link from 'next/link';
-import { useTranslations, useLocale } from 'next-intl';
+import { useTranslations, useLocale } from '@/lib/useTranslations';
 
 const instagramImages = ['/friends-image.png', '/studio.png', '/hotel.png', '/bg.png'];
 

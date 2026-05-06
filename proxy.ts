@@ -1,7 +1,19 @@
-export function proxy() {
-  return;
+import { NextResponse } from 'next/server';
+import type { NextRequest } from 'next/server';
+
+export function proxy(request: NextRequest) {
+  const pathname = request.nextUrl.pathname;
+  const locales = ['fr', 'en', 'de'];
+  
+  const hasLocale = locales.some(l => 
+    pathname.startsWith(`/${l}/`) || pathname === `/${l}`
+  );
+  
+  if (!hasLocale) {
+    return NextResponse.redirect(new URL(`/fr${pathname === '/' ? '' : pathname}`, request.url));
+  }
 }
 
 export const config = {
-  matcher: [],
+  matcher: ['/((?!_next|_vercel|api|.*\\..*).*)'],
 };
