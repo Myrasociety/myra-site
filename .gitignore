@@ -42,3 +42,5 @@ next-env.d.ts
 
 public/*.mp4
 public/*.mov
+.vercel
+.env*.local

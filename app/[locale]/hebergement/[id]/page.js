@@ -1,15 +1,14 @@
 'use client';
 
-import React, { useState, useEffect, Suspense } from 'react';
+import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { notFound, useSearchParams } from 'next/navigation';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useMotionValue, animate } from 'framer-motion';
 import { useTranslations, useLocale } from '@/lib/useTranslations';
 import { toKey } from '../../../../lib/useSmoobu';
 import ContactSection from '../../../../components/Contact';
 
 const INK    = '#0C0C0A';
 const WINE   = '#2B1022';
-const ASH    = 'rgba(12,12,10,0.45)';
 const GROUND = '#F3F2EF';
 const BONE   = 'rgba(12,12,10,0.06)';
 const EXPO   = [0.16, 1, 0.3, 1];
@@ -19,8 +18,7 @@ const SUITES = {
     number: '01', name: 'Edwige', smoobuId: 2450913,
     surface: '120 m²', capacity: '4 personnes', rooms: '3 pièces',
     description: 'Un volume habité par la lumière naturelle et le silence des vignes. Cuisine équipée, salon ouvert, matières nobles. Chaque détail a été pensé pour que le séjour devienne une parenthèse mémorable.',
-    hero: ['/Edwige/1.jpg', '/Edwige/2.jpg'],
-    images: ['/Edwige/1.jpg','/Edwige/2.jpg','/Edwige/3.jpg','/Edwige/4.jpg','/Edwige/5.jpg','/Edwige/6.jpg','/Edwige/7.jpg','/Edwige/8.jpg','/Edwige/9.jpg','/Edwige/10.jpg','/Edwige/11.jpg','/Edwige/12.jpg','/Edwige/13.jpg','/Edwige/14.jpg','/Edwige/15.jpg'],
+    images: ['/Edwige/1.jpg','/Edwige/2.jpg','/Edwige/3.jpg','/Edwige/4.jpg','/Edwige/5.jpg','/Edwige/6.jpg','/Edwige/7.jpg','/Edwige/8.jpg'],
     features: ['Cuisine entièrement équipée (four, induction, lave-vaisselle)','Salon ouvert avec cheminée décorative','Chambre principale avec literie haut de gamme','Salle de bain avec baignoire îlot','Accès privatif au sauna et bain nordique','Terrasse privée avec vue sur les vignes'],
     floorplan: 'Entrée · Salon ouvert 40 m² · Cuisine équipée · Chambre 1 (lit king) · Chambre 2 (lits jumeaux) · Salle de bain principale · WC indépendant · Terrasse 20 m²',
     address: '11 rue du Général de Gaulle\n67520 Marlenheim\nAlsace, France',
@@ -30,8 +28,7 @@ const SUITES = {
     number: '02', name: 'Wingert', smoobuId: 2868461,
     surface: '120 m²', capacity: '4 personnes', rooms: '3 pièces',
     description: 'Palette boisée et organique. Une déclinaison plus intime, orientée vers les sous-bois, avec sa terrasse plein est.',
-    hero: ['/Wingert/1.jpg', '/Wingert/2.jpg'],
-    images: ['/Wingert/1.jpg','/Wingert/2.jpg','/Wingert/3.jpg','/Wingert/4.jpg','/Wingert/5.jpg','/Wingert/6.jpg','/Wingert/7.jpg','/Wingert/8.jpg','/Wingert/9.jpg','/Wingert/10.jpg','/Wingert/11.jpg','/Wingert/12.jpg','/Wingert/13.jpg','/Wingert/14.jpg'],
+    images: ['/Wingert/1.jpg','/Wingert/2.jpg','/Wingert/3.jpg','/Wingert/4.jpg','/Wingert/5.jpg','/Wingert/6.jpg'],
     features: ['Cuisine entièrement équipée','Salon avec cheminée et bibliothèque','Chambre principale avec dressing',"Salle de bain avec douche à l'italienne",'Accès au sauna et bain nordique','Terrasse orientée plein est'],
     floorplan: 'Entrée · Salon 38 m² · Cuisine équipée · Chambre 1 (lit king) · Chambre 2 (canapé-lit) · Salle de bain · WC · Terrasse 18 m²',
     address: '11 rue du Général de Gaulle\n67520 Marlenheim\nAlsace, France',
@@ -40,25 +37,13 @@ const SUITES = {
     number: '03', name: 'Julia', smoobuId: 2637623,
     surface: '95 m²', capacity: '2 personnes', rooms: '2 pièces',
     description: "Cocon pour deux. Chaque recoin distille calme et élégance discrète, avec vue sur les vignes d'Alsace.",
-    hero: ['/Julia/1.jpg', '/Julia/2.jpg'],
     images: ['/Julia/1.jpg','/Julia/2.jpg','/Julia/3.jpg','/Julia/4.jpg','/Julia/5.jpg','/Julia/6.jpg'],
     features: ['Kitchenette équipée','Salon intime','Chambre avec vue sur les vignes','Salle de bain avec douche de tête','Accès au sauna et bain nordique','Balcon privatif'],
     floorplan: 'Entrée · Séjour 30 m² · Kitchenette · Chambre principale (lit king) · Salle de bain · Balcon 8 m²',
     address: '11 rue du Général de Gaulle\n67520 Marlenheim\nAlsace, France',
   },
-  'Etoile': {
-    number: '04', name: 'Etoile', smoobuId: 1920032,
-    surface: '150 m²', capacity: '6 personnes', rooms: '4 pièces',
-    description: "La plus spacieuse. Généreuse, lumineuse — faite pour les séjours qui s'étendent et les familles qui se retrouvent.",
-    hero: ['/club.png', '/rooms.png'],
-    images: ['/club.png','/rooms.png','/hotel.png','/studio.png','/experience.png'],
-    features: ['Grande cuisine ouverte entièrement équipée','Salon double avec espace jeux','Chambre parentale avec dressing','Accès prioritaire au sauna','Grande terrasse avec salon de jardin'],
-    floorplan: 'Entrée · Grand séjour 55 m² · Cuisine ouverte · Terrasse 30 m²',
-    address: '11 rue du Général de Gaulle\n67520 Marlenheim\nAlsace, France',
-  },
 };
 
-// Mois/jours selon locale
 const MONTHS = {
   fr: ['Janv','Févr','Mars','Avr','Mai','Juin','Juil','Août','Sept','Oct','Nov','Déc'],
   en: ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'],
@@ -70,9 +55,116 @@ const DAYS = {
   de: ['M','D','M','D','F','S','S'],
 };
 
-// ─── LIGHTBOX ─────────────────────────────────────────────────────────────────
+// ─── GALERIE LARGEUR ÉTENDUE (FASHION WIDE) ──────────────────────────────────
+function EquinoxGallery({ images, name }) {
+  const [cur, setCur] = useState(0);
+  const [width, setWidth] = useState(0);
+  const wrapRef = useRef(null);
+  const x = useMotionValue(0);
+  const total = images.length;
+
+  useEffect(() => {
+    if (!wrapRef.current) return;
+    const ro = new ResizeObserver(([e]) => setWidth(e.contentRect.width));
+    ro.observe(wrapRef.current);
+    return () => ro.disconnect();
+  }, []);
+
+  // On réduit le PEEK pour que l'image centrale soit plus imposante
+  // PEEK : l'espace visible des images adjacentes
+  const PEEK = width * 0.05; // 5% de débordement pour maximiser la photo centrale
+  const GAP  = 20;           // Espacement légèrement plus grand pour l'élégance
+  const slideW = width > 0 ? width - (PEEK * 2) : 0;
+
+  const getTargetX = (i) => {
+    return PEEK - (i * (slideW + GAP));
+  };
+
+  const snapTo = (i) => {
+    const clamped = Math.max(0, Math.min(i, total - 1));
+    setCur(clamped);
+    animate(x, getTargetX(clamped), { 
+      type: 'spring', 
+      stiffness: 220, // Ressort plus lent pour un effet plus lourd/luxueux
+      damping: 30,
+      mass: 1
+    });
+  };
+
+  useEffect(() => {
+    if (slideW > 0) {
+      x.set(getTargetX(cur));
+    }
+  }, [slideW, width]);
+
+  const handleDragEnd = (_, info) => {
+    const moved = info.offset.x;
+    const vel = info.velocity.x;
+    if (vel < -200 || moved < -slideW * 0.1) snapTo(cur + 1);
+    else if (vel > 200 || moved > slideW * 0.1) snapTo(cur - 1);
+    else snapTo(cur);
+  };
+
+  return (
+    // Suppression du max-w-container pour utiliser toute la largeur de l'écran
+    <div className="w-full">
+      <div ref={wrapRef} className="relative overflow-hidden">
+        {slideW > 0 && (
+          <motion.div
+            style={{ x, display: 'flex', gap: GAP, cursor: 'grab', touchAction: 'pan-y' }}
+            drag="x"
+            dragConstraints={{ left: getTargetX(total - 1), right: getTargetX(0) }}
+            dragElastic={0.1}
+            dragMomentum={false}
+            onDragEnd={handleDragEnd}
+          >
+            {images.map((src, i) => (
+              <motion.div
+                key={i}
+                style={{ 
+                  flexShrink: 0, 
+                  width: slideW, 
+                  aspectRatio: '21/10', // Ratio plus panoramique/cinéma
+                  overflow: 'hidden' 
+                }}
+                animate={{ 
+                  opacity: i === cur ? 1 : 0.2, 
+                  scale: i === cur ? 1 : 0.96 
+                }}
+                transition={{ duration: 0.8, ease: EXPO }}
+              >
+                <img 
+                  src={src} 
+                  alt={`${name} ${i + 1}`}
+                  className="w-full h-full object-cover select-none pointer-events-none"
+                  style={{ filter: 'saturate(0.95) contrast(1.05)' }}
+                />
+              </motion.div>
+            ))}
+          </motion.div>
+        )}
+      </div>
+
+      {/* NAVIGATION : RECTANGLES TRÈS FINS ET TRÈS LARGES */}
+      <div className="max-w-container mx-auto px-8 md:px-20 mt-16">
+        <div className="flex items-center gap-3 w-full opacity-60">
+          {images.map((_, i) => (
+            <button
+              key={i}
+              onClick={() => snapTo(i)}
+              className="h-[1px] transition-all duration-1000 outline-none"
+              style={{ 
+                flex: i === cur ? 8 : 1, 
+                backgroundColor: i === cur ? INK : 'rgba(12,12,10,0.08)' 
+              }} 
+            />
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
 function Lightbox({ images, index, onClose, onPrev, onNext }) {
-  const t = useTranslations('suite');
   useEffect(() => {
     const h = (e) => { if (e.key==='Escape') onClose(); if (e.key==='ArrowLeft') onPrev(); if (e.key==='ArrowRight') onNext(); };
     window.addEventListener('keydown', h);
@@ -84,7 +176,7 @@ function Lightbox({ images, index, onClose, onPrev, onNext }) {
     <motion.div className="fixed inset-0 z-[100] bg-[#0C0C0A] flex flex-col items-center justify-center"
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.5 }}>
       <button onClick={onClose} className="absolute top-8 right-10 z-[110] group flex items-center gap-4 outline-none">
-        <span className="font-sans text-[8px] uppercase tracking-[0.5em] opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: 'rgba(255,255,255,0.4)' }}>{t('lightbox_close')}</span>
+        <span className="font-sans text-[8px] uppercase tracking-[0.5em] opacity-0 group-hover:opacity-100 transition-opacity" style={{ color: 'rgba(255,255,255,0.4)' }}>Fermer</span>
         <svg width="22" height="22" fill="none" stroke="rgba(255,255,255,0.5)" strokeWidth="1" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" /></svg>
       </button>
       <button onClick={onPrev} className="absolute left-6 md:left-10 p-4 z-[110]" style={{ color: 'rgba(255,255,255,0.2)' }}
@@ -110,7 +202,6 @@ function Lightbox({ images, index, onClose, onPrev, onNext }) {
   );
 }
 
-// ─── ACCORDÉON ────────────────────────────────────────────────────────────────
 function Accordion({ items }) {
   const [open, setOpen] = useState(null);
   return (
@@ -133,7 +224,7 @@ function Accordion({ items }) {
   );
 }
 
-// ─── PANNEAU RÉSERVATION ──────────────────────────────────────────────────────
+// ─── PANNEAU RÉSERVATION (CARTE BLANCHE SUR FOND NOIR) ──────────────────────
 function ReservationPanel({ suite }) {
   const t      = useTranslations('suite');
   const locale = useLocale();
@@ -205,173 +296,136 @@ function ReservationPanel({ suite }) {
   const isInRange = (d)    => d && checkIn && checkOut && d > checkIn && d < checkOut;
   const nights    = checkIn && checkOut ? Math.round((checkOut - checkIn) / 86400000) : 0;
   const fmtDay    = (d) => d?.toLocaleDateString(locale === 'de' ? 'de-DE' : locale === 'en' ? 'en-GB' : 'fr-FR', { day: 'numeric', month: 'long' }) ?? '—';
-
   const monthNames = MONTHS[locale] || MONTHS.fr;
   const dayNames   = DAYS[locale]   || DAYS.fr;
 
   return (
-    <section className="py-20 md:py-32 border-t border-[rgba(12,12,10,0.06)] bg-white">
+    <section className="py-24 md:py-40" style={{ backgroundColor: INK }}>
       <div className="max-w-container mx-auto px-8 md:px-14 lg:px-20">
-
-        <div className="flex items-center gap-5 mb-16 md:mb-20">
-          <div className="h-px w-8" style={{ backgroundColor: 'rgba(43,16,34,0.40)' }} />
-          <span className="font-sans text-[11px] uppercase tracking-[0.65em] text-[rgba(12,12,10,0.35)]">{t('reservation_label')}</span>
+        
+        {/* LABEL DE SECTION (ADAPTÉ POUR LE NOIR) */}
+        <div className="flex items-center gap-5 mb-16">
+          <div className="h-px w-8" style={{ backgroundColor: WINE }} />
+          <span className="font-sans text-[11px] uppercase tracking-[0.65em] text-white/40">{t('reservation_label')}</span>
         </div>
+        
+        {/* CARTE DE RÉSERVATION BLANCHE */}
+        <div className="bg-white border border-white/5 shadow-[0_40px_100px_-20px_rgba(0,0,0,0.5)] p-8 md:p-12 lg:p-20">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 md:gap-24 items-start">
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 md:gap-24 items-start">
-
-          {/* GAUCHE */}
-          <div className="flex flex-col gap-10">
-            <div>
-              <h2 className="font-serif font-light leading-[0.92] tracking-[-0.02em] text-[#0C0C0A] mb-3" style={{ fontSize: 'clamp(32px, 3.5vw, 52px)' }}>
-                {suite.name}
-              </h2>
-              <p className="font-sans text-[11px] uppercase tracking-[0.40em] text-[rgba(12,12,10,0.30)]">
-                {suite.surface} · {suite.capacity}
-              </p>
-            </div>
-
-            {/* Dates */}
-            <div className="border border-[rgba(12,12,10,0.08)]">
-              <div className="grid grid-cols-2 divide-x divide-[rgba(12,12,10,0.06)]">
-                <div className="p-4">
-                  <p className="font-sans text-[10px] uppercase tracking-[0.50em] text-[rgba(12,12,10,0.28)] mb-3">{t('arrival')}</p>
-                  <p className="font-serif italic" style={{ fontSize: '17px', color: checkIn ? '#0C0C0A' : 'rgba(12,12,10,0.20)' }}>{fmtDay(checkIn)}</p>
-                  {checkIn && <p className="font-sans text-[10px] uppercase tracking-widest mt-1 text-[rgba(12,12,10,0.25)]">{checkIn.getFullYear()}</p>}
-                </div>
-                <div className="p-4">
-                  <p className="font-sans text-[10px] uppercase tracking-[0.50em] text-[rgba(12,12,10,0.28)] mb-3">{t('departure')}</p>
-                  <p className="font-serif italic" style={{ fontSize: '17px', color: checkOut ? '#0C0C0A' : 'rgba(12,12,10,0.20)' }}>{fmtDay(checkOut)}</p>
-                  {checkOut && <p className="font-sans text-[10px] uppercase tracking-widest mt-1 text-[rgba(12,12,10,0.25)]">{checkOut.getFullYear()}</p>}
-                </div>
+            {/* GAUCHE : INFOS & PRIX */}
+            <div className="flex flex-col gap-10">
+              <div>
+                <h2 className="font-serif font-light italic leading-[0.92] text-ink mb-2" style={{ fontSize: 'clamp(32px, 4vw, 52px)' }}>
+                  {suite.name}
+                </h2>
+                <p className="font-sans text-[10px] uppercase tracking-[0.40em] text-black/30">
+                  {suite.surface} · {suite.capacity}
+                </p>
               </div>
-              {nights > 0 && (
-                <div className="px-6 py-4 border-t border-[rgba(12,12,10,0.06)] bg-[rgba(12,12,10,0.02)]">
-                  <p className="font-sans text-[10px] uppercase tracking-[0.40em] text-[rgba(12,12,10,0.35)]">
-                    {nights} {nights > 1 ? t('nights') : t('night')}
-                  </p>
-                </div>
-              )}
-            </div>
 
-            {/* Prix + CTA */}
-            <AnimatePresence mode="wait">
-              {loadingAvail && (
-                <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="flex items-center gap-4 py-4">
-                  <motion.span className="w-4 h-4 border border-[rgba(12,12,10,0.12)] border-t-[#0C0C0A] rounded-full" animate={{ rotate: 360 }} transition={{ duration: 1, repeat: Infinity, ease: 'linear' }} />
-                  <span className="font-sans text-[11px] uppercase tracking-[0.40em] text-[rgba(12,12,10,0.30)]">{t('loading')}</span>
-                </motion.div>
-              )}
-
-              {!loadingAvail && priceInfo && isAvailable && (
-                <motion.div key="price" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.6, ease: EXPO }} className="space-y-6">
-                  <div className="border border-[rgba(12,12,10,0.08)] p-6 space-y-4">
-                    <div className="flex items-end justify-between">
-                      <div>
-                        <p className="font-sans text-[10px] uppercase tracking-[0.50em] text-[rgba(12,12,10,0.28)] mb-2">{t('total_stay')}</p>
-                        <p className="font-serif font-light leading-none text-[#0C0C0A]" style={{ fontSize: 'clamp(40px, 4.5vw, 60px)' }}>
-                          {priceInfo.total.toLocaleString('fr-FR')} €
-                        </p>
-                      </div>
-                      <div className="text-right pb-1">
-                        <p className="font-sans text-[10px] uppercase tracking-widest text-[rgba(12,12,10,0.22)] mb-1">{t('per_night')}</p>
-                        <p className="font-serif italic text-[rgba(12,12,10,0.42)]" style={{ fontSize: '22px' }}>
-                          {Math.round(priceInfo.total / priceInfo.nights).toLocaleString('fr-FR')} €
-                        </p>
-                      </div>
-                    </div>
-                    <div className="pt-4 border-t border-[rgba(12,12,10,0.06)] flex items-center justify-between">
-                      <p className="font-sans text-[10px] uppercase tracking-[0.35em] text-[rgba(12,12,10,0.28)]">
-                        {priceInfo.nights} {priceInfo.nights > 1 ? t('nights') : t('night')} · {t('tax')}
-                      </p>
-                      <div className="flex items-center gap-2">
-                        <div className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                        <span className="font-sans text-[10px] uppercase tracking-[0.30em] text-emerald-600">{t('available')}</span>
-                      </div>
-                    </div>
+              {/* BLOC DATES */}
+              <div style={{ border: '1px solid rgba(12,12,10,0.08)' }}>
+                <div className="grid grid-cols-2 divide-x divide-black/5">
+                  <div className="p-6">
+                    <p className="font-sans text-[8px] uppercase tracking-[0.45em] text-black/30 mb-2">{t('arrival')}</p>
+                    <p className="font-serif italic text-lg text-ink">{fmtDay(checkIn)}</p>
                   </div>
-                  <button onClick={handleBooking}
-                    className="w-full font-sans text-[11px] uppercase tracking-[0.55em] text-[#F3F2EF] py-5 px-8 transition-all duration-700 flex items-center justify-center gap-5"
-                    style={{ backgroundColor: '#0C0C0A' }}
-                    onMouseEnter={e => e.currentTarget.style.backgroundColor='#2B1022'}
-                    onMouseLeave={e => e.currentTarget.style.backgroundColor='#0C0C0A'}>
-                    <span>{t('confirm')}</span>
-                    <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.2" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" /></svg>
-                  </button>
-                  <p className="font-sans text-[10px] text-center tracking-[0.25em] text-[rgba(12,12,10,0.25)]">{t('secure')}</p>
-                </motion.div>
-              )}
-
-              {!loadingAvail && checkIn && checkOut && !isAvailable && (
-                <motion.div key="unavail" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} className="border border-[rgba(43,16,34,0.15)] p-6">
-                  <p className="font-serif italic text-[rgba(43,16,34,0.60)]" style={{ fontSize: '16px' }}>{t('unavailable')}</p>
-                  <p className="font-sans text-[10px] uppercase tracking-[0.35em] text-[rgba(12,12,10,0.30)] mt-2">{t('unavailable_sub')}</p>
-                </motion.div>
-              )}
-
-              {!loadingAvail && (!checkIn || !checkOut) && (
-                <motion.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
-                  <p className="font-serif italic text-[rgba(12,12,10,0.28)]" style={{ fontSize: '16px' }}>{t('select_dates')}</p>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* DROITE — Calendrier */}
-          <div className="border-t lg:border-t-0 lg:border-l border-[rgba(12,12,10,0.06)] pt-12 lg:pt-0 lg:pl-16">
-            <div className="sticky top-28">
-              <div className="flex items-center justify-between mb-8">
-                <button onClick={() => changeMonth(-1)} className="w-9 h-9 flex items-center justify-center border border-[rgba(12,12,10,0.06)] hover:border-[#2B1022] transition-all duration-400">
-                  <svg width="11" height="11" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" strokeLinecap="round" /></svg>
-                </button>
-                <span className="font-sans text-[12px] uppercase tracking-[0.40em] text-[rgba(12,12,10,0.50)]">
-                  {monthNames[view.getMonth()]} {view.getFullYear()}
-                </span>
-                <button onClick={() => changeMonth(1)} className="w-9 h-9 flex items-center justify-center border border-[rgba(12,12,10,0.06)] hover:border-[#2B1022] transition-all duration-400">
-                  <svg width="11" height="11" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6" strokeLinecap="round" /></svg>
-                </button>
-              </div>
-              <div className="grid grid-cols-7 mb-2">
-                {dayNames.map((d, i) => (
-                  <div key={i} className="font-sans text-[10px] text-center uppercase tracking-wider py-2 text-[rgba(12,12,10,0.20)]">{d}</div>
-                ))}
-              </div>
-              <div className="grid grid-cols-7">
-                {days.map((d, i) => {
-                  if (!d) return <div key={i} />;
-                  const key       = toKey(d);
-                  const dayData   = calendar[key];
-                  const isStart   = isSame(d, checkIn);
-                  const isEnd     = isSame(d, checkOut);
-                  const inRange   = isInRange(d);
-                  const isPast    = d < new Date().setHours(0,0,0,0);
-                  const isBlocked = dayData && !dayData.available;
-                  const price     = dayData?.price;
-                  return (
-                    <button key={i} onClick={() => clickDay(d)} disabled={isPast || isBlocked}
-                      className={`h-14 flex flex-col items-center justify-center transition-all duration-200
-                        ${isPast || isBlocked ? 'opacity-10 cursor-not-allowed' : 'hover:bg-[rgba(12,12,10,0.04)]'}
-                        ${inRange ? 'bg-[rgba(12,12,10,0.04)]' : ''}`}
-                      style={{ backgroundColor: (isStart || isEnd) ? '#0C0C0A' : undefined }}>
-                      <span className="font-serif text-[13px] leading-none" style={{ color: (isStart || isEnd) ? '#F3F2EF' : '#0C0C0A' }}>{d.getDate()}</span>
-                      {price && !isStart && !isEnd && !isPast && !isBlocked && (
-                        <span className="font-sans text-[9px] mt-0.5 text-[rgba(12,12,10,0.28)]">{Math.round(price)}€</span>
-                      )}
-                    </button>
-                  );
-                })}
-              </div>
-              <div className="flex items-center gap-8 mt-8 pt-6 border-t border-[rgba(12,12,10,0.06)]">
-                <div className="flex items-center gap-2">
-                  <span className="w-2.5 h-2.5 bg-[#0C0C0A]" />
-                  <span className="font-sans text-[10px] uppercase tracking-widest text-[rgba(12,12,10,0.30)]">{t('selected')}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="font-sans text-[11px] line-through text-[rgba(12,12,10,0.20)]">12</span>
-                  <span className="font-sans text-[10px] uppercase tracking-widest text-[rgba(12,12,10,0.30)]">{t('full')}</span>
+                  <div className="p-6">
+                    <p className="font-sans text-[8px] uppercase tracking-[0.45em] text-black/30 mb-2">{t('departure')}</p>
+                    <p className="font-serif italic text-lg text-ink">{fmtDay(checkOut)}</p>
+                  </div>
                 </div>
               </div>
+
+              <AnimatePresence mode="wait">
+                {loadingAvail ? (
+                  <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="py-4 flex items-center gap-4">
+                    <div className="w-4 h-4 border border-t-wine border-black/10 rounded-full animate-spin" />
+                    <span className="font-sans text-[10px] uppercase tracking-widest text-black/20">{t('loading')}</span>
+                  </motion.div>
+                ) : priceInfo && isAvailable ? (
+                  <motion.div key="price" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-8">
+                    <div className="flex items-end justify-between border-b border-black/5 pb-8">
+                      <div>
+                        <p className="font-sans text-[9px] uppercase tracking-widest text-black/30 mb-2">{t('total_stay')}</p>
+                        <p className="font-serif text-5xl text-ink leading-none tabular-nums">{priceInfo.total.toLocaleString()}€</p>
+                      </div>
+                      <div className="text-right">
+                        <p className="font-serif italic text-xl text-black/40">{Math.round(priceInfo.total / nights)}€ <span className="text-[9px] font-sans not-italic uppercase tracking-tighter">/ nuit</span></p>
+                      </div>
+                    </div>
+                    
+<button onClick={handleBooking}
+  className="w-full py-6 font-sans text-[11px] uppercase tracking-[0.60em] relative overflow-hidden group transition-colors duration-700"
+  style={{ backgroundColor: INK, color: '#F3F2EF' }}
+  onMouseEnter={e => e.currentTarget.style.backgroundColor = WINE}
+  onMouseLeave={e => e.currentTarget.style.backgroundColor = INK}>
+  <motion.span
+    className="absolute inset-0"
+    style={{ backgroundColor: WINE, originX: 0 }}
+    initial={{ scaleX: 0 }}
+    whileHover={{ scaleX: 1 }}
+    transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+  />
+  <span className="relative z-10">{t('confirm')}</span>
+</button>
+                  </motion.div>
+                ) : (
+                  <div className="py-10 border border-dashed border-black/10 text-center">
+                    <p className="font-serif italic text-black/30 text-[15px]">{t('select_dates')}</p>
+                  </div>
+                )}
+              </AnimatePresence>
             </div>
+
+            {/* DROITE : CALENDRIER */}
+            <div className="lg:pl-10">
+               <div className="flex items-center justify-between mb-10 px-2">
+                  <button onClick={() => changeMonth(-1)} className="opacity-30 hover:opacity-100 transition-opacity">
+                    <svg width="14" height="14" fill="none" stroke={INK} strokeWidth="1.2" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" /></svg>
+                  </button>
+                  <span className="font-sans text-[11px] uppercase tracking-[0.45em] text-black/40">
+                    {monthNames[view.getMonth()]} {view.getFullYear()}
+                  </span>
+                  <button onClick={() => changeMonth(1)} className="opacity-30 hover:opacity-100 transition-opacity">
+                    <svg width="14" height="14" fill="none" stroke={INK} strokeWidth="1.2" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6" /></svg>
+                  </button>
+               </div>
+               
+               <div className="grid grid-cols-7 gap-y-1">
+                 {dayNames.map((d, i) => (
+                   <div key={i} className="text-center font-sans text-[9px] uppercase text-black/20 mb-4 tracking-widest">{d}</div>
+                 ))}
+                 {days.map((d, i) => {
+                    if (!d) return <div key={i} />;
+                    const k = toKey(d);
+                    const av = calendar[k]?.available;
+                    const past = d < new Date().setHours(0,0,0,0);
+                    const start = isSame(d, checkIn);
+                    const end = isSame(d, checkOut);
+                    const range = isInRange(d);
+                    
+                    return (
+                      <button 
+                        key={i} 
+                        onClick={() => clickDay(d)} 
+                        disabled={past || av === false}
+                        className={`h-12 relative flex flex-col items-center justify-center transition-all duration-300
+                          ${past || av === false ? 'opacity-10 cursor-not-allowed' : 'hover:bg-black/5'}
+                          ${range ? 'bg-black/[0.03]' : ''}
+                          ${start || end ? 'bg-ink text-white shadow-lg z-10 scale-105' : 'text-ink'}`}
+                      >
+                        <span className="font-serif text-[14px]">{d.getDate()}</span>
+                        {calendar[k]?.price && !start && !end && !past && av !== false && (
+                          <span className="text-[8px] opacity-30 mt-0.5">{Math.round(calendar[k].price)}€</span>
+                        )}
+                      </button>
+                    );
+                 })}
+               </div>
+            </div>
+
           </div>
         </div>
       </div>
@@ -379,7 +433,6 @@ function ReservationPanel({ suite }) {
   );
 }
 
-// ─── CONTENU DE LA SUITE ──────────────────────────────────────────────────────
 function SuiteContent({ suite }) {
   const t      = useTranslations('suite');
   const locale = useLocale();
@@ -396,7 +449,7 @@ function SuiteContent({ suite }) {
         <ul className="space-y-3">
           {suite.features.map((f, i) => (
             <li key={i} className="flex items-start gap-4">
-              <span className="mt-[9px] w-1 h-1 rounded-full flex-shrink-0" style={{ backgroundColor: 'rgba(61,13,12,0.35)' }} />
+              <span className="mt-[9px] w-1 h-1 rounded-full flex-shrink-0" style={{ backgroundColor: 'rgba(43,16,34,0.40)' }} />
               <span className="font-serif text-[15px] leading-[1.75] italic" style={{ color: 'rgba(12,12,10,0.55)' }}>{f}</span>
             </li>
           ))}
@@ -414,17 +467,15 @@ function SuiteContent({ suite }) {
   ];
 
   return (
-    <div className="min-h-screen selection:bg-[#2B1022] selection:text-white" style={{ backgroundColor: GROUND }}>
-
+    <div className="min-h-screen" style={{ backgroundColor: GROUND }}>
       <AnimatePresence>
         {lightboxOpen && (
           <Lightbox images={suite.images} index={galIdx} onClose={() => setLightboxOpen(false)} onNext={nextImg} onPrev={prevImg} />
         )}
       </AnimatePresence>
 
-      {/* ── ENTÊTE ── */}
-      <section className="max-w-container mx-auto px-8 md:px-14 lg:px-20 pt-44 pb-20">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
+      <section className="max-w-container mx-auto px-8 md:px-14 lg:px-20 pt-28 pb-14">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-14 items-center">
           <div>
             <div className="font-sans flex items-center gap-3 text-[8px] uppercase tracking-[0.5em] mb-10" style={{ color: 'rgba(12,12,10,0.28)' }}>
               <a href={`/${locale}/hebergement`} className="transition-colors duration-400"
@@ -434,135 +485,66 @@ function SuiteContent({ suite }) {
               <span style={{ color: 'rgba(12,12,10,0.15)' }}>·</span>
               <span>{suite.name}</span>
             </div>
-            <h1 className="font-serif text-[56px] md:text-[80px] leading-[0.88] tracking-[-0.02em] font-light mb-8" style={{ color: INK }}>
+            <h1 className="font-serif font-light leading-[0.88] tracking-[-0.03em] mb-6" style={{ fontSize: 'clamp(52px, 7vw, 96px)', color: INK }}>
               {suite.name}
             </h1>
-            <div className="font-sans flex flex-wrap items-center gap-5" style={{ color: 'rgba(12,12,10,0.3)' }}>
-              <span className="text-[8.5px] uppercase tracking-[0.45em]">{suite.surface}</span>
-              <span className="w-px h-3" style={{ backgroundColor: 'rgba(12,12,10,0.1)' }} />
-              <span className="text-[8.5px] uppercase tracking-[0.45em]">{suite.capacity}</span>
-              <span className="w-px h-3" style={{ backgroundColor: 'rgba(12,12,10,0.1)' }} />
-              <span className="text-[8.5px] uppercase tracking-[0.45em]">{suite.rooms}</span>
+            <div className="flex flex-wrap items-center gap-5" style={{ color: 'rgba(12,12,10,0.30)' }}>
+              <span className="font-sans text-[9px] uppercase tracking-[0.45em]">{suite.surface}</span>
+              <span className="w-px h-3" style={{ backgroundColor: 'rgba(12,12,10,0.12)' }} />
+              <span className="font-sans text-[9px] uppercase tracking-[0.45em]">{suite.capacity}</span>
+              <span className="w-px h-3" style={{ backgroundColor: 'rgba(12,12,10,0.12)' }} />
+              <span className="font-sans text-[9px] uppercase tracking-[0.45em]">{suite.rooms}</span>
             </div>
           </div>
-          <div className="md:pl-10">
-            <p className="font-serif text-[18px] md:text-[20px] leading-[1.78] italic" style={{ color: 'rgba(12,12,10,0.58)' }}>
+          <div>
+            <p className="font-serif text-[18px] leading-[1.78] italic" style={{ color: 'rgba(12,12,10,0.55)' }}>
               {suite.description}
             </p>
           </div>
         </div>
       </section>
 
-      {/* ── IMAGES HERO ── */}
-      <section className="pb-32">
-        <div className="grid grid-cols-2 gap-1 mb-20">
-          {suite.hero.map((img, i) => (
-            <div key={i} style={{ aspectRatio: '16/11' }} className="overflow-hidden cursor-zoom-in group"
-              onClick={() => { setGalIdx(suite.images.indexOf(img)); setLightboxOpen(true); }}>
-              <img src={img} alt={`${suite.name} — vue ${i + 1}`}
-                className="w-full h-full object-cover transition-all duration-[3s] ease-out"
-                style={{ filter: 'saturate(0.85)' }}
-                onMouseEnter={e => { e.currentTarget.style.filter='saturate(1)'; e.currentTarget.style.transform='scale(1.04)'; }}
-                onMouseLeave={e => { e.currentTarget.style.filter='saturate(0.85)'; e.currentTarget.style.transform='scale(1)'; }} />
-            </div>
-          ))}
-        </div>
-        <div className="max-w-container mx-auto px-8 md:px-14 lg:px-20">
-          <Accordion items={accordionItems} />
-        </div>
-      </section>
-
-      {/* ── TÉMOIGNAGE ── */}
-      {suite.testimonial && (
-        <section className="py-32 text-center" style={{ backgroundColor: '#FFFFFF', borderTop: `1px solid ${BONE}`, borderBottom: `1px solid ${BONE}` }}>
-          <div className="max-w-container mx-auto px-8 md:px-14 lg:px-20">
-            <div className="max-w-[800px] mx-auto">
-              <span className="font-serif text-[72px] leading-none block mb-6 select-none" style={{ color: 'rgba(61,13,12,0.08)' }}>"</span>
-              <blockquote className="font-serif text-[28px] md:text-[38px] leading-[1.28] italic mb-14" style={{ color: 'rgba(12,12,10,0.75)' }}>
-                {suite.testimonial.text}
-              </blockquote>
-              <div className="flex flex-col items-center gap-5">
-                <div className="w-12 h-px" style={{ backgroundColor: 'rgba(61,13,12,0.25)' }} />
-                <p className="font-sans text-[9px] uppercase tracking-[0.65em] font-medium" style={{ color: INK }}>{suite.testimonial.author}</p>
-                <p className="font-sans text-[8px] uppercase tracking-[0.45em]" style={{ color: 'rgba(61,13,12,0.4)' }}>{suite.testimonial.origin}</p>
-              </div>
-            </div>
-          </div>
-        </section>
-      )}
-
-      {/* ── GALERIE ── */}
-      <section className="max-w-container mx-auto px-8 md:px-14 lg:px-20 py-20 md:py-32">
-        <div className="flex items-center justify-between mb-12">
-          <div className="flex items-center gap-6">
-            <div className="h-px w-8" style={{ backgroundColor: 'rgba(61,13,12,0.35)' }} />
-            <span className="font-sans text-[8.5px] uppercase tracking-[0.65em]" style={{ color: 'rgba(12,12,10,0.35)' }}>{t('gallery_label')}</span>
-            <span className="font-sans text-[8.5px] tracking-widest" style={{ color: 'rgba(12,12,10,0.2)' }}>
-              {String(galIdx + 1).padStart(2, '0')} / {String(suite.images.length).padStart(2, '0')}
-            </span>
-          </div>
-          <div className="flex gap-2">
-            <button onClick={prevImg} className="w-11 h-11 flex items-center justify-center border transition-all duration-400" style={{ borderColor: BONE, color: 'rgba(12,12,10,0.3)' }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor='rgba(12,12,10,0.25)'; e.currentTarget.style.color=INK; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor=BONE; e.currentTarget.style.color='rgba(12,12,10,0.3)'; }}>
-              <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" strokeLinecap="round" /></svg>
-            </button>
-            <button onClick={nextImg} className="w-11 h-11 flex items-center justify-center border transition-all duration-400" style={{ borderColor: BONE, color: 'rgba(12,12,10,0.3)' }}
-              onMouseEnter={e => { e.currentTarget.style.borderColor='rgba(12,12,10,0.25)'; e.currentTarget.style.color=INK; }}
-              onMouseLeave={e => { e.currentTarget.style.borderColor=BONE; e.currentTarget.style.color='rgba(12,12,10,0.3)'; }}>
-              <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="1" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" strokeLinecap="round" /></svg>
-            </button>
-          </div>
-        </div>
-
-        <div className="aspect-[21/9] overflow-hidden cursor-zoom-in group relative mb-3" onClick={() => setLightboxOpen(true)}>
-          <img key={galIdx} src={suite.images[galIdx]} alt=""
-            className="w-full h-full object-cover transition-transform duration-[2500ms] ease-out group-hover:scale-[1.03]"
-            style={{ filter: 'saturate(0.88)' }} />
-          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-700">
-            <div className="px-6 py-3 border backdrop-blur-sm" style={{ borderColor: 'rgba(255,255,255,0.25)', backgroundColor: 'rgba(255,255,255,0.08)' }}>
-              <span className="font-sans text-[8px] uppercase tracking-[0.45em] text-white">{t('gallery_enlarge')}</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-3 gap-3 mb-12">
-          {[1, 2, 3].map(offset => {
-            const i = (galIdx + offset) % suite.images.length;
-            return (
-              <div key={i} onClick={() => setGalIdx(i)} className="aspect-[16/10] overflow-hidden cursor-pointer group relative">
-                <img src={suite.images[i]} alt=""
-                  className="w-full h-full object-cover transition-all duration-700 group-hover:scale-[1.06]"
-                  style={{ filter: 'grayscale(0.35)', transition: 'filter 0.7s, transform 0.7s' }}
-                  onMouseEnter={e => e.currentTarget.style.filter='grayscale(0)'}
-                  onMouseLeave={e => e.currentTarget.style.filter='grayscale(0.35)'} />
-              </div>
-            );
-          })}
-        </div>
-
-        <div className="flex justify-center">
+      <section className="pb-16">
+        <EquinoxGallery images={suite.images} name={suite.name} />
+        <div className="flex justify-center mt-6">
           <button onClick={() => setLightboxOpen(true)}
-            className="font-sans text-[8.5px] uppercase tracking-[0.5em] py-3 px-8 transition-colors duration-400"
-            style={{ color: 'rgba(12,12,10,0.35)', borderBottom: '1px solid rgba(12,12,10,0.1)' }}
-            onMouseEnter={e => e.currentTarget.style.color=INK}
-            onMouseLeave={e => e.currentTarget.style.color='rgba(12,12,10,0.35)'}>
+            className="font-sans text-[9px] uppercase tracking-[0.5em] py-2 px-6 transition-colors duration-400"
+            style={{ color: 'rgba(12,12,10,0.35)', borderBottom: '1px solid rgba(12,12,10,0.12)' }}
+            onMouseEnter={e => e.currentTarget.style.color = INK}
+            onMouseLeave={e => e.currentTarget.style.color = 'rgba(12,12,10,0.35)'}>
             {t('gallery_browse')}
           </button>
         </div>
       </section>
 
-      {/* ── RÉSERVATION ── */}
-      <section className="max-w-container mx-auto px-8 md:px-14 lg:px-20 py-20 md:py-32">
-        <ReservationPanel suite={suite} />
+      {/* ── TÉMOIGNAGE PLACÉ AVANT L'ACCORDÉON ── */}
+      {suite.testimonial && (
+        <section className="py-24 text-center" style={{ backgroundColor: '#FFFFFF', borderTop: `1px solid ${BONE}`, borderBottom: `1px solid ${BONE}` }}>
+          <div className="max-w-container mx-auto px-8 md:px-14 lg:px-20">
+            <div className="max-w-[720px] mx-auto">
+              <div className="w-8 h-px mx-auto mb-10" style={{ backgroundColor: WINE, opacity: 0.4 }} />
+              <blockquote className="font-serif font-light italic leading-[1.5] mb-10" style={{ fontSize: 'clamp(22px, 2.8vw, 36px)', color: 'rgba(12,12,10,0.72)' }}>
+                {suite.testimonial.text}
+              </blockquote>
+              <p className="font-sans text-[9px] uppercase tracking-[0.55em] mb-1" style={{ color: INK }}>{suite.testimonial.author}</p>
+              <p className="font-sans text-[8px] uppercase tracking-[0.40em]" style={{ color: 'rgba(43,16,34,0.40)' }}>{suite.testimonial.origin}</p>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* ── ACCORDÉON (ÉQUIPEMENTS & PLAN) PLACÉ APRÈS ── */}
+      <section className="max-w-container mx-auto px-8 md:px-14 lg:px-20 py-20">
+        <Accordion items={accordionItems} />
       </section>
+
+      <ReservationPanel suite={suite} />
 
       <ContactSection />
     </div>
   );
 }
 
-// ─── EXPORT ───────────────────────────────────────────────────────────────────
 export default function SuiteDetailPage({ params }) {
   const { id } = React.use(params);
   const suite  = SUITES[id];
@@ -572,10 +554,8 @@ export default function SuiteDetailPage({ params }) {
     <Suspense fallback={
       <div className="h-screen flex items-center justify-center" style={{ backgroundColor: GROUND }}>
         <div className="flex flex-col items-center gap-4">
-          <div className="w-px h-12 animate-pulse" style={{ backgroundColor: 'rgba(61,13,12,0.3)' }} />
-          <span className="font-sans text-[8.5px] uppercase tracking-[0.55em]" style={{ color: 'rgba(12,12,10,0.3)' }}>
-            Chargement
-          </span>
+          <div className="w-px h-12 animate-pulse" style={{ backgroundColor: 'rgba(43,16,34,0.3)' }} />
+          <span className="font-sans text-[8.5px] uppercase tracking-[0.55em]" style={{ color: 'rgba(12,12,10,0.3)' }}>Chargement</span>
         </div>
       </div>
     }>

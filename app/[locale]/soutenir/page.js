@@ -43,6 +43,7 @@ function Trait({ light = false, className = '' }) {
 function Hero() {
   const t = useTranslations('soutenir');
   const ref = useRef(null);
+  
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
   const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
   const scale   = useTransform(scrollYProgress, [0, 1], [1, 1.12]);
@@ -50,48 +51,76 @@ function Hero() {
   return (
     <section ref={ref} className="relative w-full overflow-hidden bg-[#0C0C0A]"
       style={{ height: '100dvh', minHeight: 640 }}>
+      
+      {/* Background Image avec effet de scale au scroll */}
       <motion.div className="absolute inset-0" style={{ scale }}>
         <img src="/Complexe/6.jpg" alt="MYRA"
           className="w-full h-full object-cover"
           style={{ filter: 'brightness(0.50) grayscale(18%)' }} />
       </motion.div>
-      <div className="absolute inset-0 bg-gradient-to-b from-[#0C0C0A]/55 via-transparent to-[#0C0C0A]/90" />
 
-      <motion.div className="absolute inset-0 flex flex-col items-center justify-center text-center px-8"
+      {/* Overlays Dégradés */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#0C0C0A]/55 via-transparent to-[#0C0C0A]/90" />
+      <div className="absolute inset-0 bg-gradient-to-r from-[#0C0C0A]/30 via-transparent to-transparent" />
+
+      {/* Conteneur Principal */}
+      <motion.div className="absolute inset-0 flex flex-col justify-end px-10 md:px-16 pb-12 z-20"
         style={{ opacity }}>
-        <motion.div initial={{ opacity: 0, y: 24 }} animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.8, ease: EASE, delay: 0.3 }}>
-          <h1 className="font-serif font-light italic text-[#F3F2EF] leading-[0.92] tracking-[-0.02em] mb-16"
-            style={{ fontSize: 'clamp(28px, 3.5vw, 52px)' }}>
-            {t('hero_title').split('\n').map((line, i) => (
-              <span key={i}>{line}{i === 0 && <br />}</span>
-            ))}
+        
+        {/* BLOC TITRE : Signature Style */}
+        <motion.div 
+          className="flex flex-col items-start mb-16" 
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1.8, ease: EASE, delay: 0.2 }}>
+          
+          {/* Ligne 1 : Italique (préserve la majuscule du M dans ton fichier de trad) */}
+          <h1 className="font-serif font-light italic text-[#F3F2EF] leading-[1.1] tracking-[-0.02em] text-left"
+            style={{ fontSize: 'clamp(28px, 4vw, 56px)' }}>
+            {t('hero_title').split('\n')[0]}
           </h1>
-          <motion.a href="/Pitch Deck.pdf" download
-            whileHover={{ scale: 1.04 }}
-            className="font-sans inline-flex items-center gap-5 px-10 py-5 border border-[rgba(244,245,240,0.22)] hover:border-[#2B1022] backdrop-blur-md bg-[rgba(244,245,240,0.06)] hover:bg-[rgba(43,16,34,0.20)] transition-all duration-500">
-            <span className="text-[#F3F2EF] text-[11px] tracking-[0.30em] uppercase">{t('hero_download')}</span>
-            <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-              <path d="M6 1V8M6 8L3 5M6 8L9 5M1 11H11" stroke="#F3F2EF" strokeWidth="1.2" />
-            </svg>
-          </motion.a>
+          
+          {/* Ligne 2 : MAJUSCULE DROITE */}
+          <h2 className="font-serif font-light text-[#F3F2EF] leading-[1.1] tracking-[-0.01em] text-left mt-2 uppercase"
+            style={{ fontSize: 'clamp(32px, 4.5vw, 64px)' }}>
+            {t('hero_title').split('\n')[1]}
+          </h2>
+        </motion.div>
+
+        {/* RANGÉE DU BAS : Action & Informations */}
+        <motion.div className="flex flex-col md:flex-row items-end justify-between gap-10"
+          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.6, ease: EASE, delay: 0.5 }}>
+          
+          {/* Bouton de téléchargement */}
+          <div className="flex flex-col items-start">
+            <motion.a href="/Pitch Deck.pdf" download
+              whileHover={{ scale: 1.02 }}
+              className="font-sans inline-flex items-center gap-5 px-8 py-4 border border-[rgba(244,245,240,0.15)] hover:border-[#2B1022] backdrop-blur-md bg-[rgba(244,245,240,0.04)] hover:bg-[rgba(43,16,34,0.20)] transition-all duration-500">
+              <span className="text-[#F3F2EF] text-[10px] tracking-[0.30em] uppercase">{t('hero_download')}</span>
+              <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
+                <path d="M6 1V8M6 8L3 5M6 8L9 5M1 11H11" stroke="#F3F2EF" strokeWidth="1.2" />
+              </svg>
+            </motion.a>
+          </div>
+
+          {/* Détails techniques à droite */}
+          <div className="flex items-center gap-12 text-right mb-1">
+            <div>
+              <Cap light className="block mb-1 opacity-30 text-[9px] uppercase">{t('hero_lieu')}</Cap>
+              <span className="font-sans text-[10px] uppercase tracking-[0.20em] text-[rgba(244,245,240,0.50)]">{t('hero_lieu_val')}</span>
+            </div>
+            <div>
+              <Cap light className="block mb-1 opacity-30 text-[9px] uppercase">{t('hero_edition')}</Cap>
+              <span className="font-sans text-[10px] uppercase tracking-[0.20em] text-[rgba(244,245,240,0.50)]">{t('hero_edition_val')}</span>
+            </div>
+          </div>
+          
         </motion.div>
       </motion.div>
-
-      <div className="absolute bottom-10 inset-x-10 md:inset-x-16 flex justify-between items-end border-t border-[rgba(244,245,240,0.05)] pt-8">
-        <div>
-          <Cap light className="block mb-1.5 opacity-50">{t('hero_lieu')}</Cap>
-          <span className="font-sans text-[11px] uppercase tracking-[0.25em] text-[rgba(244,245,240,0.50)]">{t('hero_lieu_val')}</span>
-        </div>
-        <div className="text-right">
-          <Cap light className="block mb-1.5 opacity-50">{t('hero_edition')}</Cap>
-          <span className="font-sans text-[11px] uppercase tracking-[0.25em] text-[rgba(244,245,240,0.50)]">{t('hero_edition_val')}</span>
-        </div>
-      </div>
     </section>
   );
 }
-
 // ════════════════════════════════════════════════════════════════════════════
 // GENÈSE
 // ════════════════════════════════════════════════════════════════════════════
@@ -150,129 +179,208 @@ function Services() {
   const [hov, setHov] = useState(null);
 
   const SVCS = [
-    { id: 'menu',  label: t('s1_label'), src: '/Restaurant/A.jpg', pdf: '/tarifs-restauration-myra.pdf', desc: t('s1_desc') },
-    { id: 'spa',   label: t('s2_label'), src: '/Spa/A.jpg',        pdf: '/brochure-tarifs-spa.pdf',      desc: t('s2_desc') },
-    { id: 'sport', label: t('s3_label'), src: '/Fitness/A.jpg',    pdf: '/offres-fitness-myra.pdf',      desc: t('s3_desc') },
+    { id: 'menu',  num: '01', label: t('s1_label'), src: '/Restaurant/A.jpg', pdf: '/tarifs-restauration-myra.pdf', desc: t('s1_desc') },
+    { id: 'spa',   num: '02', label: t('s2_label'), src: '/Spa/A.jpg',        pdf: '/brochure-tarifs-spa.pdf',      desc: t('s2_desc') },
+    { id: 'sport', num: '03', label: t('s3_label'), src: '/Fitness/A.jpg',    pdf: '/offres-fitness-myra.pdf',      desc: t('s3_desc') },
   ];
 
   return (
-    <section className="bg-[] py-20 md:py-32 overflow-hidden">
-      <div className="max-w-container mx-auto">
-        <div className="flex items-end justify-between mb-16 pb-12 border-b border-[rgba(12,12,10,0.06)]">
+    <section className="bg-[#F3F2EF] overflow-hidden">
+      <div className="max-w-container mx-auto py-14 md:py-20">
+
+        <div className="flex items-end justify-between mb-14"
+          style={{ borderBottom: '1px solid rgba(12,12,10,0.06)', paddingBottom: '2rem' }}>
           <R><div className="flex items-center gap-4"><Trait /><Cap accent>{t('services_label')}</Cap></div></R>
           <R d={0.1}>
-            <p className="font-serif font-light italic text-[rgba(12,12,10,0.35)]"
-              style={{ fontSize: 'clamp(16px, 1.8vw, 24px)' }}>
+            <p className="font-serif font-light italic"
+              style={{ fontSize: 'clamp(14px, 1.4vw, 20px)', color: 'rgba(12,12,10,0.30)' }}>
               {t('services_subtitle')}
             </p>
           </R>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-[rgba(12,12,10,0.06)]">
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           {SVCS.map((s, i) => (
-            <div key={s.id}>
-              <div className="bg-[#F3F2EF] px-6 pt-6 pb-4">
-                <div className="flex items-baseline gap-4">
-                  <span className="font-sans text-[10px] tracking-[0.45em] text-[rgba(12,12,10,0.25)]">0{i + 1}</span>
-                  <h3 className="font-serif font-light italic text-[#0C0C0A]" style={{ fontSize: 'clamp(20px, 2vw, 28px)' }}>
-                    {s.label}
-                  </h3>
+            <motion.div key={s.id}
+              initial={{ opacity: 0, y: 24, filter: 'blur(4px)' }}
+              whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+              viewport={{ once: true }}
+              transition={{ duration: 1.2, ease: EASE, delay: i * 0.08 }}>
+              <a href={s.pdf} download
+                onMouseEnter={() => setHov(s.id)}
+                onMouseLeave={() => setHov(null)}
+                className="block cursor-pointer outline-none">
+
+                <div className="relative overflow-hidden" style={{ aspectRatio: '2/3' }}>
+                  <motion.img
+                    src={s.src} alt={s.label}
+                    className="w-full h-full object-cover"
+                    animate={{
+                      scale: hov === s.id ? 1.05 : 1,
+                      filter: hov === s.id
+                        ? 'saturate(1) brightness(0.50) contrast(1.05)'
+                        : 'saturate(0.20) brightness(0.60) contrast(1.08)',
+                    }}
+                    transition={{
+                      scale: { duration: hov === s.id ? 1.6 : 0.4, ease: EASE },
+                      filter: { duration: hov === s.id ? 0.8 : 0.2 },
+                    }} />
+
+                  {/* Gradient permanent */}
+                  <div className="absolute inset-0 pointer-events-none"
+                    style={{ background: 'linear-gradient(to top, rgba(12,12,10,0.88) 0%, rgba(12,12,10,0.20) 55%, transparent 100%)' }} />
+
+                  {/* Numéro haut gauche */}
+                  <div className="absolute top-5 left-5">
+                    <span className="font-sans text-[9px] uppercase tracking-[0.45em]"
+                      style={{ color: 'rgba(244,242,239,0.35)' }}>
+                      {s.num}
+                    </span>
+                  </div>
+
+                  {/* Contenu bas — centré */}
+<div className="absolute inset-0 px-7 flex flex-col items-center justify-center text-center">                    <h3 className="font-serif font-light leading-none mb-4"
+                      style={{ fontSize: 'clamp(24px, 2.5vw, 36px)', color: '#FFFFFF' }}>
+                      {s.label}
+                    </h3>
+
+                    <p className="font-sans text-[11px] leading-[2.0] font-light max-w-[180px] text-center"
+                      style={{ color: 'rgba(244,242,239,0.50)' }}>
+                      {s.desc}
+                    </p>
+
+                    <motion.div className="flex items-center gap-3 mt-6"
+                      animate={{ opacity: hov === s.id ? 1 : 0, y: hov === s.id ? 0 : 6 }}
+                      transition={{ duration: hov === s.id ? 0.35 : 0.15, ease: EASE }}>
+                      <span className="font-sans text-[9px] uppercase tracking-[0.45em]"
+                        style={{ color: 'rgba(244,242,239,0.40)' }}>Tarifs</span>
+                      <div className="w-7 h-7 flex items-center justify-center"
+                        style={{ border: '1px solid rgba(244,242,239,0.25)' }}>
+                        <svg width="11" height="11" fill="none" stroke="#F3F2EF" strokeWidth="1.2" viewBox="0 0 12 12">
+                          <path d="M6 1V8M6 8L3 5M6 8L9 5M1 11H11" strokeLinecap="round" />
+                        </svg>
+                      </div>
+                    </motion.div>
+                  </div>
+
                 </div>
-              </div>
-              <motion.div className="relative overflow-hidden cursor-default"
-                onMouseEnter={() => setHov(s.id)} onMouseLeave={() => setHov(null)}
-                style={{ aspectRatio: '3/4' }}
-                initial={{ opacity: 0, y: 24 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-                transition={{ duration: 1.0, ease: EXPO, delay: i * 0.12 }}>
-                <motion.img src={s.src} alt={s.label} className="absolute inset-0 w-full h-full object-cover"
-                  animate={{ scale: hov === s.id ? 1.06 : 1, filter: hov === s.id ? 'grayscale(0) saturate(0.95) brightness(0.68)' : 'grayscale(1) brightness(0.88)' }}
-                  transition={{ duration: 1.4, ease: EXPO }} />
-                <motion.div className="absolute inset-0 flex items-center justify-center z-10"
-                  animate={{ opacity: hov === s.id ? 1 : 0 }} transition={{ duration: 0.35 }}>
-                 <a href={s.pdf} download onClick={e => e.stopPropagation()}
-  className="flex items-center justify-center transition-all duration-400"
-  style={{
-    width: 48, height: 48,
-    borderRadius: '50%',
-    backgroundColor: 'rgba(244,242,239,0.18)',
-    backdropFilter: 'blur(12px)',
-    border: '1px solid rgba(244,242,239,0.30)',
-  }}
-  onMouseEnter={e => e.currentTarget.style.backgroundColor = 'rgba(244,242,239,0.30)'}
-  onMouseLeave={e => e.currentTarget.style.backgroundColor = 'rgba(244,242,239,0.18)'}>
-  <svg width="14" height="14" fill="none" stroke="#F3F2EF" strokeWidth="1.2" viewBox="0 0 12 12">
-    <path d="M6 1V8M6 8L3 5M6 8L9 5M1 11H11" strokeLinecap="round" />
-  </svg>
-</a>
-                </motion.div>
-                <motion.div className="absolute bottom-0 left-0 right-0 p-7 z-10"
-                  style={{ background: 'linear-gradient(to top, rgba(12,12,10,0.80) 0%, transparent 100%)' }}
-                  animate={{ opacity: hov === s.id ? 1 : 0 }} transition={{ duration: 0.4 }}>
-                  <p className="font-sans text-[13px] leading-[1.85] font-light text-[rgba(244,245,240,0.78)] text-right">{s.desc}</p>
-                </motion.div>
-              </motion.div>
-            </div>
+              </a>
+            </motion.div>
           ))}
         </div>
+
       </div>
     </section>
   );
 }
-
+// / ════════════════════════════════════════════════════════════════════════════
+// TEAM — portrait noir et blanc, citation dominante, minimal éditorial
 // ════════════════════════════════════════════════════════════════════════════
-// ÉQUIPE
-// ════════════════════════════════════════════════════════════════════════════
-function TeamCard({ m, i }) {
-  const [hov, setHov] = useState(false);
-  return (
-    <R d={i * 0.1}>
-      <div onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}>
-        <div className="relative overflow-hidden mb-7" style={{ aspectRatio: '3/4' }}>
-          <motion.img src={m.src} alt={m.name} className="w-full h-full object-cover"
-            animate={{ scale: hov ? 1.05 : 1, filter: hov ? 'grayscale(0) saturate(1)' : 'grayscale(1) brightness(0.93)' }}
-            transition={{ duration: 1.2, ease: EXPO }} />
-          <motion.div className="absolute inset-0 flex items-end p-6"
-            animate={{ opacity: hov ? 1 : 0 }} transition={{ duration: 0.4 }}
-            style={{ background: 'linear-gradient(to top, rgba(12,12,10,0.65) 0%, transparent 58%)' }}>
-            <p className="font-sans text-[12px] leading-[1.95] text-[rgba(244,245,240,0.80)] font-light">{m.bio}</p>
-          </motion.div>
-        </div>
-        <div className="flex items-baseline justify-between mb-4">
-          <div className="flex items-baseline gap-3">
-            <h4 className="font-serif text-[22px] font-light italic text-[#0C0C0A]">{m.name}</h4>
-            <span className="font-sans text-[10px] tracking-[0.32em] uppercase text-[rgba(12,12,10,0.35)]">{m.role}</span>
-          </div>
-          <div className="flex items-center gap-6">
-            <a href={m.instagram} target="_blank" rel="noopener noreferrer"
-              className="relative pb-1 group font-sans text-[10px] tracking-[0.32em] uppercase text-[rgba(12,12,10,0.35)] hover:text-[#0C0C0A] transition-colors duration-400">
-              Instagram<span className="absolute bottom-0 left-0 w-0 h-px group-hover:w-full transition-all duration-400 bg-[#2B1022]" />
-            </a>
-            <a href={m.linkedin} target="_blank" rel="noopener noreferrer"
-              className="relative pb-1 group font-sans text-[10px] tracking-[0.32em] uppercase text-[rgba(12,12,10,0.35)] hover:text-[#0C0C0A] transition-colors duration-400">
-              LinkedIn<span className="absolute bottom-0 left-0 w-0 h-px group-hover:w-full transition-all duration-400 bg-[#2B1022]" />
-            </a>
-          </div>
-        </div>
-        <div className="h-px w-full bg-[rgba(12,12,10,0.06)]" />
-      </div>
-    </R>
-  );
-}
+function Equipe() {
+  const t = useTranslations('team');
+  const [act, setAct] = useState(0);
 
-function Team() {
-  const t = useTranslations('soutenir');
-  const TEAM = [
-    { name: 'Tina F.',    role: 'Head Coach', src: '/Tina.jpg',    bio: t('tina_bio'),    instagram: 'https://instagram.com/myra.society', linkedin: 'https://www.linkedin.com/in/tina-fourrier-44636a188/' },
-    { name: 'Jérémy P.',  role: 'DG',         src: '/Jérémy.jpg', bio: t('jeremy_bio'),  instagram: 'https://instagram.com/myra.society', linkedin: 'https://www.linkedin.com/in/jeremy-paulen/' },
+  const EQUIPE = [
+    { src: '/Tina.jpg',   name: 'Tina F.',   role: 'Head Coach',       quote: t('tina_quote'),   instagram: 'https://instagram.com/myra.society', linkedin: 'https://www.linkedin.com/in/tina-fourrier-44636a188/' },
+    { src: '/Jérémy.jpg', name: 'Jérémy P.', role: 'Directeur Général', quote: t('jeremy_quote'), instagram: 'https://instagram.com/myra.society', linkedin: 'https://www.linkedin.com/in/jeremy-paulen/' },
   ];
+
   return (
-    <section className="bg-[] py-20 md:py-32 overflow-hidden">
-      <div className="max-w-container mx-auto">
-        <div className="flex justify-between items-end mb-20">
-          <R><div className="flex items-center gap-4"><Trait /><Cap accent>{t('team_label')}</Cap></div></R>
-          <R d={0.1}><p className="font-sans max-w-[280px] text-[13px] leading-[2] font-light text-right text-[rgba(12,12,10,0.40)]">{t('team_desc')}</p></R>
+    <section className="bg-[#F3F2EF] overflow-hidden">
+      <div className="max-w-container mx-auto py-14 md:py-20">
+
+        <div className="flex items-center gap-4 mb-16">
+          <Trait />
+          <Cap accent>{t('label')}</Cap>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-14">
-          {TEAM.map((m, i) => <TeamCard key={m.name} m={m} i={i} />)}
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-0"
+          style={{ borderTop: '1px solid rgba(12,12,10,0.06)' }}>
+
+          {/* Portrait — moitié écran, noir et blanc */}
+          <div className="relative overflow-hidden" style={{ aspectRatio: '4/5', minHeight: 480 }}>
+            <AnimatePresence mode="wait">
+              <motion.img
+                key={EQUIPE[act].src}
+                src={EQUIPE[act].src}
+                alt={EQUIPE[act].name}
+                className="absolute inset-0 w-full h-full object-cover object-top"
+                style={{ filter: 'grayscale(1) contrast(1.05)' }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.6, ease: EASE }}
+              />
+            </AnimatePresence>
+            {/* Trait bordeaux bas */}
+          </div>
+
+          {/* Contenu droite */}
+          <div className="flex flex-col justify-between px-0 md:px-14 py-12 md:py-0"
+            style={{ borderLeft: '1px solid rgba(12,12,10,0.06)' }}>
+
+            {/* Citation active */}
+            <div className="md:pt-2">
+              <AnimatePresence mode="wait">
+                <motion.div key={act}
+                  initial={{ opacity: 0, y: 12, filter: 'blur(4px)' }}
+                  animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.6, ease: EASE }}>
+                  <p className="font-sans text-[10px] uppercase tracking-[0.45em] mb-1"
+                    style={{ color: WINE }}>{EQUIPE[act].name}</p>
+                  <p className="font-sans text-[9px] uppercase tracking-[0.35em] mb-10"
+                    style={{ color: 'rgba(12,12,10,0.28)' }}>{EQUIPE[act].role}</p>
+                  <p className="font-serif font-light italic leading-[1.6]"
+                    style={{ fontSize: 'clamp(20px, 2vw, 26px)', color: 'rgba(12,12,10,0.68)' }}>
+                    &laquo;&nbsp;{EQUIPE[act].quote}&nbsp;&raquo;
+                  </p>
+                </motion.div>
+              </AnimatePresence>
+            </div>
+
+{/* Bas */}
+            <div>
+              {/* Liens */}
+              <div className="flex items-center gap-6 mb-6 pt-8"
+                style={{ borderTop: '1px solid rgba(12,12,10,0.06)' }}>
+                {['instagram', 'linkedin'].map(r => (
+                  <a key={r} href={EQUIPE[act][r]} target="_blank" rel="noopener noreferrer"
+                    className="group/link relative pb-1 font-sans text-[9px] tracking-[0.40em] uppercase transition-colors duration-400"
+                    style={{ color: 'rgba(12,12,10,0.25)' }}
+                    onMouseEnter={e => e.currentTarget.style.color = INK}
+                    onMouseLeave={e => e.currentTarget.style.color = 'rgba(12,12,10,0.25)'}>
+                    {r.charAt(0).toUpperCase() + r.slice(1)}
+                    <span className="absolute bottom-0 left-0 h-px w-0 group-hover/link:w-full transition-all duration-400"
+                      style={{ backgroundColor: WINE }} />
+                  </a>
+                ))}
+              </div>
+
+              {/* Sélecteur */}
+              <div className="flex items-center gap-6 pt-6">
+                {EQUIPE.map((m, i) => (
+                  <button key={i} onClick={() => setAct(i)}
+                    className="flex items-center gap-4 outline-none">
+                    <motion.div className="relative overflow-hidden flex-shrink-0"
+                      style={{ width: 52, height: 64 }}
+                      animate={{ opacity: i === act ? 1 : 0.25, filter: i === act ? 'grayscale(1) contrast(1.05)' : 'grayscale(1)' }}
+                      transition={{ duration: 0.4 }}>
+                      <img src={m.src} alt={m.name} className="w-full h-full object-cover object-top" />
+                      {i === act && <div className="absolute bottom-0 left-0 right-0 h-[2px]" style={{ backgroundColor: WINE }} />}
+                    </motion.div>
+                    <div className="text-left">
+                      <p className="font-sans text-[10px] uppercase tracking-[0.30em]"
+                        style={{ color: i === act ? INK : 'rgba(12,12,10,0.25)' }}>{m.name}</p>
+                      <p className="font-sans text-[9px] uppercase tracking-[0.25em] mt-0.5"
+                        style={{ color: 'rgba(12,12,10,0.20)' }}>{m.role}</p>
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+          </div>
         </div>
       </div>
     </section>
@@ -676,7 +784,7 @@ export default function SoutenirPage() {
       <Hero />
       <Genese />
       <Services />
-      <Team />
+      <Equipe />
       <Banner />
       <SectionCercles />
       <Timeline />

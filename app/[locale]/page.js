@@ -66,7 +66,6 @@ function Btn({ children, dark = false, href, onClick, className = '' }) {
 // ════════════════════════════════════════════════════════════════════════════
 function Hero() {
   const t = useTranslations('hero');
-  const locale = useLocale();
   const [muted, setMuted]     = useState(true);
   const [email, setEmail]     = useState('');
   const [focused, setFocused] = useState(false);
@@ -101,47 +100,65 @@ function Hero() {
   return (
     <section ref={ref} className="relative w-full overflow-hidden bg-[#0C0C0A]"
       style={{ height: '100dvh', minHeight: 680 }}>
+      
+      {/* Background Video */}
       <motion.div className="absolute inset-0" style={{ y }}>
         <video ref={videoRef} autoPlay muted loop playsInline
           className="w-full h-full object-cover"
           style={{ filter: 'brightness(0.52) grayscale(18%) contrast(1.06)', opacity: 0.85 }}>
-          <source src="/Alsace.mp4" type="video/mp4" />
+          <source src="https://52nwkkdv96g3ruub.public.blob.vercel-storage.com/Alsace.mp4" type="video/mp4" />
         </video>
       </motion.div>
+
+      {/* Overlays */}
       <div className="absolute inset-0 bg-gradient-to-b from-[#0C0C0A]/55 via-transparent to-[#0C0C0A]/95" />
       <div className="absolute inset-0 bg-gradient-to-r from-[#0C0C0A]/30 via-transparent to-transparent" />
-      <motion.div className="absolute inset-0 flex flex-col justify-between px-10 md:px-16 pt-36 pb-14 z-20"
+
+      {/* Main Content Container */}
+      <motion.div className="absolute inset-0 flex flex-col justify-end px-10 md:px-16 pb-12 z-20"
         style={{ opacity }}>
-        <div className="flex-1 flex items-center justify-center text-center">
-          <motion.div initial={{ opacity: 0, y: 32 }} animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 2, ease: EASE, delay: 0.3 }}>
-            <h1 className="font-serif font-light text-white leading-[0.92] tracking-[-0.02em]"
-              style={{ fontSize: 'clamp(36px, 5vw, 72px)' }}>
-              {t('tagline_1')}<br /><em className="italic">{t('tagline_2')}</em>
-            </h1>
-            <div className="mt-8 flex items-center justify-center gap-5">
-              <Trait light /><Cap light>{t('location')}</Cap><Trait light />
-            </div>
-          </motion.div>
-        </div>
-        <motion.div className="flex flex-col md:flex-row items-end justify-between gap-10 pt-8 border-t border-[rgba(255,255,255,0.06)]"
+        
+        {/* 1. LES TITRES (Plus d'espace en bas pour compenser l'absence de trait) */}
+        <motion.div 
+          className="flex flex-col items-start mb-16" 
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1.8, ease: EASE, delay: 0.2 }}>
+          
+          <h1 className="font-serif font-light text-white leading-[1.1] tracking-[-0.02em] text-left uppercase"
+            style={{ fontSize: 'clamp(32px, 4.5vw, 64px)' }}>
+            {t('tagline_1')}
+          </h1>
+          
+          <h2 className="font-serif font-light text-white leading-[1.1] tracking-[-0.02em] text-left mt-2"
+            style={{ fontSize: 'clamp(28px, 4vw, 56px)' }}>
+            <em className="italic">{t('tagline_2')}</em>
+          </h2>
+        </motion.div>
+
+        {/* 2. LA RANGÉE DU BAS (Directement sous le titre, sans trait) */}
+        <motion.div className="flex flex-col md:flex-row items-end justify-between gap-10"
           initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.6, ease: EASE, delay: 0.8 }}>
+          transition={{ duration: 1.6, ease: EASE, delay: 0.5 }}>
+          
+          {/* Formulaire à gauche */}
           <div className="w-full md:w-[400px]">
             {sent ? (
-              <p className="font-sans text-[11px] tracking-[0.40em] uppercase text-[rgba(255,255,255,0.40)]">{t('welcome')}</p>
+              <p className="font-sans text-[10px] tracking-[0.30em] uppercase text-[rgba(255,255,255,0.40)]">{t('welcome')}</p>
             ) : (
-              <form onSubmit={handleSubmit}>
-                <label className="block font-sans text-[10px] tracking-[0.55em] uppercase mb-4 text-[rgba(255,255,255,0.22)]">{t('membership')}</label>
-                <div className="flex items-center gap-3 pb-3 border-b transition-all duration-700"
+              <form onSubmit={handleSubmit} className="w-full">
+                <label className="block font-sans text-[9px] tracking-[0.45em] uppercase mb-4 text-[rgba(255,255,255,0.22)]">
+                  {t('membership')}
+                </label>
+                <div className="flex items-center gap-3 pb-2 border-b transition-all duration-700"
                   style={{ borderColor: focused ? WINE : 'rgba(255,255,255,0.12)' }}>
                   <input type="email" value={email}
                     onChange={e => setEmail(e.target.value)}
                     onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}
                     placeholder={t('placeholder')}
-                    className="flex-1 bg-transparent font-sans text-[11px] tracking-[0.25em] uppercase text-white placeholder:text-[rgba(255,255,255,0.14)] outline-none" />
-                  <button type="submit" className="w-8 h-8 flex items-center justify-center border border-[rgba(255,255,255,0.12)] hover:border-[#2B1022] transition-all duration-500 flex-shrink-0">
-                    <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="1.2" className="text-[rgba(255,255,255,0.35)]" viewBox="0 0 24 24">
+                    className="flex-1 bg-transparent font-sans text-[10px] tracking-[0.20em] uppercase text-white placeholder:text-[rgba(255,255,255,0.14)] outline-none" />
+                  <button type="submit" className="w-7 h-7 flex items-center justify-center border border-[rgba(255,255,255,0.12)] hover:border-[#2B1022] transition-all duration-500 flex-shrink-0">
+                    <svg width="10" height="10" fill="none" stroke="currentColor" strokeWidth="1.2" className="text-[rgba(255,255,255,0.35)]" viewBox="0 0 24 24">
                       <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" />
                     </svg>
                   </button>
@@ -149,22 +166,24 @@ function Hero() {
               </form>
             )}
           </div>
-          <div className="flex items-center gap-10">
+
+          {/* Socials à droite */}
+          <div className="flex items-center gap-8 mb-1">
             {[{ label: 'Instagram', href: 'https://instagram.com/myra.society' }, { label: 'TikTok', href: 'https://tiktok.com/@myra.society' }].map(s => (
               <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer"
-                className="group relative pb-1 font-sans text-[10px] tracking-[0.45em] uppercase text-[rgba(255,255,255,0.22)] hover:text-[rgba(255,255,255,0.75)] transition-colors duration-500">
+                className="group relative pb-1 font-sans text-[9px] tracking-[0.35em] uppercase text-[rgba(255,255,255,0.22)] hover:text-[rgba(255,255,255,0.75)] transition-colors duration-500">
                 {s.label}
                 <span className="absolute bottom-0 left-0 h-px w-0 group-hover:w-full transition-all duration-500" style={{ backgroundColor: WINE }} />
               </a>
             ))}
             <button onClick={toggleSound} className="group flex items-center gap-3 outline-none">
-              <div className="w-8 h-8 flex items-center justify-center border transition-all duration-500"
+              <div className="w-7 h-7 flex items-center justify-center border transition-all duration-500"
                 style={{ borderColor: !muted ? WINE : 'rgba(255,255,255,0.10)' }}>
                 {!muted ? (
-                  <div className="flex items-end gap-[2px] h-3">
+                  <div className="flex items-end gap-[1.5px] h-2.5">
                     {[1, 0.5, 0.85, 0.35, 0.92].map((h, i) => (
-                      <motion.div key={i} className="w-[1.5px] rounded-full" style={{ backgroundColor: WINE }}
-                        animate={{ height: ['2px', `${h * 10}px`, '2px'] }}
+                      <motion.div key={i} className="w-[1px] rounded-full" style={{ backgroundColor: WINE }}
+                        animate={{ height: ['2px', `${h * 8}px`, '2px'] }}
                         transition={{ duration: 0.85, repeat: Infinity, delay: i * 0.1, ease: 'easeInOut' }} />
                     ))}
                   </div>
@@ -180,46 +199,64 @@ function Hero() {
   );
 }
 
-// ════════════════════════════════════════════════════════════════════════════
-// 02 — STATEMENT (chiffres clés)
-// ════════════════════════════════════════════════════════════════════════════
 function Statement() {
   const t = useTranslations('statement');
+  
   const STATS = [
     { val: '1 500', unit: 'm²', label: t('stat_1_label') },
     { val: '12',    unit: '',   label: t('stat_2_label') },
     { val: '3',     unit: '',   label: t('stat_3_label') },
   ];
+
   return (
-    <section className="bg-[#F3F2EF] py-12 md:py-20 overflow-hidden">
-      <div className="max-w-container mx-auto">
-        <div className="grid grid-cols-12 gap-10">
-          <div className="col-span-12 md:col-span-3 pt-1 flex flex-col gap-6">
-            <R><Cap accent>{t('label')}</Cap></R>
-            <R d={0.1}><div className="w-8 h-px" style={{ backgroundColor: WINE, opacity: 0.5 }} /></R>
-          </div>
-          <div className="col-span-12 md:col-span-9 md:pl-16">
-            <R d={0.12}>
-              <p className="font-sans text-[15px] md:text-[1.7vw] leading-[1.14] tracking-[-0.018em] font-light uppercase" style={{ color: INK }}>
-                {t('tagline')}
-              </p>
-            </R>
-            <R d={0.2}>
-              <div className="mt-20 grid grid-cols-3 gap-8 pt-12" >
-                {STATS.map((s, i) => (
-                  <div key={i}>
-                    <p className="font-serif font-light tracking-tight leading-none" style={{ fontSize: 'clamp(26px, 2.5vw, 40px)', color: INK }}>
-                      {s.val}{s.unit && <span className="font-sans text-[14px] ml-1.5" style={{ color: ASH }}>{s.unit}</span>}
-                    </p>
-                    <div className="mt-4 flex items-center gap-3">
-                      <div className="h-px w-3.5 flex-shrink-0" style={{ backgroundColor: WINE, opacity: 0.5 }} />
-                      <Cap>{s.label}</Cap>
-                    </div>
-                  </div>
-                ))}
+    <section className="bg-[#F3F2EF] py-24 md:py-32 overflow-hidden">
+      <div className="px-10 md:px-16">
+        <div className="grid grid-cols-12 gap-10 md:gap-16">
+          
+          {/* Gauche — label + trait bordeaux */}
+          <div className="col-span-12 md:col-span-3">
+            <R>
+              <div className="flex items-center gap-3">
+                <div className="w-4 h-px" style={{ backgroundColor: WINE, opacity: 0.5 }} />
+                <Cap accent>{t('label')}</Cap>
               </div>
             </R>
           </div>
+
+{/* Droite — tagline + stats */}
+          <div className="col-span-12 md:col-span-9">
+            <R d={0.1}>
+              <p className="font-sans text-[15px] md:text-[17px] leading-[2.1] tracking-[0.14em] font-light uppercase text-[#0C0C0A]/60">
+                {t('tagline')}
+              </p>
+            </R>
+
+            <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
+              {STATS.map((s, i) => (
+                <R key={i} d={0.2 + i * 0.1}>
+                  <div className="flex flex-col items-start group">
+                    <div className="flex items-baseline gap-1">
+                      <span className="font-serif font-light text-[32px] md:text-[40px] tracking-tighter text-[#0C0C0A]">
+                        {s.val}
+                      </span>
+                      {s.unit && (
+                        <span className="font-sans text-[11px] tracking-widest text-[#0C0C0A]/40 uppercase">
+                          {s.unit}
+                        </span>
+                      )}
+                    </div>
+                    <div className="mt-4 flex items-center gap-3">
+                      <div className="w-4 h-px bg-[#2B1022]/30 group-hover:w-6 transition-all duration-500" />
+                      <span className="font-sans text-[9px] uppercase tracking-[0.40em] text-[#0C0C0A]/40">
+                        {s.label}
+                      </span>
+                    </div>
+                  </div>
+                </R>
+              ))}
+            </div>
+          </div>
+
         </div>
       </div>
     </section>
@@ -486,115 +523,200 @@ function Citation() {
   const t = useTranslations('citation');
   return (
     <section className="overflow-hidden">
-      <div className="relative w-full overflow-hidden" style={{ height: '62vh', minHeight: 380 }}>
-        <motion.img src="/DA/Nouveau.png" alt="MYRA" className="w-full h-full object-cover"
-          style={{ filter: 'saturate(0.72) brightness(0.75)' }}
-          initial={{ scale: 1.06 }} whileInView={{ scale: 1 }} viewport={{ once: true }}
-          transition={{ duration: 2.8, ease: EASE }} />
-        <div className="absolute inset-0 bg-[rgba(12,12,10,0.40)]" />
-        <div className="absolute inset-0 flex items-center justify-center">
-          <div className="max-w-3xl text-center px-8">
-            <motion.p
-              className="font-serif font-light italic leading-[1.6] text-[rgba(244,245,240,0.90)]"
-              style={{ fontSize: 'clamp(20px, 2.8vw, 36px)' }}
+      <div className="relative w-full overflow-hidden" style={{ height: '70vh', minHeight: 420 }}>
+        
+        {/* Image avec parallax */}
+        <motion.img
+          src="/DA/Nouveau.png"
+          alt="MYRA"
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ filter: 'saturate(0.65) brightness(0.70)' }}
+          initial={{ scale: 1.08 }}
+          whileInView={{ scale: 1 }}
+          viewport={{ once: true }}
+          transition={{ duration: 3.5, ease: EASE }}
+        />
+
+        {/* Gradient sombre en bas */}
+        <div className="absolute inset-0"
+          style={{ background: 'linear-gradient(to bottom, rgba(12,12,10,0.20) 0%, rgba(12,12,10,0.55) 100%)' }} />
+
+        {/* Ligne décorative gauche */}
+        <motion.div
+          className="absolute left-8 md:left-16 top-1/2 -translate-y-1/2 flex flex-col items-center gap-3"
+          initial={{ opacity: 0, x: -12 }}
+          whileInView={{ opacity: 1, x: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 1.2, ease: EASE, delay: 0.6 }}>
+          <div className="w-px h-16" style={{ backgroundColor: 'rgba(255,255,255,0.15)' }} />
+          <span className="font-sans text-[8px] uppercase tracking-[0.55em] text-[rgba(255,255,255,0.25)]"
+            style={{ writingMode: 'vertical-rl' }}>MYRA</span>
+          <div className="w-px h-16" style={{ backgroundColor: 'rgba(255,255,255,0.15)' }} />
+        </motion.div>
+
+        {/* Contenu centré */}
+        <div className="absolute inset-0 flex items-center justify-center px-16 md:px-32">
+          <div className="max-w-2xl text-center">
+
+            {/* Guillemet décoratif */}
+            <motion.div
+              className="mb-8 flex justify-center"
+              initial={{ opacity: 0, y: 10 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1, ease: EASE, delay: 0.1 }}>
+              <div className="w-8 h-px" style={{ backgroundColor: WINE, opacity: 0.6 }} />
+            </motion.div>
+
+<motion.p
+  className="font-serif font-light italic leading-[1.65] text-white"
+  style={{ fontSize: 'clamp(22px, 2.8vw, 38px)' }}
               initial={{ opacity: 0, y: 20, filter: 'blur(4px)' }}
               whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
               viewport={{ once: true }}
-              transition={{ duration: 1.6, ease: EASE, delay: 0.2 }}>
+              transition={{ duration: 1.8, ease: EASE, delay: 0.25 }}>
               {t('text')}
             </motion.p>
-            <motion.div className="mt-10 flex flex-col items-center gap-3"
-              initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
-              transition={{ duration: 1, ease: EASE, delay: 0.5 }}>
-              <div className="w-8 h-px" style={{ backgroundColor: WINE, opacity: 0.45 }} />
-              <Cap light className="opacity-75">{t('author')}</Cap>
-              <Cap light className="opacity-40">{t('role')}</Cap>
+
+            <motion.div
+              className="mt-10 flex flex-col items-center gap-2"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ once: true }}
+              transition={{ duration: 1, ease: EASE, delay: 0.6 }}>
+              <div className="w-5 h-px mb-2" style={{ backgroundColor: WINE, opacity: 0.40 }} />
+              <Cap light className="opacity-80">{t('author')}</Cap>
+              <Cap light className="opacity-35 mt-0.5">{t('role')}</Cap>
             </motion.div>
+
           </div>
         </div>
+
+        {/* Numéro de page discret */}
+        <div className="absolute bottom-8 right-8 md:right-16">
+          <span className="font-sans text-[9px] uppercase tracking-[0.55em] text-[rgba(255,255,255,0.20)]">04</span>
+        </div>
+
       </div>
     </section>
   );
 }
 
-// ════════════════════════════════════════════════════════════════════════════
-// 05 — COMPLEXE (déplacé après citation)
-// ════════════════════════════════════════════════════════════════════════════
 function Complexe() {
   const t = useTranslations('complexe');
   return (
-    <section className="bg-[#F3F2EF] py-12 md:py-20 overflow-hidden">
-      <div className="max-w-container mx-auto">
-        <div className="grid grid-cols-12 gap-10 items-start">
-          {/* Texte haut gauche */}
-          <div className="col-span-12 md:col-span-4">
+    <section className="bg-[#F3F2EF] overflow-hidden">
+      <div className="max-w-container mx-auto py-20 md:py-28">
+        <div className="grid grid-cols-12 gap-8 items-start">
+
+          {/* Texte — col gauche, très aéré, minimaliste */}
+          <div className="col-span-12 md:col-span-3">
             <R>
-              <div className="space-y-6">
-                <div className="w-8 h-px" style={{ backgroundColor: WINE, opacity: 0.5 }} />
-                <Cap accent>{t('label')}</Cap>
-                <p className="font-sans text-[13px] leading-[2.5] font-light" style={{ color: ASH }}>{t('text')}</p>
+              <div className="space-y-16">
+                <div className="space-y-5">
+                  <div className="flex items-center gap-3">
+                    <div className="w-4 h-px" style={{ backgroundColor: WINE, opacity: 0.4 }} />
+                    <Cap accent>{t('label')}</Cap>
+                  </div>
+                  <p className="font-sans text-[11px] leading-[2.8] font-light tracking-[0.06em]"
+                    style={{ color: 'rgba(12,12,10,0.38)' }}>
+                    {t('text')}
+                  </p>
+                </div>
+
+                {/* Données techniques — très discret */}
+                <div className="space-y-0">
+                  {[
+                    { val: '1 500 m²', label: 'Domaine' },
+                    { val: '12',       label: 'Suites' },
+                    { val: '3',        label: 'Espaces' },
+                  ].map((item, i) => (
+                    <div key={i} className="flex items-baseline justify-between py-4"
+                      style={{ borderBottom: '1px solid rgba(12,12,10,0.05)' }}>
+                      <span className="font-sans text-[9px] uppercase tracking-[0.45em]"
+                        style={{ color: 'rgba(12,12,10,0.22)' }}>{item.label}</span>
+                      <span className="font-serif font-light"
+                        style={{ fontSize: '18px', color: 'rgba(12,12,10,0.55)' }}>
+                        {item.val}
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
             </R>
           </div>
-          {/* Image droite */}
-          <div className="col-span-12 md:col-span-8">
+
+          {/* Image — grande, sobre, beaucoup d'espace */}
+          <div className="col-span-12 md:col-span-8 md:col-start-5">
             <R d={0.1}>
-              <div className="relative w-full overflow-hidden" style={{ aspectRatio: '16/10' }}>
-                <motion.img src="/Complexe/1.jpg" alt="Le Complexe MYRA"
-                  className="w-full h-full object-cover" style={{ filter: 'saturate(0.82)' }}
-                  whileHover={{ scale: 1.03, filter: 'saturate(1)' }} transition={{ duration: 1.8, ease: EASE }} />
+              <div className="relative w-full overflow-hidden" style={{ aspectRatio: '4/3' }}>
+                <motion.img
+                  src="/Complexe/1.jpg"
+                  alt="Le Complexe MYRA"
+                  className="w-full h-full object-cover"
+                  style={{ filter: 'saturate(0.72) contrast(1.04)' }}
+                  whileHover={{ scale: 1.02 }}
+                  transition={{ duration: 2.5, ease: EASE }}
+                />
               </div>
             </R>
           </div>
+
         </div>
       </div>
     </section>
   );
 }
-
-// ════════════════════════════════════════════════════════════════════════════
-// 06 — DOUBLE IMAGE (déplacé après complexe)
-// ════════════════════════════════════════════════════════════════════════════
 function DoubleImage() {
   const t = useTranslations('double');
   return (
-    <section className="bg-[#F3F2EF] py-12 md:py-20 overflow-hidden">
-      <div className="max-w-container mx-auto">
-        <div className="grid grid-cols-12 gap-10 items-end">
-          {/* Images gauche */}
-          <div className="col-span-12 md:col-span-9">
-            <div className="grid grid-cols-2 gap-4">
-              {['/Complexe/C.jpg', '/Fitness/C.jpg'].map((src, i) => (
-                <R key={i} d={i * 0.1}>
-                  <div className="relative overflow-hidden" style={{ aspectRatio: '4/5' }}>
-                    <motion.img src={src} className="w-full h-full object-cover"
-                      style={{ filter: 'saturate(0.8)' }}
-                      whileHover={{ scale: 1.04, filter: 'saturate(1)' }}
-                      transition={{ duration: 1.6, ease: EASE }} />
-                  </div>
-                </R>
-              ))}
-            </div>
-          </div>
-          {/* Texte bas droite */}
-          <div className="col-span-12 md:col-span-3 pb-4">
-            <R d={0.15}>
-              <div className="space-y-6">
-                <div className="w-8 h-px" style={{ backgroundColor: WINE, opacity: 0.5 }} />
-                <Cap accent>{t('label')}</Cap>
-                <p className="font-sans text-[13px] leading-[2.5] font-light" style={{ color: ASH }}>{t('text')}</p>
+    <section className="bg-[#F3F2EF] overflow-hidden">
+      <div className="max-w-container mx-auto py-14 md:py-20">
+        <div className="grid grid-cols-12 gap-4" style={{ alignItems: 'end' }}>
+
+          <div className="col-span-6 md:col-span-5">
+            <R>
+              <div className="relative overflow-hidden" style={{ aspectRatio: '3/4' }}>
+                <motion.img src="/Complexe/C.jpg" className="w-full h-full object-cover"
+                  style={{ filter: 'saturate(0.65) contrast(1.08)' }}
+                  whileHover={{ scale: 1.03, filter: 'saturate(0.85) contrast(1.05)' }}
+                  transition={{ duration: 2, ease: EASE }} />
               </div>
             </R>
           </div>
+
+          <div className="col-span-3 md:col-span-4">
+            <R d={0.1}>
+              <div className="relative overflow-hidden" style={{ aspectRatio: '4/5' }}>
+                <motion.img src="/Fitness/C.jpg" className="w-full h-full object-cover"
+                  style={{ filter: 'saturate(0.65) contrast(1.08)' }}
+                  whileHover={{ scale: 1.03, filter: 'saturate(0.85) contrast(1.05)' }}
+                  transition={{ duration: 2, ease: EASE }} />
+              </div>
+            </R>
+          </div>
+
+          <div className="col-span-3 md:col-span-3" style={{ alignSelf: 'end' }}>
+            <R d={0.15}>
+              <div className="space-y-4 pb-1">
+                <div className="flex items-center gap-3">
+                  <div className="w-4 h-px" style={{ backgroundColor: WINE, opacity: 0.5 }} />
+                  <Cap accent>{t('label')}</Cap>
+                </div>
+                <p className="font-sans text-[12px] leading-[2.4] font-light tracking-[0.04em]"
+                  style={{ color: 'rgba(12,12,10,0.42)' }}>
+                  {t('text')}
+                </p>
+              </div>
+            </R>
+          </div>
+
         </div>
       </div>
     </section>
   );
 }
 
-// ════════════════════════════════════════════════════════════════════════════
-// 07 — GALERIE
-// ════════════════════════════════════════════════════════════════════════════
 function Gallery() {
   const t = useTranslations('gallery');
   const GALLERY_IMGS = [
@@ -604,116 +726,215 @@ function Gallery() {
     { src: '/Spa/1.jpg',        label: t('img4') },
     { src: '/Complexe/6.jpg',   label: t('img5') },
   ];
+  const DURATION = 5000;
   const [cur, setCur] = useState(0);
-  const next = () => setCur(p => (p + 1) % GALLERY_IMGS.length);
-  const prev = () => setCur(p => (p - 1 + GALLERY_IMGS.length) % GALLERY_IMGS.length);
+  const [progress, setProgress] = useState(0);
+  const [dragging, setDragging] = useState(false);
+  const intervalRef = useRef(null);
+  const startRef = useRef(null);
+
+  const goTo = (i) => { setCur(i); setProgress(0); };
+  const next = () => goTo((cur + 1) % GALLERY_IMGS.length);
+  const prev = () => goTo((cur - 1 + GALLERY_IMGS.length) % GALLERY_IMGS.length);
+
+  useEffect(() => {
+    setProgress(0);
+    const start = Date.now();
+    const tick = () => {
+      const elapsed = Date.now() - start;
+      const p = Math.min(elapsed / DURATION, 1);
+      setProgress(p);
+      if (p < 1) { intervalRef.current = requestAnimationFrame(tick); }
+      else { setCur(c => (c + 1) % GALLERY_IMGS.length); }
+    };
+    intervalRef.current = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(intervalRef.current);
+  }, [cur]);
+
+  const handleDragStart = (e) => {
+    startRef.current = e.touches ? e.touches[0].clientX : e.clientX;
+    setDragging(true);
+  };
+  const handleDragEnd = (e) => {
+    if (!dragging) return;
+    const endX = e.changedTouches ? e.changedTouches[0].clientX : e.clientX;
+    const diff = startRef.current - endX;
+    if (Math.abs(diff) > 50) diff > 0 ? next() : prev();
+    setDragging(false);
+  };
 
   return (
-    <section className="bg-[#F3F2EF] py-12 md:py-20 overflow-hidden">
-      <div className="max-w-container mx-auto">
-        <div className="flex items-end justify-between mb-10">
-          <R>
-            <div className="flex items-center gap-5">
-              <Trait />
-              <Cap accent>{t('label')}</Cap>
-            </div>
-          </R>
-          <R d={0.05}>
-            <div className="flex items-center gap-6">
-              <button onClick={prev} className="w-10 h-10 flex items-center justify-center border border-[rgba(12,12,10,0.08)] hover:border-[#2B1022] transition-all duration-400">
-                <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.2" viewBox="0 0 24 24" className="text-[rgba(12,12,10,0.40)]"><path d="M15 18l-6-6 6-6" strokeLinecap="round" /></svg>
-              </button>
-              <span className="font-sans text-[11px] tracking-[0.40em] text-[rgba(12,12,10,0.30)]">
-                {String(cur + 1).padStart(2, '0')} / {String(GALLERY_IMGS.length).padStart(2, '0')}
-              </span>
-              <button onClick={next} className="w-10 h-10 flex items-center justify-center border border-[rgba(12,12,10,0.08)] hover:border-[#2B1022] transition-all duration-400">
-                <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.2" viewBox="0 0 24 24" className="text-[rgba(12,12,10,0.40)]"><path d="M9 18l6-6-6-6" strokeLinecap="round" /></svg>
-              </button>
-            </div>
-          </R>
-        </div>
-        <div className="relative w-full overflow-hidden cursor-pointer" style={{ aspectRatio: '16/7' }} onClick={next}>
-          <AnimatePresence mode="wait">
-            <motion.img key={cur} src={GALLERY_IMGS[cur].src} alt={GALLERY_IMGS[cur].label}
-              className="absolute inset-0 w-full h-full object-cover" style={{ filter: 'saturate(0.82)' }}
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-              transition={{ duration: 0.7, ease: EASE }} />
-          </AnimatePresence>
-          <div className="absolute bottom-8 left-8">
-            <AnimatePresence mode="wait">
-              <motion.div key={GALLERY_IMGS[cur].label} initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }} transition={{ duration: 0.4 }}>
-                <Cap light>{GALLERY_IMGS[cur].label}</Cap>
-              </motion.div>
-            </AnimatePresence>
-          </div>
-        </div>
-        <div className="mt-4 h-px w-full bg-[rgba(12,12,10,0.06)] relative overflow-hidden">
-          <motion.div className="absolute top-0 left-0 h-full" style={{ backgroundColor: WINE }}
-            animate={{ width: `${((cur + 1) / GALLERY_IMGS.length) * 100}%` }}
-            transition={{ duration: 0.5, ease: EASE }} />
+    <section className="bg-[#0C0C0A] overflow-hidden select-none"
+      style={{ aspectRatio: '21/9', position: 'relative', cursor: 'grab' }}
+      onMouseDown={handleDragStart} onMouseUp={handleDragEnd}
+      onTouchStart={handleDragStart} onTouchEnd={handleDragEnd}>
+
+      <AnimatePresence mode="wait">
+        <motion.img key={cur} src={GALLERY_IMGS[cur].src} alt={GALLERY_IMGS[cur].label}
+          className="absolute inset-0 w-full h-full object-cover"
+          style={{ filter: 'saturate(0.80) brightness(0.88)' }}
+          initial={{ opacity: 0, scale: 1.04 }} animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.98 }}
+          transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+          draggable={false} />
+      </AnimatePresence>
+
+      <div className="absolute inset-0 pointer-events-none"
+        style={{ background: 'linear-gradient(to top, rgba(12,12,10,0.65) 0%, transparent 55%)' }} />
+
+      {/* Label image — bas gauche */}
+      <div className="absolute bottom-16 left-8 md:left-14 z-10">
+        <AnimatePresence mode="wait">
+          <motion.div key={GALLERY_IMGS[cur].label}
+            initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
+            transition={{ duration: 0.4 }}>
+            <span className="font-sans text-[10px] uppercase tracking-[0.55em]"
+              style={{ color: 'rgba(244,242,239,0.45)' }}>
+              {GALLERY_IMGS[cur].label}
+            </span>
+          </motion.div>
+        </AnimatePresence>
+      </div>
+
+      {/* Compteur — bas droite */}
+      <div className="absolute bottom-16 right-8 md:right-14 z-10">
+        <span className="font-sans text-[10px] tracking-[0.45em] tabular-nums"
+          style={{ color: 'rgba(244,242,239,0.30)' }}>
+          {String(cur + 1).padStart(2, '0')} / {String(GALLERY_IMGS.length).padStart(2, '0')}
+        </span>
+      </div>
+
+      {/* Label section + Tirets — centré bas */}
+      <div className="absolute bottom-6 left-0 right-0 z-10 flex flex-col items-center gap-3">
+        <Cap light style={{ opacity: 0.30 }}>{t('label')}</Cap>
+        <div className="flex gap-2" style={{ width: 160 }}>
+          {GALLERY_IMGS.map((_, i) => (
+            <button key={i} onClick={() => goTo(i)}
+              className="relative flex-1 outline-none cursor-pointer overflow-hidden"
+              style={{ backgroundColor: 'rgba(255,255,255,0.12)', height: 2 }}>
+              {i === cur && (
+                <motion.div className="absolute top-0 left-0 h-full"
+                  style={{ backgroundColor: '#F3F2EF', width: `${progress * 100}%` }} />
+              )}
+              {i < cur && (
+                <div className="absolute inset-0" style={{ backgroundColor: 'rgba(255,255,255,0.55)' }} />
+              )}
+            </button>
+          ))}
         </div>
       </div>
+
     </section>
   );
 }
-
 // ════════════════════════════════════════════════════════════════════════════
 // 08 — ÉQUIPE
+// Éditorial fashion — portrait dominant, citation large, thumbnails discrets
 // ════════════════════════════════════════════════════════════════════════════
 function Equipe() {
   const t = useTranslations('team');
   const [act, setAct] = useState(0);
 
   const EQUIPE = [
-    { src: '/Tina.jpg',   name: 'Tina F.',   role: 'Head Coach', quote: t('tina_quote'),   instagram: 'https://instagram.com/myra.society', linkedin: 'https://www.linkedin.com/in/tina-fourrier-44636a188/' },
-    { src: '/Jérémy.jpg', name: 'Jérémy P.', role: 'DG',         quote: t('jeremy_quote'), instagram: 'https://instagram.com/myra.society', linkedin: 'https://www.linkedin.com/in/jeremy-paulen/' },
+    { src: '/Tina.jpg',   name: 'Tina F.',   role: 'Head Coach',       quote: t('tina_quote'),   instagram: 'https://instagram.com/myra.society', linkedin: 'https://www.linkedin.com/in/tina-fourrier-44636a188/' },
+    { src: '/Jérémy.jpg', name: 'Jérémy P.', role: 'Directeur Général', quote: t('jeremy_quote'), instagram: 'https://instagram.com/myra.society', linkedin: 'https://www.linkedin.com/in/jeremy-paulen/' },
   ];
 
   return (
-    <section className="bg-[#F3F2EF] py-12 md:py-20 overflow-hidden">
-      <div className="max-w-container mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-stretch">
-          <div className="lg:col-span-4 flex flex-col justify-between py-2">
-            <div>
-              <div className="flex items-center gap-5 mb-20"><Trait /><Cap accent>{t('label')}</Cap></div>
+    <section className="bg-[#F3F2EF] overflow-hidden">
+      <div className="max-w-container mx-auto py-14 md:py-20">
+
+        <div className="flex items-center gap-4 mb-16">
+          <Trait />
+          <Cap accent>{t('label')}</Cap>
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-0"
+          style={{ borderTop: '1px solid rgba(12,12,10,0.06)' }}>
+
+          {/* Portrait — moitié écran, noir et blanc */}
+          <div className="relative overflow-hidden" style={{ aspectRatio: '4/5', minHeight: 480 }}>
+            <AnimatePresence mode="wait">
+              <motion.img
+                key={EQUIPE[act].src}
+                src={EQUIPE[act].src}
+                alt={EQUIPE[act].name}
+                className="absolute inset-0 w-full h-full object-cover object-top"
+                style={{ filter: 'grayscale(1) contrast(1.05)' }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.6, ease: EASE }}
+              />
+            </AnimatePresence>
+            {/* Trait bordeaux bas */}
+          </div>
+
+          {/* Contenu droite */}
+          <div className="flex flex-col justify-between px-0 md:px-14 py-12 md:py-0"
+            style={{ borderLeft: '1px solid rgba(12,12,10,0.06)' }}>
+
+            {/* Citation active */}
+            <div className="md:pt-2">
               <AnimatePresence mode="wait">
-                <motion.div key={act} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.6, ease: EASE }}>
-                  <p className="font-sans text-[11px] tracking-[0.40em] uppercase mb-1" style={{ color: WINE }}>{EQUIPE[act].name}</p>
-                  <p className="font-sans text-[11px] tracking-[0.30em] uppercase mb-12 text-[rgba(12,12,10,0.35)]">{EQUIPE[act].role}</p>
-                  <p className="font-serif font-light italic leading-[1.6] text-[rgba(12,12,10,0.65)]" style={{ fontSize: 'clamp(20px, 2vw, 26px)' }}>
+                <motion.div key={act}
+                  initial={{ opacity: 0, y: 12, filter: 'blur(4px)' }}
+                  animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                  exit={{ opacity: 0, y: -8 }}
+                  transition={{ duration: 0.6, ease: EASE }}>
+                  <p className="font-sans text-[10px] uppercase tracking-[0.45em] mb-1"
+                    style={{ color: WINE }}>{EQUIPE[act].name}</p>
+                  <p className="font-sans text-[9px] uppercase tracking-[0.35em] mb-10"
+                    style={{ color: 'rgba(12,12,10,0.28)' }}>{EQUIPE[act].role}</p>
+                  <p className="font-serif font-light italic leading-[1.6]"
+                    style={{ fontSize: 'clamp(20px, 2vw, 26px)', color: 'rgba(12,12,10,0.68)' }}>
                     &laquo;&nbsp;{EQUIPE[act].quote}&nbsp;&raquo;
                   </p>
                 </motion.div>
               </AnimatePresence>
             </div>
-            <div className="flex items-center gap-8 pt-8 border-t border-[rgba(12,12,10,0.06)]">
-              {['instagram', 'linkedin'].map(r => (
-                <a key={r} href={EQUIPE[act][r]} target="_blank" rel="noopener noreferrer"
-                  className="group relative pb-1 font-sans text-[11px] tracking-[0.30em] uppercase text-[rgba(12,12,10,0.35)] hover:text-[#0C0C0A] transition-colors duration-400">
-                  {r.charAt(0).toUpperCase() + r.slice(1)}
-                  <span className="absolute bottom-0 left-0 h-px w-0 group-hover:w-full transition-all duration-400" style={{ backgroundColor: WINE }} />
-                </a>
-              ))}
+
+{/* Bas */}
+            <div>
+              {/* Liens */}
+              <div className="flex items-center gap-6 mb-6 pt-8"
+                style={{ borderTop: '1px solid rgba(12,12,10,0.06)' }}>
+                {['instagram', 'linkedin'].map(r => (
+                  <a key={r} href={EQUIPE[act][r]} target="_blank" rel="noopener noreferrer"
+                    className="group/link relative pb-1 font-sans text-[9px] tracking-[0.40em] uppercase transition-colors duration-400"
+                    style={{ color: 'rgba(12,12,10,0.25)' }}
+                    onMouseEnter={e => e.currentTarget.style.color = INK}
+                    onMouseLeave={e => e.currentTarget.style.color = 'rgba(12,12,10,0.25)'}>
+                    {r.charAt(0).toUpperCase() + r.slice(1)}
+                    <span className="absolute bottom-0 left-0 h-px w-0 group-hover/link:w-full transition-all duration-400"
+                      style={{ backgroundColor: WINE }} />
+                  </a>
+                ))}
+              </div>
+
+              {/* Sélecteur */}
+              <div className="flex items-center gap-6 pt-6">
+                {EQUIPE.map((m, i) => (
+                  <button key={i} onClick={() => setAct(i)}
+                    className="flex items-center gap-4 outline-none">
+                    <motion.div className="relative overflow-hidden flex-shrink-0"
+                      style={{ width: 52, height: 64 }}
+                      animate={{ opacity: i === act ? 1 : 0.25, filter: i === act ? 'grayscale(1) contrast(1.05)' : 'grayscale(1)' }}
+                      transition={{ duration: 0.4 }}>
+                      <img src={m.src} alt={m.name} className="w-full h-full object-cover object-top" />
+                      {i === act && <div className="absolute bottom-0 left-0 right-0 h-[2px]" style={{ backgroundColor: WINE }} />}
+                    </motion.div>
+                    <div className="text-left">
+                      <p className="font-sans text-[10px] uppercase tracking-[0.30em]"
+                        style={{ color: i === act ? INK : 'rgba(12,12,10,0.25)' }}>{m.name}</p>
+                      <p className="font-sans text-[9px] uppercase tracking-[0.25em] mt-0.5"
+                        style={{ color: 'rgba(12,12,10,0.20)' }}>{m.role}</p>
+                    </div>
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
-          <div className="lg:col-span-5 relative overflow-hidden" style={{ aspectRatio: '3/4', maxHeight: 620 }}>
-            <AnimatePresence mode="wait">
-              <motion.img key={EQUIPE[act].src} src={EQUIPE[act].src} alt={EQUIPE[act].name}
-                className="absolute inset-0 w-full h-full object-cover" style={{ filter: 'saturate(0.88)' }}
-                initial={{ opacity: 0, scale: 1.04 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }}
-                transition={{ duration: 0.7, ease: EASE }} />
-            </AnimatePresence>
-          </div>
-          <div className="lg:col-span-3 flex lg:flex-col gap-6 items-center justify-center pt-8 lg:pt-0">
-            {EQUIPE.map((m, i) => (
-              <motion.div key={i} onClick={() => setAct(i)}
-                className="relative overflow-hidden cursor-pointer flex-shrink-0" style={{ width: 80, height: 96 }}
-                animate={{ opacity: i === act ? 1 : 0.35, filter: i === act ? 'grayscale(0)' : 'grayscale(1)' }}
-                transition={{ duration: 0.5 }}>
-                <img src={m.src} alt={m.name} className="w-full h-full object-cover" />
-                {i === act && <div className="absolute bottom-0 left-0 right-0 h-[2px]" style={{ backgroundColor: WINE }} />}
-              </motion.div>
-            ))}
+
           </div>
         </div>
       </div>
@@ -721,45 +942,65 @@ function Equipe() {
   );
 }
 
-// ════════════════════════════════════════════════════════════════════════════
-// 09 — POSTER SOUTIEN
-// ════════════════════════════════════════════════════════════════════════════
 function SupportPoster() {
   const t = useTranslations('poster');
   const locale = useLocale();
   return (
-    <section className="relative w-full overflow-hidden flex flex-col justify-between"
-      style={{ height: '100dvh', minHeight: 580, backgroundColor: INK }}>
-      <div className="absolute inset-0 z-0">
-        <img src="/DA/Double visage.jpg" alt="" className="w-full h-full object-cover"
-          style={{ filter: 'grayscale(1) brightness(0.28) contrast(1.12)' }} />
-        <div className="absolute inset-0"
-          style={{ background: `linear-gradient(to bottom, ${INK}CC 0%, ${INK}55 50%, ${INK}DD 100%)` }} />
-      </div>
-      <motion.div className="relative z-10 flex-1 flex items-center justify-center px-8"
-        initial={{ opacity: 0, y: 28 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
+    <section className="relative overflow-hidden" style={{ backgroundColor: INK, minHeight: 600 }}>
+      
+      {/* Image plein fond */}
+      <motion.img
+        src="/DA/Double visage.jpg"
+        alt=""
+        className="absolute inset-0 w-full h-full object-cover"
+        style={{ filter: 'grayscale(1) brightness(0.28) contrast(1.12)' }}
+        initial={{ scale: 1.06 }}
+        whileInView={{ scale: 1 }}
+        viewport={{ once: true }}
+        transition={{ duration: 3, ease: EASE }}
+      />
+      <div className="absolute inset-0"
+        style={{ background: `linear-gradient(to bottom, ${INK}CC 0%, ${INK}55 50%, ${INK}DD 100%)` }} />
+
+      {/* Contenu centré */}
+      <motion.div
+        className="relative z-10 flex flex-col items-center justify-center text-center px-8 py-20 md:py-28"
+        style={{ minHeight: 600 }}
+        initial={{ opacity: 0, y: 28 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true }}
         transition={{ duration: 1.8, ease: EASE }}>
-        <div className="max-w-[500px] text-center">
-          <div className="flex items-center justify-center gap-8 mb-14">
-            <div className="h-px w-12 opacity-40" style={{ backgroundColor: WINE }} />
-            <Cap light style={{ opacity: 0.55 }}>{t('label')}</Cap>
-            <div className="h-px w-12 opacity-40" style={{ backgroundColor: WINE }} />
+
+        <div className="max-w-[560px]">
+          <div className="flex items-center justify-center gap-8 mb-12">
+            <div className="h-px w-10 opacity-30" style={{ backgroundColor: WINE }} />
+            <Cap light style={{ opacity: 0.40 }}>{t('label')}</Cap>
+            <div className="h-px w-10 opacity-30" style={{ backgroundColor: WINE }} />
           </div>
-<h2 className="font-serif font-light italic text-white mb-8 leading-[1.1]"
-  style={{ fontSize: 'clamp(32px, 4vw, 54px)', color: '#FFFFFF' }}>
-            {t('title')}
-          </h2>
-          <p className="font-sans font-light tracking-[0.18em] uppercase mb-14 text-[rgba(255,255,255,0.35)]"
-            style={{ fontSize: '12px', lineHeight: '2.2' }}>
+<h2 className="font-serif font-light text-white leading-[1.02] mb-6"
+  style={{ fontSize: 'clamp(38px, 4vw, 62px)', color: '#FFFFFF' }}>
+  {t('title').split('\n').map((line, i) => (
+    <span key={i} className={i === 1 ? 'italic block' : 'block'}>{line}</span>
+  ))}
+</h2>
+          <p className="font-sans font-light tracking-[0.22em] uppercase mb-14 mx-auto"
+            style={{ fontSize: '11px', lineHeight: '2.5', color: 'rgba(255,255,255,0.25)', maxWidth: 320 }}>
             {t('text')}
           </p>
           <Btn href={`/${locale}/soutenir`} dark>{t('cta')}</Btn>
         </div>
+
       </motion.div>
-      <div className="relative z-10 px-10 md:px-16 pb-10 pt-6 flex items-center justify-between border-t border-[rgba(255,255,255,0.04)] mt-8">
-        <span className="font-sans text-[9px] tracking-[0.35em] uppercase text-[rgba(244,245,240,0.20)]">{t('copyright')}</span>
-        <span className="font-sans text-[9px] tracking-[0.35em] uppercase text-[rgba(244,245,240,0.20)]">{t('location')}</span>
+
+{/* Bas — copyright */}
+      <div className="relative z-10 px-10 md:px-16 py-8 flex items-center justify-between"
+        style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
+        <span className="font-sans text-[9px] tracking-[0.35em] uppercase"
+          style={{ color: 'rgba(244,242,239,0.18)' }}>{t('copyright')}</span>
+        <span className="font-sans text-[9px] tracking-[0.35em] uppercase"
+          style={{ color: 'rgba(244,242,239,0.18)' }}>{t('location')}</span>
       </div>
+
     </section>
   );
 }
@@ -773,10 +1014,11 @@ export default function Page() {
       <EquinoxSections />
       <Citation />
       <Complexe />
-      <DoubleImage />
+      <DoubleImage />    
+      <Gallery /> 
       <Equipe />
-      <Gallery />
-      <SupportPoster />
+      <SupportPoster />  
+    
     </main>
   );
 }
