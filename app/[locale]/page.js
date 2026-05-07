@@ -45,7 +45,7 @@ function Btn({ children, dark = false, href, onClick, className = '' }) {
     <Tag href={href} onClick={onClick}
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
-      className={`relative overflow-hidden inline-flex items-center font-sans text-[11px] tracking-[0.55em] uppercase cursor-pointer select-none ${className}`}
+      className={`relative overflow-hidden inline-flex items-center font-sans text-[9px] md:text-[11px] tracking-[0.45em] md:tracking-[0.55em] uppercase cursor-pointer select-none ${className}`}
       style={{
         padding: '15px 36px',
         border: `1px solid ${hov ? WINE : dark ? 'rgba(255,255,255,0.18)' : BONE}`,
@@ -397,7 +397,7 @@ function EquinoxSections() {
         <section key={s.num} className="bg-[#F3F2EF] overflow-hidden">
           <div className="max-w-container mx-auto py-10 md:py-24 relative">
 
-            {/* MOBILE — titre + label avant l'image */}
+            {/* MOBILE — titre + label + description + CTA avant l'image */}
             <div className="md:hidden px-6 pb-6">
               <div className="flex items-center gap-3 mb-3">
                 <div className="w-4 h-px" style={{ backgroundColor: WINE, opacity: 0.5 }} />
@@ -405,6 +405,10 @@ function EquinoxSections() {
               </div>
               <h2 className="font-serif font-light leading-[0.92] tracking-[-0.02em] text-[#0C0C0A] mb-4"
                 style={{ fontSize: 'clamp(28px, 6vw, 42px)' }}>{s.title}</h2>
+              <p className="font-sans text-[12px] leading-[2.2] font-light text-[rgba(12,12,10,0.48)] mb-6">
+                {s.description}
+              </p>
+              <Btn href={s.href}>{s.cta}</Btn>
             </div>
 
             <div className={`grid grid-cols-1 md:grid-cols-2 gap-0 items-stretch`}
@@ -420,13 +424,7 @@ function EquinoxSections() {
               </div>
             </div>
 
-            {/* MOBILE — description + CTA sous l'image */}
-            <div className="md:hidden px-6 pt-6">
-              <p className="font-sans text-[13px] leading-[2.2] font-light text-[rgba(12,12,10,0.48)] mb-8">
-                {s.description}
-              </p>
-              <Btn href={s.href}>{s.cta}</Btn>
-            </div>
+
 
           </div>
         </section>
@@ -650,8 +648,8 @@ function Gallery() {
       onTouchStart={handleDragStart} onTouchEnd={handleDragEnd}>
 
       {/* Ratio responsive — 16/9 sur mobile, 21/9 sur desktop */}
-      <div className="w-full" style={{ aspectRatio: '16/9' }}>
-        <div className="relative w-full h-full md:hidden" style={{ aspectRatio: '16/9' }}>
+      <div className="w-full">
+        <div className="relative w-full md:hidden" style={{ aspectRatio: '4/3' }}>
           <AnimatePresence mode="wait">
             <motion.img key={cur} src={GALLERY_IMGS[cur].src} alt={GALLERY_IMGS[cur].label}
               className="absolute inset-0 w-full h-full object-cover"
@@ -662,7 +660,7 @@ function Gallery() {
               draggable={false} />
           </AnimatePresence>
         </div>
-        <div className="relative w-full h-full hidden md:block" style={{ aspectRatio: '21/9' }}>
+        <div className="relative w-full hidden md:block" style={{ aspectRatio: '21/9' }}>
           <AnimatePresence mode="wait">
             <motion.img key={cur} src={GALLERY_IMGS[cur].src} alt={GALLERY_IMGS[cur].label}
               className="absolute inset-0 w-full h-full object-cover"
@@ -771,19 +769,8 @@ function Equipe() {
               </AnimatePresence>
             </div>
             <div>
-              <div className="flex items-center gap-6 mb-6 pt-8" style={{ borderTop: '1px solid rgba(12,12,10,0.06)' }}>
-                {['instagram', 'linkedin'].map(r => (
-                  <a key={r} href={EQUIPE[act][r]} target="_blank" rel="noopener noreferrer"
-                    className="group/link relative pb-1 font-sans text-[9px] tracking-[0.40em] uppercase transition-colors duration-400"
-                    style={{ color: 'rgba(12,12,10,0.25)' }}
-                    onMouseEnter={e => e.currentTarget.style.color = INK}
-                    onMouseLeave={e => e.currentTarget.style.color = 'rgba(12,12,10,0.25)'}>
-                    {r.charAt(0).toUpperCase() + r.slice(1)}
-                    <span className="absolute bottom-0 left-0 h-px w-0 group-hover/link:w-full transition-all duration-400" style={{ backgroundColor: WINE }} />
-                  </a>
-                ))}
-              </div>
-              <div className="flex items-center gap-6 pt-6">
+              {/* Sélecteur — au dessus des liens sur mobile */}
+              <div className="flex items-center gap-6 mb-6">
                 {EQUIPE.map((m, i) => (
                   <button key={i} onClick={() => setAct(i)} className="flex items-center gap-4 outline-none">
                     <motion.div className="relative overflow-hidden flex-shrink-0" style={{ width: 52, height: 64 }}
@@ -797,6 +784,18 @@ function Equipe() {
                       <p className="font-sans text-[9px] uppercase tracking-[0.25em] mt-0.5" style={{ color: 'rgba(12,12,10,0.20)' }}>{m.role}</p>
                     </div>
                   </button>
+                ))}
+              </div>
+              <div className="flex items-center gap-6 pt-6" style={{ borderTop: '1px solid rgba(12,12,10,0.06)' }}>
+                {['instagram', 'linkedin'].map(r => (
+                  <a key={r} href={EQUIPE[act][r]} target="_blank" rel="noopener noreferrer"
+                    className="group/link relative pb-1 font-sans text-[9px] tracking-[0.40em] uppercase transition-colors duration-400"
+                    style={{ color: 'rgba(12,12,10,0.25)' }}
+                    onMouseEnter={e => e.currentTarget.style.color = INK}
+                    onMouseLeave={e => e.currentTarget.style.color = 'rgba(12,12,10,0.25)'}>
+                    {r.charAt(0).toUpperCase() + r.slice(1)}
+                    <span className="absolute bottom-0 left-0 h-px w-0 group-hover/link:w-full transition-all duration-400" style={{ backgroundColor: WINE }} />
+                  </a>
                 ))}
               </div>
             </div>
