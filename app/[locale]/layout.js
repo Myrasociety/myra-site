@@ -1,6 +1,5 @@
 import '../../styles/globals.css';
-import { serif } from '../../lib/fonts';
-import { GeistSans } from 'geist/font/sans';
+import { serif, sans } from '../../lib/fonts';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
 import PageLoader from '../../components/PageLoader';
@@ -19,7 +18,7 @@ export default function LocaleLayout({ children, params }) {
 
   return (
     <html lang={locale}
-      className={`${GeistSans.variable} ${serif.variable}`}>
+className={`${sans.variable} ${serif.variable}`}>
       <body className="font-sans overflow-x-hidden">
         <PageLoader />
         <Navbar />

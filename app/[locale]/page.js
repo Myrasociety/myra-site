@@ -101,7 +101,6 @@ function Hero() {
     <section ref={ref} className="relative w-full overflow-hidden bg-[#0C0C0A]"
       style={{ height: '100dvh', minHeight: 680 }}>
       
-      {/* Background Video */}
       <motion.div className="absolute inset-0" style={{ y }}>
         <video ref={videoRef} autoPlay muted loop playsInline
           className="w-full h-full object-cover"
@@ -110,38 +109,51 @@ function Hero() {
         </video>
       </motion.div>
 
-      {/* Overlays */}
       <div className="absolute inset-0 bg-gradient-to-b from-[#0C0C0A]/55 via-transparent to-[#0C0C0A]/95" />
       <div className="absolute inset-0 bg-gradient-to-r from-[#0C0C0A]/30 via-transparent to-transparent" />
 
-      {/* Main Content Container */}
-      <motion.div className="absolute inset-0 flex flex-col justify-end px-10 md:px-16 pb-12 z-20"
+      {/* Bouton son — haut droite sur mobile uniquement */}
+      <div className="absolute top-20 right-6 z-30 md:hidden">
+        <button onClick={toggleSound} className="outline-none">
+          <div className="w-8 h-8 flex items-center justify-center border transition-all duration-500"
+            style={{ borderColor: !muted ? WINE : 'rgba(255,255,255,0.20)' }}>
+            {!muted ? (
+              <div className="flex items-end gap-[1.5px] h-2.5">
+                {[1, 0.5, 0.85, 0.35, 0.92].map((h, i) => (
+                  <motion.div key={i} className="w-[1px] rounded-full" style={{ backgroundColor: WINE }}
+                    animate={{ height: ['2px', `${h * 8}px`, '2px'] }}
+                    transition={{ duration: 0.85, repeat: Infinity, delay: i * 0.1, ease: 'easeInOut' }} />
+                ))}
+              </div>
+            ) : (
+              <div className="w-1 h-1 rounded-full bg-[rgba(255,255,255,0.25)]" />
+            )}
+          </div>
+        </button>
+      </div>
+
+      <motion.div className="absolute inset-0 flex flex-col justify-end px-6 md:px-16 pb-12 z-20"
         style={{ opacity }}>
         
-        {/* 1. LES TITRES (Plus d'espace en bas pour compenser l'absence de trait) */}
-        <motion.div 
-          className="flex flex-col items-start mb-16" 
+        <motion.div className="flex flex-col items-start mb-10 md:mb-16"
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 1.8, ease: EASE, delay: 0.2 }}>
-          
           <h1 className="font-serif font-light text-white leading-[1.1] tracking-[-0.02em] text-left uppercase"
             style={{ fontSize: 'clamp(32px, 4.5vw, 64px)' }}>
             {t('tagline_1')}
           </h1>
-          
           <h2 className="font-serif font-light text-white leading-[1.1] tracking-[-0.02em] text-left mt-2"
             style={{ fontSize: 'clamp(28px, 4vw, 56px)' }}>
             <em className="italic">{t('tagline_2')}</em>
           </h2>
         </motion.div>
 
-        {/* 2. LA RANGÉE DU BAS (Directement sous le titre, sans trait) */}
-        <motion.div className="flex flex-col md:flex-row items-end justify-between gap-10"
+        <motion.div className="flex flex-col md:flex-row items-end justify-between gap-6 md:gap-10"
           initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.6, ease: EASE, delay: 0.5 }}>
           
-          {/* Formulaire à gauche */}
+          {/* Formulaire */}
           <div className="w-full md:w-[400px]">
             {sent ? (
               <p className="font-sans text-[10px] tracking-[0.30em] uppercase text-[rgba(255,255,255,0.40)]">{t('welcome')}</p>
@@ -167,8 +179,8 @@ function Hero() {
             )}
           </div>
 
-          {/* Socials à droite */}
-          <div className="flex items-center gap-8 mb-1">
+          {/* Socials + son — cachés sur mobile sauf le son déjà en haut */}
+          <div className="hidden md:flex items-center gap-8 mb-1">
             {[{ label: 'Instagram', href: 'https://instagram.com/myra.society' }, { label: 'TikTok', href: 'https://tiktok.com/@myra.society' }].map(s => (
               <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer"
                 className="group relative pb-1 font-sans text-[9px] tracking-[0.35em] uppercase text-[rgba(255,255,255,0.22)] hover:text-[rgba(255,255,255,0.75)] transition-colors duration-500">
@@ -199,9 +211,11 @@ function Hero() {
   );
 }
 
+// ════════════════════════════════════════════════════════════════════════════
+// 02 — STATEMENT
+// ════════════════════════════════════════════════════════════════════════════
 function Statement() {
   const t = useTranslations('statement');
-  
   const STATS = [
     { val: '1 500', unit: 'm²', label: t('stat_1_label') },
     { val: '12',    unit: '',   label: t('stat_2_label') },
@@ -209,11 +223,10 @@ function Statement() {
   ];
 
   return (
-    <section className="bg-[#F3F2EF] py-24 md:py-32 overflow-hidden">
-      <div className="px-10 md:px-16">
-        <div className="grid grid-cols-12 gap-10 md:gap-16">
+    <section className="bg-[#F3F2EF] py-16 md:py-32 overflow-hidden">
+      <div className="px-6 md:px-16">
+        <div className="grid grid-cols-12 gap-6 md:gap-16">
           
-          {/* Gauche — label + trait bordeaux */}
           <div className="col-span-12 md:col-span-3">
             <R>
               <div className="flex items-center gap-3">
@@ -223,31 +236,31 @@ function Statement() {
             </R>
           </div>
 
-{/* Droite — tagline + stats */}
           <div className="col-span-12 md:col-span-9">
             <R d={0.1}>
-              <p className="font-sans text-[15px] md:text-[17px] leading-[2.1] tracking-[0.14em] font-light uppercase text-[#0C0C0A]/60">
+              <p className="font-sans text-[13px] md:text-[17px] leading-[2.1] tracking-[0.14em] font-light uppercase text-[#0C0C0A]/60">
                 {t('tagline')}
               </p>
             </R>
 
-            <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-8">
+            {/* Stats — 3 colonnes sur mobile aussi */}
+            <div className="mt-10 md:mt-20 grid grid-cols-3 gap-3 md:gap-8">
               {STATS.map((s, i) => (
                 <R key={i} d={0.2 + i * 0.1}>
                   <div className="flex flex-col items-start group">
-                    <div className="flex items-baseline gap-1">
-                      <span className="font-serif font-light text-[32px] md:text-[40px] tracking-tighter text-[#0C0C0A]">
+                    <div className="flex items-baseline gap-1 flex-wrap">
+                      <span className="font-serif font-light text-[22px] md:text-[40px] tracking-tighter text-[#0C0C0A]">
                         {s.val}
                       </span>
                       {s.unit && (
-                        <span className="font-sans text-[11px] tracking-widest text-[#0C0C0A]/40 uppercase">
+                        <span className="font-sans text-[9px] md:text-[11px] tracking-widest text-[#0C0C0A]/40 uppercase">
                           {s.unit}
                         </span>
                       )}
                     </div>
-                    <div className="mt-4 flex items-center gap-3">
-                      <div className="w-4 h-px bg-[#2B1022]/30 group-hover:w-6 transition-all duration-500" />
-                      <span className="font-sans text-[9px] uppercase tracking-[0.40em] text-[#0C0C0A]/40">
+                    <div className="mt-2 md:mt-4 flex items-center gap-2">
+                      <div className="w-3 h-px bg-[#2B1022]/30" />
+                      <span className="font-sans text-[8px] md:text-[9px] uppercase tracking-[0.30em] md:tracking-[0.40em] text-[#0C0C0A]/40">
                         {s.label}
                       </span>
                     </div>
@@ -256,7 +269,6 @@ function Statement() {
               ))}
             </div>
           </div>
-
         </div>
       </div>
     </section>
@@ -264,19 +276,15 @@ function Statement() {
 }
 
 // ════════════════════════════════════════════════════════════════════════════
-// 03 — TROIS SECTIONS EQUINOX
-// Galerie gauche + texte droite / Texte gauche + galerie droite / alternance
+// 03 — EQUINOX SECTIONS
 // ════════════════════════════════════════════════════════════════════════════
-
-// Galerie style Equinox — swipe 1:1 fluide, snap précis
-function VerticalGallery({ images, reverse = false }) {
+function VerticalGallery({ images }) {
   const [idx,   setIdx]   = useState(0);
   const [width, setWidth] = useState(0);
   const wrapRef = useRef(null);
   const x       = useMotionValue(0);
   const visible = images.slice(0, 4);
   const total   = visible.length;
-
   const PEEK = 56;
   const GAP  = 8;
 
@@ -289,137 +297,55 @@ function VerticalGallery({ images, reverse = false }) {
 
   const slideW = width > 0 ? width - PEEK : 0;
 
-  // Snap vers l'index cible
   const snapTo = (i) => {
-    const target = i * (slideW + GAP);
     setIdx(i);
-    animate(x, -target, { type: 'spring', stiffness: 400, damping: 40 });
+    animate(x, -(i * (slideW + GAP)), { type: 'spring', stiffness: 400, damping: 40 });
   };
 
-  // Recalculer position si width change
   useEffect(() => {
     if (slideW > 0) x.set(-(idx * (slideW + GAP)));
   }, [slideW]);
 
   const handleDragEnd = (_, info) => {
-    const current  = -x.get();
-    const velocity = info.velocity.x;
-    const moved    = info.offset.x;
-
-    // Déterminer l'index cible selon vitesse ou distance
     let target = idx;
-    if (velocity < -200 || moved < -slideW * 0.2)      target = Math.min(idx + 1, total - 1);
-    else if (velocity > 200 || moved > slideW * 0.2)   target = Math.max(idx - 1, 0);
-
+    if (info.velocity.x < -200 || info.offset.x < -slideW * 0.2) target = Math.min(idx + 1, total - 1);
+    else if (info.velocity.x > 200 || info.offset.x > slideW * 0.2) target = Math.max(idx - 1, 0);
     snapTo(target);
   };
 
   return (
     <div className="flex flex-col gap-5 h-full">
-      <div
-        ref={wrapRef}
-        style={{
-          position: 'relative',
-          aspectRatio: '3/4',
-          minHeight: 440,
-          overflow: 'hidden',
-          flex: 1,
-        }}
-      >
+      <div ref={wrapRef} style={{ position: 'relative', aspectRatio: '3/4', minHeight: 340, overflow: 'hidden', flex: 1 }}>
         {slideW > 0 && (
-          <motion.div
-            style={{
-              x,
-              position: 'absolute',
-              top: 0,
-              bottom: 0,
-              left: 0,
-              display: 'flex',
-              gap: GAP,
-              cursor: 'grabbing',
-              touchAction: 'pan-y',
-              width: total * slideW + (total - 1) * GAP + PEEK,
-            }}
-            drag="x"
-            dragConstraints={{
-              left: -((total - 1) * (slideW + GAP)),
-              right: 0,
-            }}
-            dragElastic={0}
-            dragMomentum={false}
-            onDragEnd={handleDragEnd}
-          >
+          <motion.div style={{ x, position: 'absolute', top: 0, bottom: 0, left: 0, display: 'flex', gap: GAP, cursor: 'grabbing', touchAction: 'pan-y', width: total * slideW + (total - 1) * GAP + PEEK }}
+            drag="x" dragConstraints={{ left: -((total - 1) * (slideW + GAP)), right: 0 }}
+            dragElastic={0} dragMomentum={false} onDragEnd={handleDragEnd}>
             {visible.map((src, i) => (
-              <div
-                key={i}
-                style={{
-                  flexShrink: 0,
-                  width: slideW,
-                  height: '100%',
-                  overflow: 'hidden',
-                }}
-              >
-                <motion.img
-                  src={src}
-                  alt=""
-                  draggable={false}
-                  animate={{
-                    filter: i === idx
-                      ? 'saturate(0.90) brightness(1)'
-                      : 'saturate(0.25) brightness(0.60)',
-                  }}
+              <div key={i} style={{ flexShrink: 0, width: slideW, height: '100%', overflow: 'hidden' }}>
+                <motion.img src={src} alt="" draggable={false}
+                  animate={{ filter: i === idx ? 'saturate(0.90) brightness(1)' : 'saturate(0.25) brightness(0.60)' }}
                   transition={{ duration: 0.35 }}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    userSelect: 'none',
-                    pointerEvents: 'none',
-                  }}
-                />
+                  style={{ width: '100%', height: '100%', objectFit: 'cover', userSelect: 'none', pointerEvents: 'none' }} />
               </div>
             ))}
           </motion.div>
         )}
       </div>
-
-      {/* Tirets */}
       <div style={{ display: 'flex', gap: 6 }}>
         {visible.map((_, i) => (
-          <button
-            key={i}
-            onClick={() => snapTo(i)}
-            aria-label={`Image ${i + 1}`}
-            className="outline-none"
-            style={{
-              height: 2,
-              flex: i === idx ? 3 : 1,
-              backgroundColor: i === idx ? '#0C0C0A' : 'rgba(12,12,10,0.15)',
-              transition: 'flex 0.45s cubic-bezier(0.16,1,0.3,1), background-color 0.3s',
-              border: 'none',
-              padding: 0,
-              cursor: 'pointer',
-            }}
-          />
+          <button key={i} onClick={() => snapTo(i)} aria-label={`Image ${i + 1}`} className="outline-none"
+            style={{ height: 2, flex: i === idx ? 3 : 1, backgroundColor: i === idx ? '#0C0C0A' : 'rgba(12,12,10,0.15)', transition: 'flex 0.45s cubic-bezier(0.16,1,0.3,1), background-color 0.3s', border: 'none', padding: 0, cursor: 'pointer' }} />
         ))}
       </div>
     </div>
   );
 }
 
-
 function SectionText({ num, label, title, description, href, cta, locale, reverse = false }) {
   return (
     <div className={`flex flex-col justify-center h-full relative ${reverse ? 'md:pr-20' : 'md:pl-20'}`}>
-      {/* Numéro géant en filigrane */}
-      <div className="absolute -top-4 font-serif font-light select-none pointer-events-none"
-        style={{
-          fontSize: 'clamp(100px, 12vw, 160px)',
-          color: 'rgba(12,12,10,0.04)',
-          lineHeight: 1,
-          left: reverse ? 'auto' : '60px',
-          right: reverse ? '60px' : 'auto',
-        }}>
+      <div className="absolute -top-4 font-serif font-light select-none pointer-events-none hidden md:block"
+        style={{ fontSize: 'clamp(100px, 12vw, 160px)', color: 'rgba(12,12,10,0.04)', lineHeight: 1, left: reverse ? 'auto' : '60px', right: reverse ? '60px' : 'auto' }}>
         {num}
       </div>
       <R>
@@ -451,64 +377,57 @@ function EquinoxSections() {
   const t = useTranslations('services');
 
   const SECTIONS = [
-    {
-      num: '01',
-      label: t('s4_tags'),
-      title: 'Chambres & Suites',
+    { num: '01', label: t('s4_tags'), title: 'Chambres & Suites',
       description: 'Suites privatives en Alsace. Chaque espace a été pensé pour la récupération et le ressourcement. Luxe discret, matières nobles, silence des vignes.',
-      href: `/${locale}/hebergement`,
-      cta: 'Découvrir les suites',
-      images: ['/Edwige/1.jpg', '/Edwige/2.jpg', '/Wingert/1.jpg', '/Julia/1.jpg'],
-      reverse: false, // image gauche, texte droite
-    },
-    {
-      num: '02',
-      label: t('s3_tags'),
-      title: 'Table & Nutrition',
+      href: `/${locale}/hebergement`, cta: 'Découvrir les suites',
+      images: ['/Edwige/1.jpg', '/Edwige/2.jpg', '/Wingert/1.jpg', '/Julia/1.jpg'], reverse: false },
+    { num: '02', label: t('s3_tags'), title: 'Table & Nutrition',
       description: 'Restaurant diététique, circuits courts, accords pensés pour votre métabolisme. Une table réelle, pas un catalogue. La cuisine comme acte de soin.',
-      href: `/${locale}/soutenir`,
-      cta: 'En savoir plus',
-      images: ['/Restaurant/B.jpg', '/Restaurant/1.jpg', '/Restaurant/A.jpg', '/Restaurant/B.jpg'],
-      reverse: true, // texte gauche, image droite
-    },
-    {
-      num: '03',
-      label: t('s2_tags'),
-      title: 'Récupération & Spa',
-      description: '200 m² dédiés à la récupération active. Sauna, hammam, balnéo, soins. Un espace pour revenir à soi, sans compromis sur l\'intensité.',
-      href: `/${locale}/soutenir`,
-      cta: 'Découvrir le spa',
-      images: ['/Spa/A.jpg', '/Spa/1.jpg', '/Spa/3.jpg', '/Spa/A.jpg'],
-      reverse: false, // image gauche, texte droite
-    },
+      href: `/${locale}/soutenir`, cta: 'En savoir plus',
+      images: ['/Restaurant/B.jpg', '/Restaurant/1.jpg', '/Restaurant/A.jpg', '/Restaurant/B.jpg'], reverse: true },
+    { num: '03', label: t('s2_tags'), title: 'Récupération & Spa',
+      description: "200 m² dédiés à la récupération active. Sauna, hammam, balnéo, soins. Un espace pour revenir à soi, sans compromis sur l'intensité.",
+      href: `/${locale}/soutenir`, cta: 'Découvrir le spa',
+      images: ['/Spa/A.jpg', '/Spa/1.jpg', '/Spa/3.jpg', '/Spa/A.jpg'], reverse: false },
   ];
 
   return (
     <>
       {SECTIONS.map((s, idx) => (
-        <section key={s.num} className="bg-[#F3F2EF] overflow-hidden"
-          >
-          <div className="max-w-container mx-auto py-16 md:py-24 relative">
-            <div className={`grid grid-cols-1 md:grid-cols-2 gap-0 items-stretch ${s.reverse ? 'md:flex-row-reverse' : ''}`}
+        <section key={s.num} className="bg-[#F3F2EF] overflow-hidden">
+          <div className="max-w-container mx-auto py-10 md:py-24 relative">
+
+            {/* MOBILE — titre + label avant l'image */}
+            <div className="md:hidden px-6 pb-6">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-4 h-px" style={{ backgroundColor: WINE, opacity: 0.5 }} />
+                <Cap accent>{s.label}</Cap>
+              </div>
+              <h2 className="font-serif font-light leading-[0.92] tracking-[-0.02em] text-[#0C0C0A] mb-4"
+                style={{ fontSize: 'clamp(28px, 6vw, 42px)' }}>{s.title}</h2>
+            </div>
+
+            <div className={`grid grid-cols-1 md:grid-cols-2 gap-0 items-stretch`}
               style={{ direction: s.reverse ? 'rtl' : 'ltr' }}>
               {/* Galerie */}
               <div style={{ direction: 'ltr' }}>
-                  <VerticalGallery images={s.images} reverse={s.reverse} />
+                <VerticalGallery images={s.images} />
               </div>
-              {/* Texte */}
-              <div style={{ direction: 'ltr' }} className="flex items-center py-12 md:py-0">
-                <SectionText
-                  num={s.num}
-                  label={s.label}
-                  title={s.title}
-                  description={s.description}
-                  href={s.href}
-                  cta={s.cta}
-                  locale={locale}
-                  reverse={s.reverse}
-                />
+              {/* Texte — desktop seulement */}
+              <div style={{ direction: 'ltr' }} className="hidden md:flex items-center py-12 md:py-0">
+                <SectionText num={s.num} label={s.label} title={s.title} description={s.description}
+                  href={s.href} cta={s.cta} locale={locale} reverse={s.reverse} />
               </div>
             </div>
+
+            {/* MOBILE — description + CTA sous l'image */}
+            <div className="md:hidden px-6 pt-6">
+              <p className="font-sans text-[13px] leading-[2.2] font-light text-[rgba(12,12,10,0.48)] mb-8">
+                {s.description}
+              </p>
+              <Btn href={s.href}>{s.cta}</Btn>
+            </div>
+
           </div>
         </section>
       ))}
@@ -523,180 +442,141 @@ function Citation() {
   const t = useTranslations('citation');
   return (
     <section className="overflow-hidden">
-      <div className="relative w-full overflow-hidden" style={{ height: '70vh', minHeight: 420 }}>
-        
-        {/* Image avec parallax */}
-        <motion.img
-          src="/DA/Nouveau.png"
-          alt="MYRA"
+      <div className="relative w-full overflow-hidden" style={{ height: '70vh', minHeight: 380 }}>
+        <motion.img src="/DA/Nouveau.png" alt="MYRA"
           className="absolute inset-0 w-full h-full object-cover"
           style={{ filter: 'saturate(0.65) brightness(0.70)' }}
-          initial={{ scale: 1.08 }}
-          whileInView={{ scale: 1 }}
-          viewport={{ once: true }}
-          transition={{ duration: 3.5, ease: EASE }}
-        />
-
-        {/* Gradient sombre en bas */}
-        <div className="absolute inset-0"
-          style={{ background: 'linear-gradient(to bottom, rgba(12,12,10,0.20) 0%, rgba(12,12,10,0.55) 100%)' }} />
-
-        {/* Ligne décorative gauche */}
-        <motion.div
-          className="absolute left-8 md:left-16 top-1/2 -translate-y-1/2 flex flex-col items-center gap-3"
-          initial={{ opacity: 0, x: -12 }}
-          whileInView={{ opacity: 1, x: 0 }}
-          viewport={{ once: true }}
+          initial={{ scale: 1.08 }} whileInView={{ scale: 1 }} viewport={{ once: true }}
+          transition={{ duration: 3.5, ease: EASE }} />
+        <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(12,12,10,0.35) 0%, rgba(12,12,10,0.70) 100%)' }} />
+        <motion.div className="absolute left-8 md:left-16 top-1/2 -translate-y-1/2 flex-col items-center gap-3 hidden md:flex"
+          initial={{ opacity: 0, x: -12 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}
           transition={{ duration: 1.2, ease: EASE, delay: 0.6 }}>
           <div className="w-px h-16" style={{ backgroundColor: 'rgba(255,255,255,0.15)' }} />
           <span className="font-sans text-[8px] uppercase tracking-[0.55em] text-[rgba(255,255,255,0.25)]"
             style={{ writingMode: 'vertical-rl' }}>MYRA</span>
           <div className="w-px h-16" style={{ backgroundColor: 'rgba(255,255,255,0.15)' }} />
         </motion.div>
-
-        {/* Contenu centré */}
-        <div className="absolute inset-0 flex items-center justify-center px-16 md:px-32">
+        <div className="absolute inset-0 flex items-center justify-center px-8 md:px-32">
           <div className="max-w-2xl text-center">
-
-            {/* Guillemet décoratif */}
-            <motion.div
-              className="mb-8 flex justify-center"
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
+            <motion.div className="mb-8 flex justify-center"
+              initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
               transition={{ duration: 1, ease: EASE, delay: 0.1 }}>
               <div className="w-8 h-px" style={{ backgroundColor: WINE, opacity: 0.6 }} />
             </motion.div>
-
-<motion.p
-  className="font-serif font-light italic leading-[1.65] text-white"
-  style={{ fontSize: 'clamp(22px, 2.8vw, 38px)' }}
+            <motion.p className="font-serif font-light italic leading-[1.65] text-white"
+              style={{ fontSize: 'clamp(18px, 2.8vw, 38px)' }}
               initial={{ opacity: 0, y: 20, filter: 'blur(4px)' }}
-              whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-              viewport={{ once: true }}
+              whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }} viewport={{ once: true }}
               transition={{ duration: 1.8, ease: EASE, delay: 0.25 }}>
               {t('text')}
             </motion.p>
-
-            <motion.div
-              className="mt-10 flex flex-col items-center gap-2"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
+            <motion.div className="mt-8 flex flex-col items-center gap-2"
+              initial={{ opacity: 0 }} whileInView={{ opacity: 1 }} viewport={{ once: true }}
               transition={{ duration: 1, ease: EASE, delay: 0.6 }}>
               <div className="w-5 h-px mb-2" style={{ backgroundColor: WINE, opacity: 0.40 }} />
               <Cap light className="opacity-80">{t('author')}</Cap>
               <Cap light className="opacity-35 mt-0.5">{t('role')}</Cap>
             </motion.div>
-
           </div>
         </div>
-
-        {/* Numéro de page discret */}
-        <div className="absolute bottom-8 right-8 md:right-16">
-          <span className="font-sans text-[9px] uppercase tracking-[0.55em] text-[rgba(255,255,255,0.20)]">04</span>
-        </div>
-
       </div>
     </section>
   );
 }
 
+// ════════════════════════════════════════════════════════════════════════════
+// 05 — COMPLEXE
+// ════════════════════════════════════════════════════════════════════════════
 function Complexe() {
   const t = useTranslations('complexe');
   return (
     <section className="bg-[#F3F2EF] overflow-hidden">
-      <div className="max-w-container mx-auto py-20 md:py-28">
-        <div className="grid grid-cols-12 gap-8 items-start">
-
-          {/* Texte — col gauche, très aéré, minimaliste */}
+      <div className="max-w-container mx-auto py-16 md:py-28 px-6 md:px-0">
+        <div className="grid grid-cols-12 gap-6 md:gap-8 items-start">
           <div className="col-span-12 md:col-span-3">
             <R>
-              <div className="space-y-16">
-                <div className="space-y-5">
+              <div className="space-y-8 md:space-y-16">
+                <div className="space-y-4">
                   <div className="flex items-center gap-3">
                     <div className="w-4 h-px" style={{ backgroundColor: WINE, opacity: 0.4 }} />
                     <Cap accent>{t('label')}</Cap>
                   </div>
                   <p className="font-sans text-[11px] leading-[2.8] font-light tracking-[0.06em]"
-                    style={{ color: 'rgba(12,12,10,0.38)' }}>
-                    {t('text')}
-                  </p>
+                    style={{ color: 'rgba(12,12,10,0.38)' }}>{t('text')}</p>
                 </div>
-
-                {/* Données techniques — très discret */}
-                <div className="space-y-0">
-                  {[
-                    { val: '1 500 m²', label: 'Domaine' },
-                    { val: '12',       label: 'Suites' },
-                    { val: '3',        label: 'Espaces' },
-                  ].map((item, i) => (
+                <div className="hidden md:block space-y-0">
+                  {[{ val: '1 500 m²', label: 'Domaine' }, { val: '12', label: 'Suites' }, { val: '3', label: 'Espaces' }].map((item, i) => (
                     <div key={i} className="flex items-baseline justify-between py-4"
                       style={{ borderBottom: '1px solid rgba(12,12,10,0.05)' }}>
-                      <span className="font-sans text-[9px] uppercase tracking-[0.45em]"
-                        style={{ color: 'rgba(12,12,10,0.22)' }}>{item.label}</span>
-                      <span className="font-serif font-light"
-                        style={{ fontSize: '18px', color: 'rgba(12,12,10,0.55)' }}>
-                        {item.val}
-                      </span>
+                      <span className="font-sans text-[9px] uppercase tracking-[0.45em]" style={{ color: 'rgba(12,12,10,0.22)' }}>{item.label}</span>
+                      <span className="font-serif font-light" style={{ fontSize: '18px', color: 'rgba(12,12,10,0.55)' }}>{item.val}</span>
                     </div>
                   ))}
                 </div>
               </div>
             </R>
           </div>
-
-          {/* Image — grande, sobre, beaucoup d'espace */}
           <div className="col-span-12 md:col-span-8 md:col-start-5">
             <R d={0.1}>
               <div className="relative w-full overflow-hidden" style={{ aspectRatio: '4/3' }}>
-                <motion.img
-                  src="/Complexe/1.jpg"
-                  alt="Le Complexe MYRA"
+                <motion.img src="/Complexe/1.jpg" alt="Le Complexe MYRA"
                   className="w-full h-full object-cover"
                   style={{ filter: 'saturate(0.72) contrast(1.04)' }}
-                  whileHover={{ scale: 1.02 }}
-                  transition={{ duration: 2.5, ease: EASE }}
-                />
+                  whileHover={{ scale: 1.02 }} transition={{ duration: 2.5, ease: EASE }} />
               </div>
             </R>
           </div>
-
         </div>
       </div>
     </section>
   );
 }
+
+// ════════════════════════════════════════════════════════════════════════════
+// 06 — DOUBLE IMAGE
+// ════════════════════════════════════════════════════════════════════════════
 function DoubleImage() {
   const t = useTranslations('double');
   return (
     <section className="bg-[#F3F2EF] overflow-hidden">
-      <div className="max-w-container mx-auto py-14 md:py-20">
-        <div className="grid grid-cols-12 gap-4" style={{ alignItems: 'end' }}>
+      <div className="max-w-container mx-auto py-14 md:py-20 px-6 md:px-0">
 
+        {/* Texte — au dessus sur mobile */}
+        <div className="md:hidden mb-8">
+          <R>
+            <div className="space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="w-4 h-px" style={{ backgroundColor: WINE, opacity: 0.5 }} />
+                <Cap accent>{t('label')}</Cap>
+              </div>
+              <p className="font-sans text-[12px] leading-[2.4] font-light tracking-[0.04em]"
+                style={{ color: 'rgba(12,12,10,0.42)' }}>{t('text')}</p>
+            </div>
+          </R>
+        </div>
+
+        <div className="grid grid-cols-12 gap-4" style={{ alignItems: 'end' }}>
           <div className="col-span-6 md:col-span-5">
             <R>
               <div className="relative overflow-hidden" style={{ aspectRatio: '3/4' }}>
                 <motion.img src="/Complexe/C.jpg" className="w-full h-full object-cover"
                   style={{ filter: 'saturate(0.65) contrast(1.08)' }}
-                  whileHover={{ scale: 1.03, filter: 'saturate(0.85) contrast(1.05)' }}
-                  transition={{ duration: 2, ease: EASE }} />
+                  whileHover={{ scale: 1.03 }} transition={{ duration: 2, ease: EASE }} />
               </div>
             </R>
           </div>
-
-          <div className="col-span-3 md:col-span-4">
+          <div className="col-span-6 md:col-span-4">
             <R d={0.1}>
               <div className="relative overflow-hidden" style={{ aspectRatio: '4/5' }}>
                 <motion.img src="/Fitness/C.jpg" className="w-full h-full object-cover"
                   style={{ filter: 'saturate(0.65) contrast(1.08)' }}
-                  whileHover={{ scale: 1.03, filter: 'saturate(0.85) contrast(1.05)' }}
-                  transition={{ duration: 2, ease: EASE }} />
+                  whileHover={{ scale: 1.03 }} transition={{ duration: 2, ease: EASE }} />
               </div>
             </R>
           </div>
-
-          <div className="col-span-3 md:col-span-3" style={{ alignSelf: 'end' }}>
+          {/* Texte desktop — bas droite */}
+          <div className="hidden md:block col-span-3 md:col-span-3" style={{ alignSelf: 'end' }}>
             <R d={0.15}>
               <div className="space-y-4 pb-1">
                 <div className="flex items-center gap-3">
@@ -704,19 +584,19 @@ function DoubleImage() {
                   <Cap accent>{t('label')}</Cap>
                 </div>
                 <p className="font-sans text-[12px] leading-[2.4] font-light tracking-[0.04em]"
-                  style={{ color: 'rgba(12,12,10,0.42)' }}>
-                  {t('text')}
-                </p>
+                  style={{ color: 'rgba(12,12,10,0.42)' }}>{t('text')}</p>
               </div>
             </R>
           </div>
-
         </div>
       </div>
     </section>
   );
 }
 
+// ════════════════════════════════════════════════════════════════════════════
+// 07 — GALLERY
+// ════════════════════════════════════════════════════════════════════════════
 function Gallery() {
   const t = useTranslations('gallery');
   const GALLERY_IMGS = [
@@ -764,26 +644,43 @@ function Gallery() {
   };
 
   return (
-    <section className="bg-[#0C0C0A] overflow-hidden select-none"
-      style={{ aspectRatio: '21/9', position: 'relative', cursor: 'grab' }}
+    <section className="bg-[#0C0C0A] overflow-hidden select-none relative"
+      style={{ cursor: 'grab' }}
       onMouseDown={handleDragStart} onMouseUp={handleDragEnd}
       onTouchStart={handleDragStart} onTouchEnd={handleDragEnd}>
 
-      <AnimatePresence mode="wait">
-        <motion.img key={cur} src={GALLERY_IMGS[cur].src} alt={GALLERY_IMGS[cur].label}
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{ filter: 'saturate(0.80) brightness(0.88)' }}
-          initial={{ opacity: 0, scale: 1.04 }} animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.98 }}
-          transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
-          draggable={false} />
-      </AnimatePresence>
+      {/* Ratio responsive — 16/9 sur mobile, 21/9 sur desktop */}
+      <div className="w-full" style={{ aspectRatio: '16/9' }}>
+        <div className="relative w-full h-full md:hidden" style={{ aspectRatio: '16/9' }}>
+          <AnimatePresence mode="wait">
+            <motion.img key={cur} src={GALLERY_IMGS[cur].src} alt={GALLERY_IMGS[cur].label}
+              className="absolute inset-0 w-full h-full object-cover"
+              style={{ filter: 'saturate(0.80) brightness(0.88)' }}
+              initial={{ opacity: 0, scale: 1.04 }} animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.98 }}
+              transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+              draggable={false} />
+          </AnimatePresence>
+        </div>
+        <div className="relative w-full h-full hidden md:block" style={{ aspectRatio: '21/9' }}>
+          <AnimatePresence mode="wait">
+            <motion.img key={cur} src={GALLERY_IMGS[cur].src} alt={GALLERY_IMGS[cur].label}
+              className="absolute inset-0 w-full h-full object-cover"
+              style={{ filter: 'saturate(0.80) brightness(0.88)' }}
+              initial={{ opacity: 0, scale: 1.04 }} animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.98 }}
+              transition={{ duration: 1.1, ease: [0.16, 1, 0.3, 1] }}
+              draggable={false} />
+          </AnimatePresence>
+        </div>
+      </div>
 
+      {/* Overlay */}
       <div className="absolute inset-0 pointer-events-none"
         style={{ background: 'linear-gradient(to top, rgba(12,12,10,0.65) 0%, transparent 55%)' }} />
 
-      {/* Label image — bas gauche */}
-      <div className="absolute bottom-16 left-8 md:left-14 z-10">
+      {/* Label image — caché sur mobile */}
+      <div className="absolute bottom-16 left-8 md:left-14 z-10 hidden md:block">
         <AnimatePresence mode="wait">
           <motion.div key={GALLERY_IMGS[cur].label}
             initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
@@ -796,17 +693,16 @@ function Gallery() {
         </AnimatePresence>
       </div>
 
-      {/* Compteur — bas droite */}
-      <div className="absolute bottom-16 right-8 md:right-14 z-10">
+      {/* Compteur — caché sur mobile */}
+      <div className="absolute bottom-16 right-8 md:right-14 z-10 hidden md:block">
         <span className="font-sans text-[10px] tracking-[0.45em] tabular-nums"
           style={{ color: 'rgba(244,242,239,0.30)' }}>
           {String(cur + 1).padStart(2, '0')} / {String(GALLERY_IMGS.length).padStart(2, '0')}
         </span>
       </div>
 
-      {/* Label section + Tirets — centré bas */}
-      <div className="absolute bottom-6 left-0 right-0 z-10 flex flex-col items-center gap-3">
-        <Cap light style={{ opacity: 0.30 }}>{t('label')}</Cap>
+      {/* Tirets seulement — centré bas */}
+      <div className="absolute bottom-4 left-0 right-0 z-10 flex justify-center">
         <div className="flex gap-2" style={{ width: 160 }}>
           {GALLERY_IMGS.map((_, i) => (
             <button key={i} onClick={() => goTo(i)}
@@ -827,9 +723,9 @@ function Gallery() {
     </section>
   );
 }
+
 // ════════════════════════════════════════════════════════════════════════════
 // 08 — ÉQUIPE
-// Éditorial fashion — portrait dominant, citation large, thumbnails discrets
 // ════════════════════════════════════════════════════════════════════════════
 function Equipe() {
   const t = useTranslations('team');
@@ -842,39 +738,22 @@ function Equipe() {
 
   return (
     <section className="bg-[#F3F2EF] overflow-hidden">
-      <div className="max-w-container mx-auto py-14 md:py-20">
-
-        <div className="flex items-center gap-4 mb-16">
-          <Trait />
-          <Cap accent>{t('label')}</Cap>
+      <div className="max-w-container mx-auto py-14 md:py-20 px-6 md:px-0">
+        <div className="flex items-center gap-4 mb-12 md:mb-16">
+          <Trait /><Cap accent>{t('label')}</Cap>
         </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-0"
-          style={{ borderTop: '1px solid rgba(12,12,10,0.06)' }}>
-
-          {/* Portrait — moitié écran, noir et blanc */}
-          <div className="relative overflow-hidden" style={{ aspectRatio: '4/5', minHeight: 480 }}>
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-0" style={{ borderTop: '1px solid rgba(12,12,10,0.06)' }}>
+          <div className="relative overflow-hidden" style={{ aspectRatio: '4/5', minHeight: 380 }}>
             <AnimatePresence mode="wait">
-              <motion.img
-                key={EQUIPE[act].src}
-                src={EQUIPE[act].src}
-                alt={EQUIPE[act].name}
+              <motion.img key={EQUIPE[act].src} src={EQUIPE[act].src} alt={EQUIPE[act].name}
                 className="absolute inset-0 w-full h-full object-cover object-top"
                 style={{ filter: 'grayscale(1) contrast(1.05)' }}
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.6, ease: EASE }}
-              />
+                initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                transition={{ duration: 0.6, ease: EASE }} />
             </AnimatePresence>
-            {/* Trait bordeaux bas */}
           </div>
-
-          {/* Contenu droite */}
-          <div className="flex flex-col justify-between px-0 md:px-14 py-12 md:py-0"
+          <div className="flex flex-col justify-between px-0 md:px-14 py-10 md:py-0"
             style={{ borderLeft: '1px solid rgba(12,12,10,0.06)' }}>
-
-            {/* Citation active */}
             <div className="md:pt-2">
               <AnimatePresence mode="wait">
                 <motion.div key={act}
@@ -882,23 +761,17 @@ function Equipe() {
                   animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
                   exit={{ opacity: 0, y: -8 }}
                   transition={{ duration: 0.6, ease: EASE }}>
-                  <p className="font-sans text-[10px] uppercase tracking-[0.45em] mb-1"
-                    style={{ color: WINE }}>{EQUIPE[act].name}</p>
-                  <p className="font-sans text-[9px] uppercase tracking-[0.35em] mb-10"
-                    style={{ color: 'rgba(12,12,10,0.28)' }}>{EQUIPE[act].role}</p>
+                  <p className="font-sans text-[10px] uppercase tracking-[0.45em] mb-1" style={{ color: WINE }}>{EQUIPE[act].name}</p>
+                  <p className="font-sans text-[9px] uppercase tracking-[0.35em] mb-8" style={{ color: 'rgba(12,12,10,0.28)' }}>{EQUIPE[act].role}</p>
                   <p className="font-serif font-light italic leading-[1.6]"
-                    style={{ fontSize: 'clamp(20px, 2vw, 26px)', color: 'rgba(12,12,10,0.68)' }}>
+                    style={{ fontSize: 'clamp(18px, 2vw, 26px)', color: 'rgba(12,12,10,0.68)' }}>
                     &laquo;&nbsp;{EQUIPE[act].quote}&nbsp;&raquo;
                   </p>
                 </motion.div>
               </AnimatePresence>
             </div>
-
-{/* Bas */}
             <div>
-              {/* Liens */}
-              <div className="flex items-center gap-6 mb-6 pt-8"
-                style={{ borderTop: '1px solid rgba(12,12,10,0.06)' }}>
+              <div className="flex items-center gap-6 mb-6 pt-8" style={{ borderTop: '1px solid rgba(12,12,10,0.06)' }}>
                 {['instagram', 'linkedin'].map(r => (
                   <a key={r} href={EQUIPE[act][r]} target="_blank" rel="noopener noreferrer"
                     className="group/link relative pb-1 font-sans text-[9px] tracking-[0.40em] uppercase transition-colors duration-400"
@@ -906,35 +779,27 @@ function Equipe() {
                     onMouseEnter={e => e.currentTarget.style.color = INK}
                     onMouseLeave={e => e.currentTarget.style.color = 'rgba(12,12,10,0.25)'}>
                     {r.charAt(0).toUpperCase() + r.slice(1)}
-                    <span className="absolute bottom-0 left-0 h-px w-0 group-hover/link:w-full transition-all duration-400"
-                      style={{ backgroundColor: WINE }} />
+                    <span className="absolute bottom-0 left-0 h-px w-0 group-hover/link:w-full transition-all duration-400" style={{ backgroundColor: WINE }} />
                   </a>
                 ))}
               </div>
-
-              {/* Sélecteur */}
               <div className="flex items-center gap-6 pt-6">
                 {EQUIPE.map((m, i) => (
-                  <button key={i} onClick={() => setAct(i)}
-                    className="flex items-center gap-4 outline-none">
-                    <motion.div className="relative overflow-hidden flex-shrink-0"
-                      style={{ width: 52, height: 64 }}
+                  <button key={i} onClick={() => setAct(i)} className="flex items-center gap-4 outline-none">
+                    <motion.div className="relative overflow-hidden flex-shrink-0" style={{ width: 52, height: 64 }}
                       animate={{ opacity: i === act ? 1 : 0.25, filter: i === act ? 'grayscale(1) contrast(1.05)' : 'grayscale(1)' }}
                       transition={{ duration: 0.4 }}>
                       <img src={m.src} alt={m.name} className="w-full h-full object-cover object-top" />
                       {i === act && <div className="absolute bottom-0 left-0 right-0 h-[2px]" style={{ backgroundColor: WINE }} />}
                     </motion.div>
                     <div className="text-left">
-                      <p className="font-sans text-[10px] uppercase tracking-[0.30em]"
-                        style={{ color: i === act ? INK : 'rgba(12,12,10,0.25)' }}>{m.name}</p>
-                      <p className="font-sans text-[9px] uppercase tracking-[0.25em] mt-0.5"
-                        style={{ color: 'rgba(12,12,10,0.20)' }}>{m.role}</p>
+                      <p className="font-sans text-[10px] uppercase tracking-[0.30em]" style={{ color: i === act ? INK : 'rgba(12,12,10,0.25)' }}>{m.name}</p>
+                      <p className="font-sans text-[9px] uppercase tracking-[0.25em] mt-0.5" style={{ color: 'rgba(12,12,10,0.20)' }}>{m.role}</p>
                     </div>
                   </button>
                 ))}
               </div>
             </div>
-
           </div>
         </div>
       </div>
@@ -942,70 +807,53 @@ function Equipe() {
   );
 }
 
+// ════════════════════════════════════════════════════════════════════════════
+// 09 — SUPPORT POSTER
+// ════════════════════════════════════════════════════════════════════════════
 function SupportPoster() {
   const t = useTranslations('poster');
   const locale = useLocale();
   return (
-    <section className="relative overflow-hidden" style={{ backgroundColor: INK, minHeight: 600 }}>
-      
-      {/* Image plein fond */}
-      <motion.img
-        src="/DA/Double visage.jpg"
-        alt=""
+    <section className="relative overflow-hidden" style={{ backgroundColor: INK, minHeight: 500 }}>
+      <motion.img src="/DA/Double visage.jpg" alt=""
         className="absolute inset-0 w-full h-full object-cover"
         style={{ filter: 'grayscale(1) brightness(0.28) contrast(1.12)' }}
-        initial={{ scale: 1.06 }}
-        whileInView={{ scale: 1 }}
-        viewport={{ once: true }}
-        transition={{ duration: 3, ease: EASE }}
-      />
+        initial={{ scale: 1.06 }} whileInView={{ scale: 1 }} viewport={{ once: true }}
+        transition={{ duration: 3, ease: EASE }} />
       <div className="absolute inset-0"
         style={{ background: `linear-gradient(to bottom, ${INK}CC 0%, ${INK}55 50%, ${INK}DD 100%)` }} />
-
-      {/* Contenu centré */}
-      <motion.div
-        className="relative z-10 flex flex-col items-center justify-center text-center px-8 py-20 md:py-28"
-        style={{ minHeight: 600 }}
-        initial={{ opacity: 0, y: 28 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
+      <motion.div className="relative z-10 flex flex-col items-center justify-center text-center px-6 md:px-8 py-16 md:py-28"
+        style={{ minHeight: 500 }}
+        initial={{ opacity: 0, y: 28 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
         transition={{ duration: 1.8, ease: EASE }}>
-
-        <div className="max-w-[560px]">
-          <div className="flex items-center justify-center gap-8 mb-12">
-            <div className="h-px w-10 opacity-30" style={{ backgroundColor: WINE }} />
+        <div className="max-w-[560px] w-full">
+          <div className="flex items-center justify-center gap-6 mb-10">
+            <div className="h-px w-8 opacity-30" style={{ backgroundColor: WINE }} />
             <Cap light style={{ opacity: 0.40 }}>{t('label')}</Cap>
-            <div className="h-px w-10 opacity-30" style={{ backgroundColor: WINE }} />
+            <div className="h-px w-8 opacity-30" style={{ backgroundColor: WINE }} />
           </div>
-<h2 className="font-serif font-light text-white leading-[1.02] mb-6"
-  style={{ fontSize: 'clamp(38px, 4vw, 62px)', color: '#FFFFFF' }}>
-  {t('title').split('\n').map((line, i) => (
-    <span key={i} className={i === 1 ? 'italic block' : 'block'}>{line}</span>
-  ))}
-</h2>
-          <p className="font-sans font-light tracking-[0.22em] uppercase mb-14 mx-auto"
-            style={{ fontSize: '11px', lineHeight: '2.5', color: 'rgba(255,255,255,0.25)', maxWidth: 320 }}>
+          <h2 className="font-serif font-light text-white leading-[1.02] mb-6"
+            style={{ fontSize: 'clamp(30px, 4vw, 62px)', color: '#FFFFFF' }}>
+            {t('title').split('\n').map((line, i) => (
+              <span key={i} className={i === 1 ? 'italic block' : 'block'}>{line}</span>
+            ))}
+          </h2>
+          <p className="font-sans font-light tracking-[0.18em] uppercase mb-10 mx-auto"
+            style={{ fontSize: '11px', lineHeight: '2.2', color: 'rgba(255,255,255,0.25)', maxWidth: 280 }}>
             {t('text')}
           </p>
           <Btn href={`/${locale}/soutenir`} dark>{t('cta')}</Btn>
         </div>
-
       </motion.div>
-
-{/* Bas — copyright */}
-      <div className="relative z-10 px-10 md:px-16 py-8 flex items-center justify-between"
+      <div className="relative z-10 px-6 md:px-16 py-6 flex items-center justify-between"
         style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
-        <span className="font-sans text-[9px] tracking-[0.35em] uppercase"
-          style={{ color: 'rgba(244,242,239,0.18)' }}>{t('copyright')}</span>
-        <span className="font-sans text-[9px] tracking-[0.35em] uppercase"
-          style={{ color: 'rgba(244,242,239,0.18)' }}>{t('location')}</span>
+        <span className="font-sans text-[8px] tracking-[0.30em] uppercase" style={{ color: 'rgba(244,242,239,0.18)' }}>{t('copyright')}</span>
+        <span className="font-sans text-[8px] tracking-[0.30em] uppercase" style={{ color: 'rgba(244,242,239,0.18)' }}>{t('location')}</span>
       </div>
-
     </section>
   );
 }
 
-// ─── EXPORT ───────────────────────────────────────────────────────────────────
 export default function Page() {
   return (
     <main className="bg-[#F3F2EF]">
@@ -1014,11 +862,10 @@ export default function Page() {
       <EquinoxSections />
       <Citation />
       <Complexe />
-      <DoubleImage />    
-      <Gallery /> 
+      <DoubleImage />
+      <Gallery />
       <Equipe />
-      <SupportPoster />  
-    
+      <SupportPoster />
     </main>
   );
 }
