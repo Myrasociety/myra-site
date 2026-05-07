@@ -399,7 +399,7 @@ function EquinoxSections() {
 
             {/* MOBILE — titre + label + description + CTA avant l'image */}
             <div className="md:hidden px-6 pb-6">
-              <div className="flex items-center gap-3 mb-3">
+ <div className="flex items-center gap-3 mb-3 hidden md:flex">
                 <div className="w-4 h-px" style={{ backgroundColor: WINE, opacity: 0.5 }} />
                 <Cap accent>{s.label}</Cap>
               </div>
@@ -734,13 +734,40 @@ function Equipe() {
     { src: '/Jérémy.jpg', name: 'Jérémy P.', role: 'Directeur Général', quote: t('jeremy_quote'), instagram: 'https://instagram.com/myra.society', linkedin: 'https://www.linkedin.com/in/jeremy-paulen/' },
   ];
 
+  const Selector = () => (
+    <div className="flex items-center gap-6">
+      {EQUIPE.map((m, i) => (
+        <button key={i} onClick={() => setAct(i)} className="flex items-center gap-4 outline-none">
+          <motion.div className="relative overflow-hidden flex-shrink-0" style={{ width: 52, height: 64 }}
+            animate={{ opacity: i === act ? 1 : 0.25, filter: i === act ? 'grayscale(1) contrast(1.05)' : 'grayscale(1)' }}
+            transition={{ duration: 0.4 }}>
+            <img src={m.src} alt={m.name} className="w-full h-full object-cover object-top" />
+            {i === act && <div className="absolute bottom-0 left-0 right-0 h-[2px]" style={{ backgroundColor: WINE }} />}
+          </motion.div>
+          <div className="text-left">
+            <p className="font-sans text-[10px] uppercase tracking-[0.30em]" style={{ color: i === act ? INK : 'rgba(12,12,10,0.25)' }}>{m.name}</p>
+            <p className="font-sans text-[9px] uppercase tracking-[0.25em] mt-0.5" style={{ color: 'rgba(12,12,10,0.20)' }}>{m.role}</p>
+          </div>
+        </button>
+      ))}
+    </div>
+  );
+
   return (
     <section className="bg-[#F3F2EF] overflow-hidden">
       <div className="max-w-container mx-auto py-14 md:py-20 px-6 md:px-0">
         <div className="flex items-center gap-4 mb-12 md:mb-16">
           <Trait /><Cap accent>{t('label')}</Cap>
         </div>
+
+        {/* Thumbnails — au dessus du portrait sur mobile */}
+        <div className="lg:hidden mb-6">
+          <Selector />
+        </div>
+
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-0" style={{ borderTop: '1px solid rgba(12,12,10,0.06)' }}>
+
+          {/* Portrait */}
           <div className="relative overflow-hidden" style={{ aspectRatio: '4/5', minHeight: 380 }}>
             <AnimatePresence mode="wait">
               <motion.img key={EQUIPE[act].src} src={EQUIPE[act].src} alt={EQUIPE[act].name}
@@ -750,8 +777,11 @@ function Equipe() {
                 transition={{ duration: 0.6, ease: EASE }} />
             </AnimatePresence>
           </div>
+
+          {/* Contenu droite */}
           <div className="flex flex-col justify-between px-0 md:px-14 py-10 md:py-0"
             style={{ borderLeft: '1px solid rgba(12,12,10,0.06)' }}>
+
             <div className="md:pt-2">
               <AnimatePresence mode="wait">
                 <motion.div key={act}
@@ -768,23 +798,11 @@ function Equipe() {
                 </motion.div>
               </AnimatePresence>
             </div>
+
             <div>
-              {/* Sélecteur — au dessus des liens sur mobile */}
-              <div className="flex items-center gap-6 mb-6">
-                {EQUIPE.map((m, i) => (
-                  <button key={i} onClick={() => setAct(i)} className="flex items-center gap-4 outline-none">
-                    <motion.div className="relative overflow-hidden flex-shrink-0" style={{ width: 52, height: 64 }}
-                      animate={{ opacity: i === act ? 1 : 0.25, filter: i === act ? 'grayscale(1) contrast(1.05)' : 'grayscale(1)' }}
-                      transition={{ duration: 0.4 }}>
-                      <img src={m.src} alt={m.name} className="w-full h-full object-cover object-top" />
-                      {i === act && <div className="absolute bottom-0 left-0 right-0 h-[2px]" style={{ backgroundColor: WINE }} />}
-                    </motion.div>
-                    <div className="text-left">
-                      <p className="font-sans text-[10px] uppercase tracking-[0.30em]" style={{ color: i === act ? INK : 'rgba(12,12,10,0.25)' }}>{m.name}</p>
-                      <p className="font-sans text-[9px] uppercase tracking-[0.25em] mt-0.5" style={{ color: 'rgba(12,12,10,0.20)' }}>{m.role}</p>
-                    </div>
-                  </button>
-                ))}
+              {/* Thumbnails desktop — dans le bas */}
+              <div className="hidden lg:flex items-center gap-6 mb-6">
+                <Selector />
               </div>
               <div className="flex items-center gap-6 pt-6" style={{ borderTop: '1px solid rgba(12,12,10,0.06)' }}>
                 {['instagram', 'linkedin'].map(r => (
