@@ -17,9 +17,8 @@ export default function LocaleLayout({ children, params }) {
   const { locale } = params;
 
   return (
-    <html lang={locale}
-className={`${sans.variable} ${serif.variable}`}>
-      <body className="font-sans overflow-x-hidden">
+    <html lang={locale} className={`${sans.variable} ${serif.variable} overflow-x-hidden`}>
+      <body className="font-sans overflow-x-hidden" style={{ maxWidth: '100vw' }}>
         <PageLoader />
         <Navbar />
         {children}
