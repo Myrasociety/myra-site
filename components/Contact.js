@@ -36,6 +36,23 @@ export default function ContactSection() {
     { key: 'message', label: t('message'), type: 'area',  placeholder: t('message_placeholder') },
   ];
 
+  const ContactInfo = () => (
+    <div className="space-y-4 pt-8 border-t border-[rgba(12,12,10,0.06)]">
+      <a href="tel:+33637038677" className="flex items-center gap-4 group">
+        <div className="w-px h-4 bg-[rgba(43,16,34,0.35)]" />
+        <span className="font-sans text-[11px] md:text-[12px] uppercase tracking-[0.20em] text-[rgba(12,12,10,0.40)] group-hover:text-[#0C0C0A] transition-colors duration-400">
+          +33 (0)6 37 03 86 77
+        </span>
+      </a>
+      <a href="mailto:contact@myrasociety.com" className="flex items-center gap-4 group">
+        <div className="w-px h-4 bg-[rgba(43,16,34,0.35)]" />
+        <span className="font-sans text-[11px] md:text-[12px] uppercase tracking-[0.20em] text-[rgba(12,12,10,0.40)] group-hover:text-[#0C0C0A] transition-colors duration-400">
+          contact@myrasociety.com
+        </span>
+      </a>
+    </div>
+  );
+
   return (
     <section className="bg-white py-16 md:py-36 border-t border-[rgba(12,12,10,0.05)]">
       <div className="max-w-container mx-auto px-6 md:px-14 lg:px-20">
@@ -54,19 +71,9 @@ export default function ContactSection() {
             <p className="font-sans text-[13px] leading-[2.2] font-light text-[rgba(12,12,10,0.45)] mb-8 md:mb-14">
               {t('desc')}
             </p>
-            <div className="space-y-4 pt-8 border-t border-[rgba(12,12,10,0.06)]">
-              <a href="tel:+33637038677" className="flex items-center gap-4 group">
-                <div className="w-px h-4 bg-[rgba(43,16,34,0.35)]" />
-                <span className="font-sans text-[11px] md:text-[12px] uppercase tracking-[0.20em] text-[rgba(12,12,10,0.40)] group-hover:text-[#0C0C0A] transition-colors duration-400">
-                  +33 (0)6 37 03 86 77
-                </span>
-              </a>
-              <a href="mailto:contact@myrasociety.com" className="flex items-center gap-4 group">
-                <div className="w-px h-4 bg-[rgba(43,16,34,0.35)]" />
-                <span className="font-sans text-[11px] md:text-[12px] uppercase tracking-[0.20em] text-[rgba(12,12,10,0.40)] group-hover:text-[#0C0C0A] transition-colors duration-400">
-                  contact@myrasociety.com
-                </span>
-              </a>
+            {/* Infos contact — desktop seulement ici */}
+            <div className="hidden md:block">
+              <ContactInfo />
             </div>
           </div>
 
@@ -108,13 +115,19 @@ export default function ContactSection() {
                       </div>
                     </div>
                   ))}
-<button type="submit" disabled={sending}
-  className="font-sans text-[9px] md:text-[11px] tracking-[0.55em] uppercase px-8 md:px-10 py-4 transition-all duration-500 disabled:opacity-40 outline-none"
-  style={{ backgroundColor: '#0C0C0A', color: '#F3F2EF' }}
-  onMouseEnter={e => e.currentTarget.style.backgroundColor = '#2B1022'}
-  onMouseLeave={e => e.currentTarget.style.backgroundColor = '#0C0C0A'}>
-  {sending ? t('sending') : t('send')}
-</button>
+
+                  {/* Infos contact — mobile seulement, avant le bouton */}
+                  <div className="md:hidden">
+                    <ContactInfo />
+                  </div>
+
+                  <button type="submit" disabled={sending}
+                    className="font-sans text-[9px] md:text-[11px] tracking-[0.55em] uppercase px-8 md:px-10 py-4 transition-all duration-500 disabled:opacity-40 outline-none"
+                    style={{ backgroundColor: '#0C0C0A', color: '#F3F2EF' }}
+                    onMouseEnter={e => e.currentTarget.style.backgroundColor = '#2B1022'}
+                    onMouseLeave={e => e.currentTarget.style.backgroundColor = '#0C0C0A'}>
+                    {sending ? t('sending') : t('send')}
+                  </button>
                 </motion.form>
               )}
             </AnimatePresence>
