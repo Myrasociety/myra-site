@@ -97,10 +97,7 @@ function Hero() {
               <span className="font-sans text-[10px] uppercase tracking-[0.20em] text-[rgba(244,245,240,0.50)]">{t('hero_edition_val')}</span>
             </div>
           </div>
-          {/* Marlenheim seul sur mobile */}
-          <div className="md:hidden">
-            <span className="font-sans text-[9px] uppercase tracking-[0.35em] text-[rgba(244,245,240,0.35)]">{t('hero_lieu_val')}</span>
-          </div>
+
 
         </motion.div>
       </motion.div>
@@ -162,10 +159,7 @@ function Genese() {
           </div>
         </div>
 
-        {/* Location mobile */}
-        <div className="md:hidden mt-6 pt-5 border-t border-[rgba(12,12,10,0.06)]">
-          <Cap accent>{t('genese_location')}</Cap>
-        </div>
+
       </div>
     </section>
   );
@@ -341,23 +335,26 @@ function Banner() {
     <section className="bg-[#F3F2EF] overflow-hidden">
       <R y={30}>
         <div className="relative w-full overflow-hidden" style={{ height: '62vh', minHeight: 280 }}>
-          <motion.img src="/DA/Nouveau.png" alt="MYRA" className="w-full h-full object-cover absolute inset-0"
+          <motion.img src="/DA/Nouveau.png" alt="MYRA" className="w-full h-full object-cover"
             style={{ filter: 'saturate(0.72) brightness(0.75)' }}
             initial={{ scale: 1.06 }} whileInView={{ scale: 1 }} viewport={{ once: true }}
             transition={{ duration: 3.5, ease: EXPO }} />
           <div className="absolute inset-0 bg-[rgba(12,12,10,0.45)]" />
-          <div className="absolute inset-0 flex items-center justify-center">
-            {/* Mobile — vertical */}
-            <div className="flex flex-col items-center gap-5 md:hidden">
+          <div className="absolute inset-0 flex items-center justify-center px-6">
+
+            {/* Mobile — côte à côte */}
+            <div className="flex md:hidden items-center justify-center flex-wrap gap-x-4 gap-y-3">
               {words.map((w, i) => (
-                <motion.span key={w} className="font-sans text-[#F3F2EF] text-[11px] tracking-[0.55em] uppercase opacity-85"
-                  initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 0.85, y: 0 }} viewport={{ once: true }}
+                <motion.div key={w} className="flex items-center"
+                  initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
                   transition={{ duration: 1.1, ease: EXPO, delay: 0.2 + i * 0.14 }}>
-                  {w}
-                </motion.span>
+                  <span className="font-sans text-[#F3F2EF] text-[10px] tracking-[0.55em] uppercase opacity-85">{w}</span>
+                  {i < 2 && <span className="text-[#F3F2EF] opacity-30 mx-3" style={{ fontSize: '6px' }}>●</span>}
+                </motion.div>
               ))}
             </div>
-            {/* Desktop — horizontal */}
+
+            {/* Desktop — comme avant */}
             <div className="hidden md:flex items-center">
               {words.map((w, i) => (
                 <motion.div key={w} className="flex items-center"
@@ -368,6 +365,7 @@ function Banner() {
                 </motion.div>
               ))}
             </div>
+
           </div>
         </div>
       </R>
@@ -688,7 +686,7 @@ function MRow({ m, i }) {
         </div>
         <h3 className="font-serif leading-tight italic text-[#0C0C0A]" style={{ fontSize: 'clamp(22px, 3vw, 42px)' }}>{m.title}</h3>
       </div>
-      <div className="col-span-8 md:col-span-5">
+      <div className="col-span-12 md:col-span-5">
         <p className="font-sans text-[13px] leading-[1.85] font-light mb-4 text-[rgba(12,12,10,0.45)]">{m.desc}</p>
         <div className="space-y-2">
           {m.items.map((it, idx) => (
@@ -699,7 +697,7 @@ function MRow({ m, i }) {
           ))}
         </div>
       </div>
-      <div className="col-span-4 md:col-span-3">
+      <div className="hidden md:block col-span-3">
         <div className="relative overflow-hidden aspect-[3/4]">
           <motion.img src={m.img} alt={m.title} className="w-full h-full object-cover"
             animate={{ scale: hov ? 1.08 : 1 }} transition={{ duration: 1.2, ease: 'easeOut' }} />
