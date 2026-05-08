@@ -43,23 +43,24 @@ export default function Footer() {
     <footer className="bg-[#F3F2EF] border-t border-[rgba(12,12,10,0.05)]">
 
       {/* ── GRILLE INSTAGRAM ── */}
-      <div className="max-w-container mx-auto px-8 md:px-14 lg:px-20 pt-24 pb-20">
+      <div className="max-w-container mx-auto px-6 md:px-14 lg:px-20 pt-16 md:pt-24 pb-12 md:pb-20">
         <div className="flex flex-col items-center">
-          <img src="/myra-logo.svg" alt="MYRA" className="h-6 w-auto mb-12 opacity-60" />
-          <p className="text-[9px] uppercase tracking-[0.55em] text-[rgba(12,12,10,0.30)] mb-10">
+          <img src="/myra-logo.svg" alt="MYRA" className="h-5 md:h-6 w-auto mb-8 md:mb-12 opacity-60" />
+          <p className="text-[9px] uppercase tracking-[0.55em] text-[rgba(12,12,10,0.30)] mb-8 md:mb-10 text-center">
             {t('tagline')}
           </p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-1 w-full">
+          {/* 4 colonnes sur mobile aussi */}
+          <div className="grid grid-cols-4 gap-1 w-full">
             {instagramImages.map((src, i) => (
               <a key={i} href="https://instagram.com/myra.society" target="_blank" rel="noopener noreferrer"
-                className="group relative aspect-[4/5] overflow-hidden bg-[rgba(12,12,10,0.04)]">
+                className="group relative aspect-square overflow-hidden bg-[rgba(12,12,10,0.04)]">
                 <img src={src} alt={`MYRA Society — ${i + 1}`}
                   className="w-full h-full object-cover grayscale brightness-90 transition-all duration-[2s] ease-out group-hover:grayscale-0 group-hover:brightness-100 group-hover:scale-[1.03]" />
               </a>
             ))}
           </div>
           <a href="https://instagram.com/myra.society" target="_blank" rel="noopener noreferrer"
-            className="group relative mt-8 inline-block pb-1">
+            className="group relative mt-6 inline-block pb-1">
             <span className="text-[8.5px] uppercase tracking-[0.5em] text-[rgba(12,12,10,0.25)] group-hover:text-[rgba(12,12,10,0.65)] transition-colors duration-500">
               @myra.society
             </span>
@@ -71,24 +72,44 @@ export default function Footer() {
       <div className="border-t border-[rgba(12,12,10,0.05)]" />
 
       {/* ── NAVIGATION + ADRESSE + NEWSLETTER ── */}
-      <div className="max-w-container mx-auto px-8 md:px-14 lg:px-20 py-20">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-16 md:gap-8">
+      <div className="max-w-container mx-auto px-6 md:px-14 lg:px-20 py-12 md:py-20">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-10 md:gap-8">
 
-          {/* Navigation */}
-          <div className="md:col-span-4">
-            <p className="text-[9px] uppercase tracking-[0.55em] text-[rgba(12,12,10,0.25)] mb-8">{t('nav_label')}</p>
-            <nav className="space-y-3">
-              {navLinks.map(link => (
-                <Link key={link.href} href={link.href}
-                  className="group block py-1 w-fit text-[12px] tracking-[0.10em] font-light uppercase text-[rgba(12,12,10,0.40)] hover:text-[rgba(12,12,10,0.80)] transition-colors duration-500">
-                  {link.label}
-                </Link>
-              ))}
-            </nav>
+          {/* Navigation + Adresse — côte à côte sur mobile */}
+          <div className="md:col-span-4 grid grid-cols-2 md:grid-cols-1 gap-8 md:gap-0">
+            <div>
+              <p className="text-[9px] uppercase tracking-[0.55em] text-[rgba(12,12,10,0.25)] mb-5 md:mb-8">{t('nav_label')}</p>
+              <nav className="space-y-2 md:space-y-3">
+                {navLinks.map(link => (
+                  <Link key={link.href} href={link.href}
+                    className="block py-1 w-fit text-[11px] md:text-[12px] tracking-[0.10em] font-light uppercase text-[rgba(12,12,10,0.40)] hover:text-[rgba(12,12,10,0.80)] transition-colors duration-500">
+                    {link.label}
+                  </Link>
+                ))}
+              </nav>
+            </div>
+
+            {/* Adresse — dans la même colonne sur mobile */}
+            <div className="md:hidden">
+              <p className="text-[9px] uppercase tracking-[0.55em] text-[rgba(12,12,10,0.25)] mb-5">{t('address_label')}</p>
+              <address className="not-italic text-[11px] leading-[2] tracking-[0.04em] text-[rgba(12,12,10,0.40)] uppercase">
+                MYRA Marlenheim<br />
+                67520 Marlenheim<br />
+                Alsace, France
+              </address>
+              <div className="mt-4 space-y-1.5">
+                <a href="tel:+33637038677" className="block text-[11px] tracking-[0.04em] uppercase text-[rgba(12,12,10,0.40)]">
+                  +33 (0)6 37 03 86 77
+                </a>
+                <a href="mailto:contact@myrasociety.com" className="block text-[10px] tracking-[0.02em] uppercase text-[rgba(12,12,10,0.40)]">
+                  contact@myrasociety.com
+                </a>
+              </div>
+            </div>
           </div>
 
-          {/* Adresse */}
-          <div className="md:col-span-3">
+          {/* Adresse desktop */}
+          <div className="hidden md:block md:col-span-3">
             <p className="text-[9px] uppercase tracking-[0.55em] text-[rgba(12,12,10,0.25)] mb-8">{t('address_label')}</p>
             <address className="not-italic text-[12px] leading-[2] tracking-[0.06em] text-[rgba(12,12,10,0.40)] uppercase">
               MYRA Marlenheim<br />
@@ -108,20 +129,20 @@ export default function Footer() {
 
           {/* Newsletter */}
           <div className="md:col-span-5 md:pl-12 md:border-l border-[rgba(12,12,10,0.05)]">
-            <p className="text-[9px] uppercase tracking-[0.55em] text-[rgba(12,12,10,0.25)] mb-8">{t('newsletter_label')}</p>
-            <p className="text-[13px] leading-[1.75] font-light text-[rgba(12,12,10,0.40)] mb-8 max-w-[280px]">
+            <p className="text-[9px] uppercase tracking-[0.55em] text-[rgba(12,12,10,0.25)] mb-5 md:mb-8">{t('newsletter_label')}</p>
+            <p className="text-[12px] md:text-[13px] leading-[1.75] font-light text-[rgba(12,12,10,0.40)] mb-6 md:mb-8 max-w-[280px]">
               {t('newsletter_desc')}
             </p>
             {sent ? (
               <p className="text-[10px] uppercase tracking-[0.3em] text-[rgba(43,16,34,0.60)]">{t('newsletter_welcome')}</p>
             ) : (
               <form onSubmit={subscribe}>
-                <div className="flex items-center gap-4 pb-4 border-b border-[rgba(12,12,10,0.10)] focus-within:border-[rgba(43,16,34,0.40)] transition-colors duration-700">
+                <div className="flex items-center gap-4 pb-3 md:pb-4 border-b border-[rgba(12,12,10,0.10)] focus-within:border-[rgba(43,16,34,0.40)] transition-colors duration-700">
                   <input type="email" required value={email} onChange={e => setEmail(e.target.value)}
                     placeholder={t('newsletter_placeholder')}
                     className="flex-1 bg-transparent text-[11px] tracking-[0.15em] uppercase placeholder:text-[rgba(12,12,10,0.20)] text-[rgba(12,12,10,0.65)] focus:outline-none" />
                   <button type="submit" disabled={sending} aria-label={t('send')}
-                    className="flex-shrink-0 text-[rgba(12,12,10,0.20)] hover:text-[#2B1022] hover:translate-x-0.5 disabled:opacity-20 transition-all duration-500">
+                    className="flex-shrink-0 text-[rgba(12,12,10,0.20)] hover:text-[#2B1022] disabled:opacity-20 transition-all duration-500">
                     {sending ? (
                       <span className="inline-block w-4 h-4 border border-current border-t-transparent rounded-full animate-spin" />
                     ) : (
@@ -141,8 +162,8 @@ export default function Footer() {
 
       {/* ── BANDE LÉGALE ── */}
       <div className="bg-[#0C0C0A]">
-        <div className="max-w-container mx-auto px-8 md:px-14 lg:px-20 py-6 flex flex-col md:flex-row items-center justify-between gap-4">
-          <nav className="flex items-center gap-8">
+        <div className="max-w-container mx-auto px-6 md:px-14 lg:px-20 py-5 md:py-6 flex flex-col md:flex-row items-center justify-between gap-3 md:gap-4">
+          <nav className="flex items-center gap-6 md:gap-8">
             {legalLinks.map(link => (
               <Link key={link.href} href={link.href}
                 className="text-[8px] uppercase tracking-[0.40em] text-[rgba(255,255,255,0.25)] hover:text-[rgba(255,255,255,0.65)] transition-colors duration-400">
