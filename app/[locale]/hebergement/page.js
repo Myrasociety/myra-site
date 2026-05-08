@@ -59,8 +59,10 @@ const TO_COME = [
 
 const ALL_IDS  = SUITES.map(s => s.smoobuId);
 const fmtShort = (d) => d ? d.toLocaleDateString('fr-FR', { day: '2-digit', month: '2-digit' }) : '';
+const MONTHS_FR = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+const MONTHS_SHORT = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
 
-// ─── GALERIE SWIPE (sans flèches sur mobile) ───────────────────────────────
+// ─── GALERIE SWIPE ──────────────────────────────────────────────────────────
 function ImageGallery({ images, name }) {
   const [idx, setIdx] = useState(0);
   const startX = useRef(null);
@@ -84,7 +86,6 @@ function ImageGallery({ images, name }) {
         initial={{ opacity: 0 }} animate={{ opacity: 1 }}
         transition={{ duration: 0.6, ease: EASE }}
         style={{ filter: 'saturate(0.85)' }} />
-      {/* Flèches desktop seulement */}
       <div className="absolute inset-0 hidden md:flex items-center justify-between px-4 opacity-0 group-hover/gal:opacity-100 transition-opacity duration-500 z-20 pointer-events-none">
         <button onClick={prev} className="pointer-events-auto w-9 h-9 flex items-center justify-center bg-[#F3F2EF]/80 hover:bg-[#F3F2EF] backdrop-blur-sm transition-all duration-300">
           <svg width="11" height="11" fill="none" stroke={INK} strokeWidth="1.5" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" strokeLinecap="round" /></svg>
@@ -103,7 +104,7 @@ function ImageGallery({ images, name }) {
   );
 }
 
-// ─── SUITE CARD ────────────────────────────────────────────────────────────
+// ─── SUITE CARD ─────────────────────────────────────────────────────────────
 function SuiteCard({ suite, datesSelected, checkIn, checkOut, isToCome = false, dark = false }) {
   const t = useTranslations('hebergement');
   const locale = useLocale();
@@ -178,12 +179,51 @@ function SuiteCard({ suite, datesSelected, checkIn, checkOut, isToCome = false, 
   );
 }
 
-// ─── CALENDRIER ────────────────────────────────────────────────────────────
+// ─── MOIS PICKER DROPDOWN ───────────────────────────────────────────────────
+function MonthPicker({ current, onSelect, onClose }) {
+  const monthOptions = Array.from({ length: 18 }, (_, i) => {
+    const d = new Date();
+    d.setDate(1);
+    d.setMonth(d.getMonth() + i);
+    return d;
+  });
+
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: -6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -4 }}
+      transition={{ duration: 0.2 }}
+      className="absolute top-full left-1/2 -translate-x-1/2 mt-2 bg-white z-[60] shadow-xl overflow-y-auto"
+      style={{ width: 180, maxHeight: 260, border: '1px solid rgba(12,12,10,0.08)' }}>
+      {monthOptions.map((d, i) => {
+        const isActive = d.getMonth() === current.getMonth() && d.getFullYear() === current.getFullYear();
+        return (
+          <button key={i}
+            onClick={() => { onSelect(d); onClose(); }}
+            className="w-full flex items-center justify-between px-4 py-2.5 text-left transition-colors"
+            style={{ backgroundColor: isActive ? INK : 'transparent' }}
+            onMouseEnter={e => { if (!isActive) e.currentTarget.style.backgroundColor = 'rgba(12,12,10,0.04)'; }}
+            onMouseLeave={e => { if (!isActive) e.currentTarget.style.backgroundColor = 'transparent'; }}>
+            <span className="font-sans text-[10px] uppercase tracking-[0.35em]"
+              style={{ color: isActive ? '#F3F2EF' : 'rgba(12,12,10,0.65)' }}>
+              {MONTHS_SHORT[d.getMonth()]}
+            </span>
+            <span className="font-sans text-[9px]"
+              style={{ color: isActive ? 'rgba(244,242,239,0.55)' : 'rgba(12,12,10,0.30)' }}>
+              {d.getFullYear()}
+            </span>
+          </button>
+        );
+      })}
+    </motion.div>
+  );
+}
+
+// ─── CALENDRIER DOUBLE ──────────────────────────────────────────────────────
 function DoubleCalendar({ checkIn, checkOut, onChange, ratesData }) {
   const [viewDate, setViewDate] = useState(new Date());
+  const [picker, setPicker] = useState(null); // 'left' | 'right' | null
   const nextMonthDate = new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 1);
-  const MONTHS = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
-  const DAYS   = ['L','M','M','J','V','S','D'];
+  const DAYS = ['L','M','M','J','V','S','D'];
 
   const getDayData = (d) => {
     if (!d || !ratesData?.data) return null;
@@ -196,15 +236,70 @@ function DoubleCalendar({ checkIn, checkOut, onChange, ratesData }) {
     }, null);
   };
 
-  const renderMonth = (date) => {
+  // Fermer picker si clic ailleurs
+  useEffect(() => {
+    if (!picker) return;
+    const h = () => setPicker(null);
+    setTimeout(() => document.addEventListener('click', h), 0);
+    return () => document.removeEventListener('click', h);
+  }, [picker]);
+
+  const renderMonth = (date, side) => {
     const y = date.getFullYear(), mo = date.getMonth();
     let first = new Date(y, mo, 1).getDay();
     first = first === 0 ? 6 : first - 1;
     const total = new Date(y, mo + 1, 0).getDate();
     const days = [...Array(first).fill(null), ...Array.from({ length: total }, (_, i) => new Date(y, mo, i + 1))];
+
+    const prevMonth = () => {
+      if (side === 'left') setViewDate(new Date(viewDate.getFullYear(), viewDate.getMonth() - 1, 1));
+      else setViewDate(new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 1));
+    };
+    const nextMonth = () => {
+      if (side === 'left') setViewDate(new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 1));
+      else setViewDate(new Date(viewDate.getFullYear(), viewDate.getMonth() + 2, 1));
+    };
+
     return (
       <div className="flex-1 min-w-[240px]">
-        <p className="font-sans text-[10px] uppercase tracking-[0.4em] text-center mb-6 text-[rgba(12,12,10,0.38)]">{MONTHS[mo]} {y}</p>
+        {/* Header mois cliquable */}
+        <div className="flex items-center justify-between mb-6">
+          <button onClick={prevMonth}
+            className="w-7 h-7 flex items-center justify-center text-[rgba(12,12,10,0.22)] hover:text-[#0C0C0A] transition-colors">
+            <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" strokeLinecap="round" /></svg>
+          </button>
+
+          <div className="relative" onClick={e => e.stopPropagation()}>
+            <button
+              onClick={() => setPicker(picker === side ? null : side)}
+              className="flex items-center gap-1.5 font-sans text-[10px] uppercase tracking-[0.4em] hover:text-[#0C0C0A] transition-colors outline-none"
+              style={{ color: 'rgba(12,12,10,0.50)' }}>
+              {MONTHS_FR[mo]} {y}
+              <svg width="8" height="8" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"
+                style={{ transform: picker === side ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>
+                <path d="M6 9l6 6 6-6" strokeLinecap="round" />
+              </svg>
+            </button>
+            <AnimatePresence>
+              {picker === side && (
+                <MonthPicker
+                  current={date}
+                  onSelect={(d) => {
+                    if (side === 'left') setViewDate(d);
+                    else setViewDate(new Date(d.getFullYear(), d.getMonth() - 1, 1));
+                  }}
+                  onClose={() => setPicker(null)}
+                />
+              )}
+            </AnimatePresence>
+          </div>
+
+          <button onClick={nextMonth}
+            className="w-7 h-7 flex items-center justify-center text-[rgba(12,12,10,0.22)] hover:text-[#0C0C0A] transition-colors">
+            <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6" strokeLinecap="round" /></svg>
+          </button>
+        </div>
+
         <div className="grid grid-cols-7">
           {DAYS.map((d, i) => (
             <div key={i} className="font-sans text-[9px] text-center uppercase tracking-wider mb-3 text-[rgba(12,12,10,0.20)]">{d}</div>
@@ -239,27 +334,18 @@ function DoubleCalendar({ checkIn, checkOut, onChange, ratesData }) {
 
   return (
     <div className="w-full">
-      <div className="flex items-center justify-between mb-6">
-        <button onClick={() => setViewDate(new Date(viewDate.getFullYear(), viewDate.getMonth() - 1, 1))}
-          className="w-8 h-8 flex items-center justify-center text-[rgba(12,12,10,0.25)] hover:text-[#0C0C0A] transition-colors">
-          <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" strokeLinecap="round" /></svg>
-        </button>
-        <button onClick={() => setViewDate(new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 1))}
-          className="w-8 h-8 flex items-center justify-center text-[rgba(12,12,10,0.25)] hover:text-[#0C0C0A] transition-colors">
-          <svg width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6" strokeLinecap="round" /></svg>
-        </button>
-      </div>
       {/* Mobile — un seul mois */}
-      <div className="md:hidden">{renderMonth(viewDate)}</div>
-      {/* Desktop — deux mois */}
+      <div className="md:hidden">{renderMonth(viewDate, 'left')}</div>
+      {/* Desktop — deux mois côte à côte */}
       <div className="hidden md:flex flex-row gap-14 md:gap-20">
-        {renderMonth(viewDate)}{renderMonth(nextMonthDate)}
+        {renderMonth(viewDate, 'left')}
+        {renderMonth(nextMonthDate, 'right')}
       </div>
     </div>
   );
 }
 
-// ─── HERO ──────────────────────────────────────────────────────────────────
+// ─── HERO ────────────────────────────────────────────────────────────────────
 function Hero({ checkIn, checkOut, guests, setGuests, onDateChange, panelOpen, setPanelOpen, isLoading, ratesData }) {
   const t = useTranslations('hebergement');
   const filterRef = useRef(null);
@@ -288,7 +374,6 @@ function Hero({ checkIn, checkOut, guests, setGuests, onDateChange, panelOpen, s
 
       <div className="flex-1" />
 
-      {/* Tagline + Logo */}
       <div className="relative z-10 w-full pb-4 md:pb-6">
         <div className="max-w-container mx-auto px-6 md:px-16">
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
@@ -305,18 +390,14 @@ function Hero({ checkIn, checkOut, guests, setGuests, onDateChange, panelOpen, s
         </div>
       </div>
 
-      {/* Adresse + barre recherche */}
       <div className="relative z-40 w-full pb-8 md:pb-12" ref={filterRef}>
         <div className="max-w-container mx-auto px-6 md:px-16">
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
             transition={{ duration: 1.2, ease: EASE, delay: 0.8 }}>
-
-            {/* Adresse — cachée sur mobile */}
             <p className="hidden md:block font-sans text-[9px] uppercase tracking-[0.45em] mb-5"
               style={{ color: 'rgba(244,245,240,0.18)' }}>
               71 rue du Général de Gaulle — 67520 Marlenheim, Alsace
             </p>
-
             <div className="relative" ref={barRef}>
               <AnimatePresence>
                 {panelOpen && (
@@ -348,7 +429,6 @@ function Hero({ checkIn, checkOut, guests, setGuests, onDateChange, panelOpen, s
                 )}
               </AnimatePresence>
 
-              {/* Barre glassmorphie — empilée sur mobile */}
               <div className="flex flex-col md:flex-row items-stretch"
                 style={{
                   border: '1px solid rgba(244,245,240,0.12)',
@@ -356,11 +436,9 @@ function Hero({ checkIn, checkOut, guests, setGuests, onDateChange, panelOpen, s
                   backdropFilter: 'blur(24px)',
                   WebkitBackdropFilter: 'blur(24px)',
                 }}>
-
-                {/* Dates */}
                 <button onClick={() => setPanelOpen(panelOpen === 'dates' ? null : 'dates')}
                   className="flex items-center gap-4 px-5 py-4 md:flex-1 md:py-5 md:pl-6 md:pr-8 outline-none text-left transition-colors"
-                  style={{ borderBottom: '1px solid rgba(244,245,240,0.08)', borderRight: 'none' }}
+                  style={{ borderBottom: '1px solid rgba(244,245,240,0.08)' }}
                   onMouseEnter={e => e.currentTarget.style.backgroundColor='rgba(244,245,240,0.04)'}
                   onMouseLeave={e => e.currentTarget.style.backgroundColor='transparent'}>
                   <span className="font-sans text-[9px] uppercase tracking-[0.45em] flex-shrink-0"
@@ -370,9 +448,7 @@ function Hero({ checkIn, checkOut, guests, setGuests, onDateChange, panelOpen, s
                     {datesSelected ? `${fmtShort(checkIn)} — ${fmtShort(checkOut)}` : '—'}
                   </span>
                 </button>
-
                 <div className="flex md:contents">
-                  {/* Voyageurs */}
                   <button onClick={() => setPanelOpen(panelOpen === 'guests' ? null : 'guests')}
                     className="flex-1 flex items-center gap-4 px-5 py-4 md:w-auto md:py-5 md:px-8 outline-none text-left transition-colors"
                     style={{ borderRight: '1px solid rgba(244,245,240,0.08)' }}
@@ -385,8 +461,6 @@ function Hero({ checkIn, checkOut, guests, setGuests, onDateChange, panelOpen, s
                       {guests > 0 ? `${guests}` : '—'}
                     </span>
                   </button>
-
-                  {/* CTA */}
                   <button onClick={() => document.getElementById('collection')?.scrollIntoView({ behavior: 'smooth' })}
                     className="px-5 py-4 md:py-5 md:pl-8 md:pr-6 font-sans text-[9px] uppercase tracking-[0.45em] outline-none transition-colors"
                     style={{ color: 'rgba(244,245,240,0.45)' }}
@@ -404,7 +478,7 @@ function Hero({ checkIn, checkOut, guests, setGuests, onDateChange, panelOpen, s
   );
 }
 
-// ─── PAGE ──────────────────────────────────────────────────────────────────
+// ─── PAGE ────────────────────────────────────────────────────────────────────
 export default function HebergementPage() {
   const t = useTranslations('hebergement');
   const [checkIn,   setCheckIn]   = useState(null);
@@ -412,33 +486,6 @@ export default function HebergementPage() {
   const [guests,    setGuests]    = useState(0);
   const [panelOpen, setPanelOpen] = useState(null);
   const panelRef = useRef(null);
-
-  // Swipe TO_COME mobile
-  const [toCurr, setToCurr] = useState(0);
-  const toX = useMotionValue(0);
-  const toWrapRef = useRef(null);
-  const [toWrapW, setToWrapW] = useState(0);
-  const CARD_W = toWrapW > 0 ? toWrapW * 0.82 : 300;
-  const GAP = 12;
-
-  useEffect(() => {
-    if (!toWrapRef.current) return;
-    const ro = new ResizeObserver(([e]) => setToWrapW(e.contentRect.width));
-    ro.observe(toWrapRef.current);
-    return () => ro.disconnect();
-  }, []);
-
-  const snapToCard = (i) => {
-    const clamped = Math.max(0, Math.min(i, TO_COME.length - 1));
-    setToCurr(clamped);
-    animate(toX, -(clamped * (CARD_W + GAP)), { type: 'tween', duration: 0.55, ease: EXPO });
-  };
-
-  const handleToDragEnd = (_, info) => {
-    if (info.velocity.x < -200 || info.offset.x < -(CARD_W * 0.2)) snapToCard(toCurr + 1);
-    else if (info.velocity.x > 200 || info.offset.x > CARD_W * 0.2) snapToCard(toCurr - 1);
-    else snapToCard(toCurr);
-  };
 
   const { ratesData }                          = useRates(ALL_IDS);
   const { availData, isLoading: availLoading } = useAvailability(checkIn, checkOut, ALL_IDS, guests);
@@ -495,8 +542,6 @@ export default function HebergementPage() {
               </Cap>
             </div>
           </div>
-
-          {/* Desktop — 2 colonnes */}
           <div className="hidden md:grid grid-cols-2 gap-x-10 gap-y-24">
             {visible.map((s, i) => (
               <motion.div key={s.id}
@@ -508,8 +553,6 @@ export default function HebergementPage() {
               </motion.div>
             ))}
           </div>
-
-          {/* Mobile — 1 colonne pleine largeur */}
           <div className="md:hidden flex flex-col gap-14">
             {visible.map((s, i) => (
               <motion.div key={s.id}
@@ -526,59 +569,62 @@ export default function HebergementPage() {
 
       {/* ── PROCHAINEMENT ── */}
       <section style={{ backgroundColor: INK }}>
-        <div className="max-w-container mx-auto py-16 md:py-32 relative overflow-hidden px-6 md:px-0">
-          <div className="relative z-10">
-            <div className="flex items-end justify-between mb-10 md:mb-20 pb-6 md:pb-10"
-              style={{ borderBottom: '1px solid rgba(244,242,239,0.06)' }}>
-              <R>
-                <div className="flex items-center gap-5">
-                  <div className="w-8 h-px" style={{ backgroundColor: WINE, opacity: 0.4 }} />
-                  <Cap light>{t('coming_soon_label')}</Cap>
+        <div className="max-w-container mx-auto py-16 md:py-32 px-6 md:px-0">
+          <div className="flex items-end justify-between mb-10 md:mb-20 pb-6 md:pb-10"
+            style={{ borderBottom: '1px solid rgba(244,242,239,0.06)' }}>
+            <R>
+              <div className="flex items-center gap-5">
+                <div className="w-8 h-px" style={{ backgroundColor: WINE, opacity: 0.4 }} />
+                <Cap light>{t('coming_soon_label')}</Cap>
+              </div>
+            </R>
+          </div>
+
+          {/* Desktop — 3 colonnes */}
+          <div className="hidden md:grid grid-cols-3 gap-x-8 gap-y-20">
+            {TO_COME.map((s, i) => (
+              <motion.div key={s.id}
+                initial={{ opacity: 0, y: 32, filter: 'blur(4px)' }}
+                whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                viewport={{ once: true }}
+                transition={{ duration: 1.4, ease: EXPO, delay: i * 0.12 }}>
+                <SuiteCard suite={s} datesSelected={false} checkIn={checkIn} checkOut={checkOut} isToCome={true} dark={true} />
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Mobile — 2 colonnes compactes */}
+          <div className="md:hidden grid grid-cols-2 gap-4">
+            {TO_COME.map((s, i) => (
+              <motion.div key={s.id}
+                initial={{ opacity: 0, y: 24, filter: 'blur(4px)' }}
+                whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+                viewport={{ once: true }}
+                transition={{ duration: 1.2, ease: EXPO, delay: i * 0.08 }}>
+                <div>
+                  <div className="relative overflow-hidden mb-3" style={{ aspectRatio: '3/4' }}>
+                    <ImageGallery images={s.images} name={s.name} />
+                    <div className="absolute top-3 left-3 z-30">
+                      <span className="font-sans text-[8px] uppercase tracking-[0.30em] px-2 py-1"
+                        style={{ backgroundColor: 'rgba(12,12,10,0.60)', color: 'rgba(244,242,239,0.55)' }}>
+                        {t('coming_soon_badge')}
+                      </span>
+                    </div>
+                  </div>
+                  <h3 className="font-serif font-light italic mb-1"
+                    style={{ fontSize: '17px', color: 'rgba(244,242,239,0.80)' }}>
+                    {s.name}
+                  </h3>
+                  <div className="flex items-center gap-2">
+                    <span className="font-sans text-[9px] uppercase tracking-[0.28em]"
+                      style={{ color: 'rgba(244,242,239,0.28)' }}>{s.surface}</span>
+                    <span className="w-px h-2.5" style={{ backgroundColor: 'rgba(244,242,239,0.10)' }} />
+                    <span className="font-sans text-[9px] uppercase tracking-[0.28em]"
+                      style={{ color: 'rgba(244,242,239,0.20)' }}>{s.guests} pers.</span>
+                  </div>
                 </div>
-              </R>
-            </div>
-
-            {/* Desktop — 3 colonnes */}
-            <div className="hidden md:grid grid-cols-3 gap-x-8 gap-y-20">
-              {TO_COME.map((s, i) => (
-                <motion.div key={s.id}
-                  initial={{ opacity: 0, y: 32, filter: 'blur(4px)' }}
-                  whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                  viewport={{ once: true }}
-                  transition={{ duration: 1.4, ease: EXPO, delay: i * 0.12 }}>
-                  <SuiteCard suite={s} datesSelected={false} checkIn={checkIn} checkOut={checkOut} isToCome={true} dark={true} />
-                </motion.div>
-              ))}
-            </div>
-
-            {/* Mobile — swipe horizontal, cartes plus petites */}
-            <div className="md:hidden" ref={toWrapRef}>
-              <div className="overflow-hidden">
-                {toWrapW > 0 && (
-                  <motion.div
-                    style={{ x: toX, display: 'flex', gap: GAP, cursor: 'grab', touchAction: 'pan-y' }}
-                    drag="x"
-                    dragConstraints={{ left: -((TO_COME.length - 1) * (CARD_W + GAP)), right: 0 }}
-                    dragElastic={0.04} dragMomentum={false}
-                    onDragEnd={handleToDragEnd}>
-                    {TO_COME.map((s, i) => (
-                      <div key={s.id} style={{ flexShrink: 0, width: CARD_W }}>
-                        <SuiteCard suite={s} datesSelected={false} checkIn={checkIn} checkOut={checkOut} isToCome={true} dark={true} />
-                      </div>
-                    ))}
-                  </motion.div>
-                )}
-              </div>
-              {/* Tirets navigation */}
-              <div className="flex gap-2 mt-8 justify-center">
-                {TO_COME.map((_, i) => (
-                  <button key={i} onClick={() => snapToCard(i)}
-                    className="outline-none transition-all duration-400"
-                    style={{ height: 2, width: i === toCurr ? 28 : 10, backgroundColor: i === toCurr ? 'rgba(244,242,239,0.60)' : 'rgba(244,242,239,0.15)', border: 'none', padding: 0, cursor: 'pointer' }} />
-                ))}
-              </div>
-            </div>
-
+              </motion.div>
+            ))}
           </div>
         </div>
       </section>
