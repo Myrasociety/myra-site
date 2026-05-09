@@ -384,11 +384,11 @@ function EquinoxSections() {
     { num: '02', label: t('s3_tags'), title: 'Table & Nutrition',
       description: 'Restaurant diététique, circuits courts, accords pensés pour votre métabolisme. Une table réelle, pas un catalogue. La cuisine comme acte de soin.',
       href: `/${locale}/soutenir`, cta: 'En savoir plus',
-      images: ['/Restaurant/B.jpg', '/Restaurant/1.jpg', '/Restaurant/A.jpg', '/Restaurant/B.jpg'], reverse: true },
+      images: ['/Visuels/Restaurant.jpg','/Restaurant/B.jpg', '/Restaurant/A.jpg'], reverse: true },
     { num: '03', label: t('s2_tags'), title: 'Récupération & Spa',
       description: "200 m² dédiés à la récupération active. Sauna, hammam, balnéo, soins. Un espace pour revenir à soi, sans compromis sur l'intensité.",
       href: `/${locale}/soutenir`, cta: 'Découvrir le spa',
-      images: ['/Spa/A.jpg', '/Spa/1.jpg', '/Spa/3.jpg', '/Spa/A.jpg'], reverse: false },
+      images: ['/Visuels/Hammam.jpg','/Visuels/Piscine.jpg','/Visuels/Massage.jpg','/Spa/A.jpg'], reverse: false },
   ];
 
   return (
@@ -518,7 +518,7 @@ function Complexe() {
           <div className="col-span-12 md:col-span-8 md:col-start-5">
             <R d={0.1}>
               <div className="relative w-full overflow-hidden" style={{ aspectRatio: '4/3' }}>
-                <motion.img src="/Complexe/1.jpg" alt="Le Complexe MYRA"
+                <motion.img src="/Visuels/Exterieur 71.jpg" alt="Le Complexe MYRA"
                   className="w-full h-full object-cover"
                   style={{ filter: 'saturate(0.72) contrast(1.04)' }}
                   whileHover={{ scale: 1.02 }} transition={{ duration: 2.5, ease: EASE }} />
@@ -598,11 +598,11 @@ function DoubleImage() {
 function Gallery() {
   const t = useTranslations('gallery');
   const GALLERY_IMGS = [
-    { src: '/Complexe/A.jpg',   label: t('img1') },
-    { src: '/Fitness/2.jpg',    label: t('img2') },
-    { src: '/Restaurant/1.jpg', label: t('img3') },
-    { src: '/Spa/1.jpg',        label: t('img4') },
-    { src: '/Complexe/6.jpg',   label: t('img5') },
+    { src: '/Visuels/Exterieur.jpg',   label: t('img1') },
+    { src: '/Visuels/Coaching.jpg',    label: t('img2') },
+    { src: '/Visuels/Restaurant.jpg', label: t('img3') },
+    { src: '/Visuels/Vestiaire.jpg',        label: t('img4') },
+    { src: '/Visuels/Exterieur Extension.jpg',   label: t('img5') },
   ];
   const DURATION = 5000;
   const [cur, setCur] = useState(0);

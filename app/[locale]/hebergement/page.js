@@ -53,9 +53,9 @@ const SUITES = [
 ];
 
 const TO_COME = [
-  { id: 'Nova', name: 'Nova', surface: '80 m²',  guests: 2, images: ['/Nova/2.jpg','/Nova/3.jpg','/Nova/4.jpg','/Nova/5.jpg'],  excerpt: 'Éclat contemporain et volumes généreux.' },
-  { id: 'Opal', name: 'Opal', surface: '90 m²',  guests: 4, images: ['/Opal/1.jpg','/Opal/2.jpg'],                             excerpt: 'Douceur minérale et vue imprenable.' },
-  { id: 'Asta', name: 'Asta', surface: '170 m²', guests: 8, images: ['/Asta/1.jpg'],                                           excerpt: "L'équilibre parfait entre héritage et modernité." },
+  { id: 'Nova', name: 'Nova', surface: '80 m²',  guests: 2, images: ['/Visuels/Salon Nova.jpg','/Visuels/Cuisine Nova.jpg','/Visuels/Chambre Nova.jpg','/Visuels/SDB nova.jpg'],  excerpt: 'Éclat contemporain et volumes généreux.' },
+  { id: 'Opal', name: 'Opal', surface: '90 m²',  guests: 4, images: ['/Visuels/Opal Salon.jpg','/Visuels/Jardin Opal.jpg'],                             excerpt: 'Douceur minérale et vue imprenable.' },
+  { id: 'Asta', name: 'Asta', surface: '170 m²', guests: 8, images: ['/Visuels/Etoile.jpg'],                                           excerpt: "L'équilibre parfait entre héritage et modernité." },
 ];
 
 const ALL_IDS  = SUITES.map(s => s.smoobuId);
@@ -63,7 +63,7 @@ const fmtShort = (d) => d ? d.toLocaleDateString('fr-FR', { day: '2-digit', mont
 const MONTHS_FR = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
 const MONTHS_SHORT = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
 
-// ─── GALERIE SWIPE ──────────────────────────────────────────────────────────
+// ─── GALERIE SWIPE (suites classiques) ───────────────────────────────────────
 function ImageGallery({ images, name }) {
   const [idx, setIdx] = useState(0);
   const startX = useRef(null);
@@ -105,6 +105,60 @@ function ImageGallery({ images, name }) {
   );
 }
 
+// ─── GALERIE PROCHAINEMENT (indépendante, avec flèches fonctionnelles) ────────
+function ToComeGallery({ images, name }) {
+  const [idx, setIdx] = useState(0);
+  const startX = useRef(null);
+
+  const prev = (e) => { e.preventDefault(); e.stopPropagation(); setIdx(i => (i - 1 + images.length) % images.length); };
+  const next = (e) => { e.preventDefault(); e.stopPropagation(); setIdx(i => (i + 1) % images.length); };
+
+  const onTouchStart = (e) => { startX.current = e.touches[0].clientX; };
+  const onTouchEnd   = (e) => {
+    if (startX.current === null) return;
+    const diff = startX.current - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 40) diff > 0 ? setIdx(i => (i + 1) % images.length) : setIdx(i => (i - 1 + images.length) % images.length);
+    startX.current = null;
+  };
+
+  return (
+    <div className="relative w-full h-full group/toc overflow-hidden" style={{ backgroundColor: BONE }}
+      onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
+      <motion.img key={idx} src={images[idx]} alt={`${name} — vue ${idx + 1}`}
+        className="absolute inset-0 w-full h-full object-cover"
+        initial={{ opacity: 0 }} animate={{ opacity: 1 }}
+        transition={{ duration: 0.6, ease: EASE }}
+        style={{ filter: 'saturate(0.85)' }} />
+      {/* Flèches — toujours visibles au hover, sur desktop ET mobile */}
+      {images.length > 1 && (
+        <div className="absolute inset-0 flex items-center justify-between px-3 z-20 pointer-events-none
+          opacity-0 group-hover/toc:opacity-100 transition-opacity duration-400">
+          <button onClick={prev}
+            className="pointer-events-auto w-8 h-8 flex items-center justify-center transition-all duration-300"
+            style={{ backgroundColor: 'rgba(12,12,10,0.50)', backdropFilter: 'blur(8px)' }}>
+            <svg width="10" height="10" fill="none" stroke="rgba(244,242,239,0.80)" strokeWidth="1.5" viewBox="0 0 24 24">
+              <path d="M15 18l-6-6 6-6" strokeLinecap="round" />
+            </svg>
+          </button>
+          <button onClick={next}
+            className="pointer-events-auto w-8 h-8 flex items-center justify-center transition-all duration-300"
+            style={{ backgroundColor: 'rgba(12,12,10,0.50)', backdropFilter: 'blur(8px)' }}>
+            <svg width="10" height="10" fill="none" stroke="rgba(244,242,239,0.80)" strokeWidth="1.5" viewBox="0 0 24 24">
+              <path d="M9 18l6-6-6-6" strokeLinecap="round" />
+            </svg>
+          </button>
+        </div>
+      )}
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10 pointer-events-none">
+        {images.map((_, i) => (
+          <div key={i} className="h-px transition-all duration-500"
+            style={{ width: i === idx ? 20 : 8, backgroundColor: i === idx ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.30)' }} />
+        ))}
+      </div>
+    </div>
+  );
+}
+
 // ─── SUITE CARD ─────────────────────────────────────────────────────────────
 function SuiteCard({ suite, datesSelected, checkIn, checkOut, isToCome = false, dark = false }) {
   const t = useTranslations('hebergement');
@@ -125,18 +179,26 @@ function SuiteCard({ suite, datesSelected, checkIn, checkOut, isToCome = false, 
   return (
     <div className={`group transition-all duration-[1200ms] ${isOff ? 'opacity-20 pointer-events-none' : ''}`}>
       {isToCome ? (
-        <Link href={`/${locale}/hebergement/prochainement/${suite.id}`} className="block relative overflow-hidden mb-5 md:mb-7 outline-none cursor-pointer" style={{ aspectRatio: '3/4' }}>
-          <ImageGallery images={suite.images} name={suite.name} />
+        /* Desktop: Link cliquable avec galerie dédiée */
+        <Link href={`/${locale}/hebergement/prochainement/${suite.id}`}
+          className="block relative overflow-hidden mb-5 md:mb-7 outline-none cursor-pointer"
+          style={{ aspectRatio: '3/4' }}>
+          <ToComeGallery images={suite.images} name={suite.name} />
           <div className="absolute top-4 left-4 z-30">
             <span className="font-sans text-[9px] uppercase tracking-[0.35em] px-2 py-1"
               style={{ backgroundColor: 'rgba(12,12,10,0.60)', color: 'rgba(244,242,239,0.55)' }}>
               {t('coming_soon_badge')}
             </span>
           </div>
-          <div className="absolute inset-0 flex items-center justify-center z-30 opacity-0 group-hover:opacity-100 transition-opacity duration-400">
-            <div className="flex items-center gap-2 px-4 py-2" style={{ backgroundColor: 'rgba(12,12,10,0.55)', backdropFilter: 'blur(8px)' }}>
-              <span className="font-sans text-[8px] uppercase tracking-[0.40em]" style={{ color: 'rgba(244,242,239,0.70)' }}>Découvrir</span>
-              <svg width="8" height="8" fill="none" stroke="rgba(244,242,239,0.70)" strokeWidth="1.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" /></svg>
+          <div className="absolute inset-0 flex items-center justify-center z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-400"
+            style={{ pointerEvents: 'none' }}>
+            <div className="flex items-center gap-2 px-4 py-2"
+              style={{ backgroundColor: 'rgba(12,12,10,0.55)', backdropFilter: 'blur(8px)' }}>
+              <span className="font-sans text-[8px] uppercase tracking-[0.40em]"
+                style={{ color: 'rgba(244,242,239,0.70)' }}>Découvrir</span>
+              <svg width="8" height="8" fill="none" stroke="rgba(244,242,239,0.70)" strokeWidth="1.5" viewBox="0 0 24 24">
+                <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" />
+              </svg>
             </div>
           </div>
         </Link>
@@ -186,7 +248,7 @@ function SuiteCard({ suite, datesSelected, checkIn, checkOut, isToCome = false, 
   );
 }
 
-// ─── MOIS PICKER DROPDOWN ───────────────────────────────────────────────────
+// ─── MOIS PICKER ─────────────────────────────────────────────────────────────
 function MonthPicker({ current, onSelect, onClose }) {
   const monthOptions = Array.from({ length: 18 }, (_, i) => {
     const d = new Date();
@@ -225,10 +287,10 @@ function MonthPicker({ current, onSelect, onClose }) {
   );
 }
 
-// ─── CALENDRIER DOUBLE ──────────────────────────────────────────────────────
+// ─── CALENDRIER DOUBLE ───────────────────────────────────────────────────────
 function DoubleCalendar({ checkIn, checkOut, onChange, ratesData }) {
   const [viewDate, setViewDate] = useState(new Date());
-  const [picker, setPicker] = useState(null); // 'left' | 'right' | null
+  const [picker, setPicker] = useState(null);
   const nextMonthDate = new Date(viewDate.getFullYear(), viewDate.getMonth() + 1, 1);
   const DAYS = ['L','M','M','J','V','S','D'];
 
@@ -243,7 +305,6 @@ function DoubleCalendar({ checkIn, checkOut, onChange, ratesData }) {
     }, null);
   };
 
-  // Fermer picker si clic ailleurs
   useEffect(() => {
     if (!picker) return;
     const h = () => setPicker(null);
@@ -269,16 +330,13 @@ function DoubleCalendar({ checkIn, checkOut, onChange, ratesData }) {
 
     return (
       <div className="flex-1 min-w-[240px]">
-        {/* Header mois cliquable */}
         <div className="flex items-center justify-between mb-6">
           <button onClick={prevMonth}
             className="w-7 h-7 flex items-center justify-center text-[rgba(12,12,10,0.22)] hover:text-[#0C0C0A] transition-colors">
             <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" strokeLinecap="round" /></svg>
           </button>
-
           <div className="relative" onClick={e => e.stopPropagation()}>
-            <button
-              onClick={() => setPicker(picker === side ? null : side)}
+            <button onClick={() => setPicker(picker === side ? null : side)}
               className="flex items-center gap-1.5 font-sans text-[10px] uppercase tracking-[0.4em] hover:text-[#0C0C0A] transition-colors outline-none"
               style={{ color: 'rgba(12,12,10,0.50)' }}>
               {MONTHS_FR[mo]} {y}
@@ -300,7 +358,6 @@ function DoubleCalendar({ checkIn, checkOut, onChange, ratesData }) {
               )}
             </AnimatePresence>
           </div>
-
           <button onClick={nextMonth}
             className="w-7 h-7 flex items-center justify-center text-[rgba(12,12,10,0.22)] hover:text-[#0C0C0A] transition-colors">
             <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6" strokeLinecap="round" /></svg>
@@ -341,9 +398,7 @@ function DoubleCalendar({ checkIn, checkOut, onChange, ratesData }) {
 
   return (
     <div className="w-full">
-      {/* Mobile — un seul mois */}
       <div className="md:hidden">{renderMonth(viewDate, 'left')}</div>
-      {/* Desktop — deux mois côte à côte */}
       <div className="hidden md:flex flex-row gap-14 md:gap-20">
         {renderMonth(viewDate, 'left')}
         {renderMonth(nextMonthDate, 'right')}
@@ -613,7 +668,7 @@ export default function HebergementPage() {
                 <div>
                   <div onClick={(e) => { e.stopPropagation(); router.push(`/${locale}/hebergement/prochainement/${s.id}`); }} className="cursor-pointer">
                     <div className="relative overflow-hidden mb-3" style={{ aspectRatio: '3/4' }}>
-                      <ImageGallery images={s.images} name={s.name} />
+                      <ToComeGallery images={s.images} name={s.name} />
                       <div className="absolute top-3 left-3 z-30">
                         <span className="font-sans text-[8px] uppercase tracking-[0.30em] px-2 py-1"
                           style={{ backgroundColor: 'rgba(12,12,10,0.60)', color: 'rgba(244,242,239,0.55)' }}>

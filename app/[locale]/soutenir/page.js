@@ -51,7 +51,7 @@ function Hero() {
     <section ref={ref} className="relative w-full overflow-hidden bg-[#0C0C0A]"
       style={{ height: '100dvh', minHeight: 640 }}>
       <motion.div className="absolute inset-0" style={{ scale }}>
-        <img src="/Complexe/6.jpg" alt="MYRA" className="w-full h-full object-cover"
+        <img src="/Visuels/Attente.jpg" alt="MYRA" className="w-full h-full object-cover"
           style={{ filter: 'brightness(0.50) grayscale(18%)' }} />
       </motion.div>
       <div className="absolute inset-0 bg-gradient-to-b from-[#0C0C0A]/55 via-transparent to-[#0C0C0A]/90" />
@@ -609,13 +609,13 @@ function SectionCercles() {
 const MILESTONES = [
   { id: 1, amount: 400000,  title: 'Restaurant & Bar',  status: 'done',
     desc: "Ouverture de l'espace gastronomique et du bar lounge.",
-    items: ['Cuisine professionnelle', 'Cave à vin visitable', 'Terrasse panoramique'], img: '/Restaurant/1.jpg' },
+    items: ['Cuisine professionnelle', 'Cave à vin visitable', 'Terrasse panoramique'], img: '/Visuels/Restaurant.jpg' },
   { id: 2, amount: 650000,  title: 'Espace Recovery',   status: 'current',
     desc: 'Installation du centre de bien-être : Saunas, zones de récupération.',
-    items: ['Sauna bois brûlé', 'Hammam pierre naturelle', 'Zone de repos sensorielle'], img: '/Spa/1.jpg' },
+    items: ['Sauna bois brûlé', 'Hammam pierre naturelle', 'Zone de repos sensorielle'], img: '/Visuels/Hammam.jpg' },
   { id: 3, amount: 1700000, title: 'Extension Piscine',  status: 'horizon',
     desc: "Un bassin extérieur à débordement et une aile aquatique couverte.",
-    items: ['Bassin de nage 25m', 'Système de filtration bio', 'Plage immergée'], img: '/Spa/3.jpg' },
+    items: ['Bassin de nage 25m', 'Système de filtration bio', 'Plage immergée'], img: '/Visuels/Piscine.jpg' },
 ];
 const CURRENT_FUNDED = 520000;
 const TOTAL_GOAL     = 1700000;
