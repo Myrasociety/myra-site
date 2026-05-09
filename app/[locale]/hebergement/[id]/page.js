@@ -706,6 +706,47 @@ function SuiteContent({ suite }) {
       {/* ── RÉSERVATION ── */}
       <ReservationPanel suite={suite} />
 
+      {/* ── AUTRES SUITES ── */}
+      <section className="max-w-container mx-auto px-6 md:px-14 lg:px-20 py-16 md:py-24">
+        <div className="flex items-center gap-4 mb-10">
+          <div className="w-4 h-px" style={{ backgroundColor: WINE, opacity: 0.4 }} />
+          <span className="font-sans text-[11px] uppercase tracking-[0.55em]" style={{ color: 'rgba(12,12,10,0.35)' }}>Autres suites</span>
+        </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {Object.values(SUITES).filter(s => s.name !== suite.name).map((s, i) => (
+            <a key={s.id} href={`/${locale}/hebergement/${s.name}`}
+              className="group block" style={{ borderTop: '1px solid rgba(12,12,10,0.06)' }}>
+              <div className="relative overflow-hidden mb-4" style={{ aspectRatio: '16/10' }}>
+                <img src={s.images[0]} alt={s.name}
+                  className="w-full h-full object-cover transition-all duration-[2s] group-hover:scale-[1.03]"
+                  style={{ filter: 'saturate(0.80)' }} />
+                <div className="absolute inset-0 bg-[rgba(12,12,10,0)] group-hover:bg-[rgba(12,12,10,0.10)] transition-all duration-500" />
+              </div>
+              <div className="py-4 flex items-end justify-between">
+                <div>
+                  <h3 className="font-serif font-light italic mb-1"
+                    style={{ fontSize: '28px', color: INK }}>{s.name}</h3>
+                  <div className="flex items-center gap-3">
+                    <span className="font-sans text-[9px] uppercase tracking-[0.35em]"
+                      style={{ color: 'rgba(12,12,10,0.30)' }}>{s.surface}</span>
+                    <span className="w-px h-3" style={{ backgroundColor: BONE }} />
+                    <span className="font-sans text-[9px] uppercase tracking-[0.35em]"
+                      style={{ color: 'rgba(12,12,10,0.30)' }}>{s.capacity}</span>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-400">
+                  <span className="font-sans text-[9px] uppercase tracking-[0.40em]"
+                    style={{ color: 'rgba(12,12,10,0.40)' }}>Voir</span>
+                  <svg width="10" height="10" fill="none" stroke="rgba(12,12,10,0.40)" strokeWidth="1.3" viewBox="0 0 24 24">
+                    <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" />
+                  </svg>
+                </div>
+              </div>
+            </a>
+          ))}
+        </div>
+      </section>
+
       <ContactSection />
     </div>
   );

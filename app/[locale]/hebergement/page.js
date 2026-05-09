@@ -4,6 +4,7 @@ import { useState, useMemo, useRef, useEffect } from 'react';
 import { motion, AnimatePresence, useInView, useMotionValue, animate } from 'framer-motion';
 import Link from 'next/link';
 import { useTranslations, useLocale } from '@/lib/useTranslations';
+import { useRouter } from 'next/navigation';
 import { useRates, useAvailability, toKey } from '../../../lib/useSmoobu';
 import ContactSection from '../../../components/Contact';
 
@@ -124,7 +125,7 @@ function SuiteCard({ suite, datesSelected, checkIn, checkOut, isToCome = false, 
   return (
     <div className={`group transition-all duration-[1200ms] ${isOff ? 'opacity-20 pointer-events-none' : ''}`}>
       {isToCome ? (
-        <div className="relative overflow-hidden mb-5 md:mb-7" style={{ aspectRatio: '3/4' }}>
+        <Link href={`/${locale}/hebergement/prochainement/${suite.id}`} className="block relative overflow-hidden mb-5 md:mb-7 outline-none cursor-pointer" style={{ aspectRatio: '3/4' }}>
           <ImageGallery images={suite.images} name={suite.name} />
           <div className="absolute top-4 left-4 z-30">
             <span className="font-sans text-[9px] uppercase tracking-[0.35em] px-2 py-1"
@@ -132,7 +133,13 @@ function SuiteCard({ suite, datesSelected, checkIn, checkOut, isToCome = false, 
               {t('coming_soon_badge')}
             </span>
           </div>
-        </div>
+          <div className="absolute inset-0 flex items-center justify-center z-30 opacity-0 group-hover:opacity-100 transition-opacity duration-400">
+            <div className="flex items-center gap-2 px-4 py-2" style={{ backgroundColor: 'rgba(12,12,10,0.55)', backdropFilter: 'blur(8px)' }}>
+              <span className="font-sans text-[8px] uppercase tracking-[0.40em]" style={{ color: 'rgba(244,242,239,0.70)' }}>Découvrir</span>
+              <svg width="8" height="8" fill="none" stroke="rgba(244,242,239,0.70)" strokeWidth="1.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" /></svg>
+            </div>
+          </div>
+        </Link>
       ) : (
         <Link href={href} className="block relative overflow-hidden mb-5 md:mb-7 outline-none" style={{ aspectRatio: '14/10' }}>
           <ImageGallery images={suite.images} name={suite.name} />
@@ -481,6 +488,8 @@ function Hero({ checkIn, checkOut, guests, setGuests, onDateChange, panelOpen, s
 // ─── PAGE ────────────────────────────────────────────────────────────────────
 export default function HebergementPage() {
   const t = useTranslations('hebergement');
+  const locale = useLocale();
+  const router = useRouter();
   const [checkIn,   setCheckIn]   = useState(null);
   const [checkOut,  setCheckOut]  = useState(null);
   const [guests,    setGuests]    = useState(0);
@@ -602,25 +611,27 @@ export default function HebergementPage() {
                 viewport={{ once: true }}
                 transition={{ duration: 1.2, ease: EXPO, delay: i * 0.08 }}>
                 <div>
-                  <div className="relative overflow-hidden mb-3" style={{ aspectRatio: '3/4' }}>
-                    <ImageGallery images={s.images} name={s.name} />
-                    <div className="absolute top-3 left-3 z-30">
-                      <span className="font-sans text-[8px] uppercase tracking-[0.30em] px-2 py-1"
-                        style={{ backgroundColor: 'rgba(12,12,10,0.60)', color: 'rgba(244,242,239,0.55)' }}>
-                        {t('coming_soon_badge')}
-                      </span>
+                  <div onClick={(e) => { e.stopPropagation(); router.push(`/${locale}/hebergement/prochainement/${s.id}`); }} className="cursor-pointer">
+                    <div className="relative overflow-hidden mb-3" style={{ aspectRatio: '3/4' }}>
+                      <ImageGallery images={s.images} name={s.name} />
+                      <div className="absolute top-3 left-3 z-30">
+                        <span className="font-sans text-[8px] uppercase tracking-[0.30em] px-2 py-1"
+                          style={{ backgroundColor: 'rgba(12,12,10,0.60)', color: 'rgba(244,242,239,0.55)' }}>
+                          {t('coming_soon_badge')}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                  <h3 className="font-serif font-light italic mb-1"
-                    style={{ fontSize: '17px', color: 'rgba(244,242,239,0.80)' }}>
-                    {s.name}
-                  </h3>
-                  <div className="flex items-center gap-2">
-                    <span className="font-sans text-[9px] uppercase tracking-[0.28em]"
-                      style={{ color: 'rgba(244,242,239,0.28)' }}>{s.surface}</span>
-                    <span className="w-px h-2.5" style={{ backgroundColor: 'rgba(244,242,239,0.10)' }} />
-                    <span className="font-sans text-[9px] uppercase tracking-[0.28em]"
-                      style={{ color: 'rgba(244,242,239,0.20)' }}>{s.guests} pers.</span>
+                    <h3 className="font-serif font-light italic mb-1"
+                      style={{ fontSize: '17px', color: 'rgba(244,242,239,0.80)' }}>
+                      {s.name}
+                    </h3>
+                    <div className="flex items-center gap-2">
+                      <span className="font-sans text-[9px] uppercase tracking-[0.28em]"
+                        style={{ color: 'rgba(244,242,239,0.28)' }}>{s.surface}</span>
+                      <span className="w-px h-2.5" style={{ backgroundColor: 'rgba(244,242,239,0.10)' }} />
+                      <span className="font-sans text-[9px] uppercase tracking-[0.28em]"
+                        style={{ color: 'rgba(244,242,239,0.20)' }}>{s.guests} pers.</span>
+                    </div>
                   </div>
                 </div>
               </motion.div>
