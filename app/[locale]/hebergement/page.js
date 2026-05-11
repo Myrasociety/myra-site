@@ -9,7 +9,7 @@ import { useRates, useAvailability, toKey } from '../../../lib/useSmoobu';
 import ContactSection from '../../../components/Contact';
 
 const INK  = '#0C0C0A';
-const WINE = '#2B1022';
+const WINE = '#351421';
 const BONE = 'rgba(12,12,10,0.06)';
 const EASE = [0.19, 1, 0.22, 1];
 const EXPO = [0.16, 1, 0.3, 1];
@@ -29,7 +29,7 @@ function R({ children, d = 0, y = 28, className = '' }) {
 
 function Cap({ children, light = false, accent = false, className = '' }) {
   return (
-    <span className={`inline-block font-sans text-[11px] tracking-[0.55em] uppercase ${accent ? 'text-[#2B1022]' : light ? 'text-[rgba(244,245,240,0.38)]' : 'text-[rgba(12,12,10,0.35)]'} ${className}`}>
+    <span className={`inline-block font-sans text-[11px] tracking-[0.55em] uppercase ${accent ? 'text-[#351421]' : light ? 'text-[rgba(244,245,240,0.38)]' : 'text-[rgba(12,12,10,0.35)]'} ${className}`}>
       {children}
     </span>
   );
@@ -37,7 +37,7 @@ function Cap({ children, light = false, accent = false, className = '' }) {
 
 function Trait({ light = false, className = '' }) {
   return <div className={`h-px w-8 flex-shrink-0 ${className}`}
-    style={{ backgroundColor: light ? 'rgba(244,245,240,0.15)' : 'rgba(43,16,34,0.35)' }} />;
+    style={{ backgroundColor: light ? 'rgba(244,245,240,0.15)' : 'rgba(53,20,33,0.35)' }} />;
 }
 
 const SUITES = [
@@ -88,10 +88,10 @@ function ImageGallery({ images, name }) {
         transition={{ duration: 0.6, ease: EASE }}
         style={{ filter: 'saturate(0.85)' }} />
       <div className="absolute inset-0 hidden md:flex items-center justify-between px-4 opacity-0 group-hover/gal:opacity-100 transition-opacity duration-500 z-20 pointer-events-none">
-        <button onClick={prev} className="pointer-events-auto w-9 h-9 flex items-center justify-center bg-[#F3F2EF]/80 hover:bg-[#F3F2EF] backdrop-blur-sm transition-all duration-300">
+        <button onClick={prev} className="pointer-events-auto w-9 h-9 flex items-center justify-center bg-[#F4F5F0]/80 hover:bg-[#F4F5F0] backdrop-blur-sm transition-all duration-300">
           <svg width="11" height="11" fill="none" stroke={INK} strokeWidth="1.5" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" strokeLinecap="round" /></svg>
         </button>
-        <button onClick={next} className="pointer-events-auto w-9 h-9 flex items-center justify-center bg-[#F3F2EF]/80 hover:bg-[#F3F2EF] backdrop-blur-sm transition-all duration-300">
+        <button onClick={next} className="pointer-events-auto w-9 h-9 flex items-center justify-center bg-[#F4F5F0]/80 hover:bg-[#F4F5F0] backdrop-blur-sm transition-all duration-300">
           <svg width="11" height="11" fill="none" stroke={INK} strokeWidth="1.5" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6" strokeLinecap="round" /></svg>
         </button>
       </div>
@@ -136,14 +136,14 @@ function ToComeGallery({ images, name }) {
           <button onClick={prev}
             className="pointer-events-auto w-8 h-8 flex items-center justify-center transition-all duration-300"
             style={{ backgroundColor: 'rgba(12,12,10,0.50)', backdropFilter: 'blur(8px)' }}>
-            <svg width="10" height="10" fill="none" stroke="rgba(244,242,239,0.80)" strokeWidth="1.5" viewBox="0 0 24 24">
+            <svg width="10" height="10" fill="none" stroke="rgba(244,245,240,0.80)" strokeWidth="1.5" viewBox="0 0 24 24">
               <path d="M15 18l-6-6 6-6" strokeLinecap="round" />
             </svg>
           </button>
           <button onClick={next}
             className="pointer-events-auto w-8 h-8 flex items-center justify-center transition-all duration-300"
             style={{ backgroundColor: 'rgba(12,12,10,0.50)', backdropFilter: 'blur(8px)' }}>
-            <svg width="10" height="10" fill="none" stroke="rgba(244,242,239,0.80)" strokeWidth="1.5" viewBox="0 0 24 24">
+            <svg width="10" height="10" fill="none" stroke="rgba(244,245,240,0.80)" strokeWidth="1.5" viewBox="0 0 24 24">
               <path d="M9 18l6-6-6-6" strokeLinecap="round" />
             </svg>
           </button>
@@ -186,7 +186,7 @@ function SuiteCard({ suite, datesSelected, checkIn, checkOut, isToCome = false, 
           <ToComeGallery images={suite.images} name={suite.name} />
           <div className="absolute top-4 left-4 z-30">
             <span className="font-sans text-[9px] uppercase tracking-[0.35em] px-2 py-1"
-              style={{ backgroundColor: 'rgba(12,12,10,0.60)', color: 'rgba(244,242,239,0.55)' }}>
+              style={{ backgroundColor: 'rgba(12,12,10,0.60)', color: 'rgba(244,245,240,0.55)' }}>
               {t('coming_soon_badge')}
             </span>
           </div>
@@ -195,8 +195,8 @@ function SuiteCard({ suite, datesSelected, checkIn, checkOut, isToCome = false, 
             <div className="flex items-center gap-2 px-4 py-2"
               style={{ backgroundColor: 'rgba(12,12,10,0.55)', backdropFilter: 'blur(8px)' }}>
               <span className="font-sans text-[8px] uppercase tracking-[0.40em]"
-                style={{ color: 'rgba(244,242,239,0.70)' }}>Découvrir</span>
-              <svg width="8" height="8" fill="none" stroke="rgba(244,242,239,0.70)" strokeWidth="1.5" viewBox="0 0 24 24">
+                style={{ color: 'rgba(244,245,240,0.70)' }}>Découvrir</span>
+              <svg width="8" height="8" fill="none" stroke="rgba(244,245,240,0.70)" strokeWidth="1.5" viewBox="0 0 24 24">
                 <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" />
               </svg>
             </div>
@@ -211,17 +211,17 @@ function SuiteCard({ suite, datesSelected, checkIn, checkOut, isToCome = false, 
         <R>
           <div className="flex justify-between items-baseline mb-2 gap-3">
             <h3 className="font-serif font-light italic leading-[0.95]"
-              style={{ fontSize: 'clamp(22px, 3vw, 42px)', color: dark ? 'rgba(244,242,239,0.85)' : '#0C0C0A' }}>
+              style={{ fontSize: 'clamp(22px, 3vw, 42px)', color: dark ? 'rgba(244,245,240,0.85)' : '#0C0C0A' }}>
               {suite.name}
             </h3>
             {price && (
               <div className="flex items-baseline gap-1 flex-shrink-0">
                 <span className="font-sans text-[8px] uppercase tracking-[0.25em]"
-                  style={{ color: dark ? 'rgba(244,242,239,0.25)' : 'rgba(12,12,10,0.30)' }}>
+                  style={{ color: dark ? 'rgba(244,245,240,0.25)' : 'rgba(12,12,10,0.30)' }}>
                   {suite.priceInfo ? t('total') : t('from')}
                 </span>
                 <p className="font-serif font-light"
-                  style={{ fontSize: 'clamp(15px, 1.8vw, 24px)', color: dark ? 'rgba(244,242,239,0.75)' : '#0C0C0A' }}>
+                  style={{ fontSize: 'clamp(15px, 1.8vw, 24px)', color: dark ? 'rgba(244,245,240,0.75)' : '#0C0C0A' }}>
                   {Math.round(price).toLocaleString('fr-FR')} €
                 </p>
               </div>
@@ -229,12 +229,12 @@ function SuiteCard({ suite, datesSelected, checkIn, checkOut, isToCome = false, 
           </div>
           <div className="flex items-center gap-3 mb-3">
             <Cap light={dark}>{suite.surface}</Cap>
-            <span className="w-px h-3" style={{ backgroundColor: dark ? 'rgba(244,242,239,0.10)' : BONE }} />
+            <span className="w-px h-3" style={{ backgroundColor: dark ? 'rgba(244,245,240,0.10)' : BONE }} />
             <Cap light={dark}>{suite.guests} {t('max_guests')}</Cap>
           </div>
-          <div className="h-px w-full mb-3" style={{ backgroundColor: dark ? 'rgba(244,242,239,0.06)' : BONE }} />
+          <div className="h-px w-full mb-3" style={{ backgroundColor: dark ? 'rgba(244,245,240,0.06)' : BONE }} />
           <p className="font-serif font-light italic"
-            style={{ fontSize: '14px', lineHeight: 1.72, color: dark ? 'rgba(244,242,239,0.35)' : 'rgba(12,12,10,0.42)' }}>
+            style={{ fontSize: '14px', lineHeight: 1.72, color: dark ? 'rgba(244,245,240,0.35)' : 'rgba(12,12,10,0.42)' }}>
             {suite.excerpt}
           </p>
           {!isToCome && (
@@ -273,11 +273,11 @@ function MonthPicker({ current, onSelect, onClose }) {
             onMouseEnter={e => { if (!isActive) e.currentTarget.style.backgroundColor = 'rgba(12,12,10,0.04)'; }}
             onMouseLeave={e => { if (!isActive) e.currentTarget.style.backgroundColor = 'transparent'; }}>
             <span className="font-sans text-[10px] uppercase tracking-[0.35em]"
-              style={{ color: isActive ? '#F3F2EF' : 'rgba(12,12,10,0.65)' }}>
+              style={{ color: isActive ? '#F4F5F0' : 'rgba(12,12,10,0.65)' }}>
               {MONTHS_SHORT[d.getMonth()]}
             </span>
             <span className="font-sans text-[9px]"
-              style={{ color: isActive ? 'rgba(244,242,239,0.55)' : 'rgba(12,12,10,0.30)' }}>
+              style={{ color: isActive ? 'rgba(244,245,240,0.55)' : 'rgba(12,12,10,0.30)' }}>
               {d.getFullYear()}
             </span>
           </button>
@@ -380,7 +380,7 @@ function DoubleCalendar({ checkIn, checkOut, onChange, ratesData }) {
             return (
               <button key={i} onClick={() => !isPast && !isBlocked && onChange(d)} disabled={isPast || isBlocked}
                 className={`h-10 flex flex-col items-center justify-center transition-all duration-150
-                  ${isStart || isEnd ? 'text-[#F3F2EF]' : 'hover:bg-[rgba(12,12,10,0.04)]'}
+                  ${isStart || isEnd ? 'text-[#F4F5F0]' : 'hover:bg-[rgba(12,12,10,0.04)]'}
                   ${inRange ? 'bg-[rgba(12,12,10,0.04)]' : ''}
                   ${isBlocked || isPast ? 'opacity-10 cursor-not-allowed' : ''}`}
                 style={{ backgroundColor: (isStart || isEnd) ? INK : undefined }}>
@@ -467,7 +467,7 @@ function Hero({ checkIn, checkOut, guests, setGuests, onDateChange, panelOpen, s
                     initial={{ opacity: 0, y: dir === 'top' ? -8 : 8 }}
                     animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
                     transition={{ duration: 0.4, ease: EASE }}
-                    className={`absolute ${dir === 'top' ? 'bottom-full mb-3' : 'top-full mt-3'} left-0 right-0 bg-[#F3F2EF] z-50 max-h-[75vh] overflow-y-auto`}
+                    className={`absolute ${dir === 'top' ? 'bottom-full mb-3' : 'top-full mt-3'} left-0 right-0 bg-[#F4F5F0] z-50 max-h-[75vh] overflow-y-auto`}
                     style={{ border: '1px solid rgba(12,12,10,0.06)', boxShadow: '0 40px 100px rgba(0,0,0,0.25)' }}>
                     <div className="px-5 md:px-12 pt-8 pb-10">
                       {panelOpen === 'dates' ? (
@@ -479,7 +479,7 @@ function Hero({ checkIn, checkOut, guests, setGuests, onDateChange, panelOpen, s
                             {[1,2,3,4,5,6].map(n => (
                               <button key={n} onClick={() => { setGuests(n); setPanelOpen(null); }}
                                 className="w-12 h-12 md:w-14 md:h-14 transition-all duration-500 border font-sans text-[13px]"
-                                style={{ backgroundColor: guests === n ? INK : 'transparent', color: guests === n ? '#F3F2EF' : 'rgba(12,12,10,0.40)', borderColor: guests === n ? INK : BONE }}>
+                                style={{ backgroundColor: guests === n ? INK : 'transparent', color: guests === n ? '#F4F5F0' : 'rgba(12,12,10,0.40)', borderColor: guests === n ? INK : BONE }}>
                                 {n}
                               </button>
                             ))}
@@ -579,7 +579,7 @@ export default function HebergementPage() {
   const availableCount = datesSelected ? visible.filter(s => s.isAvailable).length : visible.length;
 
   return (
-    <motion.div className="min-h-screen bg-[#F3F2EF]"
+    <motion.div className="min-h-screen bg-[#F4F5F0]"
       initial={{ opacity: 0 }} animate={{ opacity: 1 }}
       transition={{ duration: 0.7, ease: EXPO }}>
       <div ref={panelRef}>
@@ -596,7 +596,7 @@ export default function HebergementPage() {
             <R><div className="flex items-center gap-5"><Trait /><Cap accent>{t('collection_label')}</Cap></div></R>
             <div className="flex items-center gap-4">
               {availLoading && (
-                <motion.span className="w-1.5 h-1.5 rounded-full bg-[#2B1022]"
+                <motion.span className="w-1.5 h-1.5 rounded-full bg-[#351421]"
                   animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 1.5, repeat: Infinity }} />
               )}
               <Cap>
@@ -635,7 +635,7 @@ export default function HebergementPage() {
       <section style={{ backgroundColor: INK }}>
         <div className="max-w-container mx-auto py-16 md:py-32 px-6 md:px-0">
           <div className="flex items-end justify-between mb-10 md:mb-20 pb-6 md:pb-10"
-            style={{ borderBottom: '1px solid rgba(244,242,239,0.06)' }}>
+            style={{ borderBottom: '1px solid rgba(244,245,240,0.06)' }}>
             <R>
               <div className="flex items-center gap-5">
                 <div className="w-8 h-px" style={{ backgroundColor: WINE, opacity: 0.4 }} />
@@ -671,21 +671,21 @@ export default function HebergementPage() {
                       <ToComeGallery images={s.images} name={s.name} />
                       <div className="absolute top-3 left-3 z-30">
                         <span className="font-sans text-[8px] uppercase tracking-[0.30em] px-2 py-1"
-                          style={{ backgroundColor: 'rgba(12,12,10,0.60)', color: 'rgba(244,242,239,0.55)' }}>
+                          style={{ backgroundColor: 'rgba(12,12,10,0.60)', color: 'rgba(244,245,240,0.55)' }}>
                           {t('coming_soon_badge')}
                         </span>
                       </div>
                     </div>
                     <h3 className="font-serif font-light italic mb-1"
-                      style={{ fontSize: '17px', color: 'rgba(244,242,239,0.80)' }}>
+                      style={{ fontSize: '17px', color: 'rgba(244,245,240,0.80)' }}>
                       {s.name}
                     </h3>
                     <div className="flex items-center gap-2">
                       <span className="font-sans text-[9px] uppercase tracking-[0.28em]"
-                        style={{ color: 'rgba(244,242,239,0.28)' }}>{s.surface}</span>
-                      <span className="w-px h-2.5" style={{ backgroundColor: 'rgba(244,242,239,0.10)' }} />
+                        style={{ color: 'rgba(244,245,240,0.28)' }}>{s.surface}</span>
+                      <span className="w-px h-2.5" style={{ backgroundColor: 'rgba(244,245,240,0.10)' }} />
                       <span className="font-sans text-[9px] uppercase tracking-[0.28em]"
-                        style={{ color: 'rgba(244,242,239,0.20)' }}>{s.guests} pers.</span>
+                        style={{ color: 'rgba(244,245,240,0.20)' }}>{s.guests} pers.</span>
                     </div>
                   </div>
                 </div>

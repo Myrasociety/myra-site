@@ -8,8 +8,8 @@ import { toKey } from '../../../../lib/useSmoobu';
 import ContactSection from '../../../../components/Contact';
 
 const INK    = '#0C0C0A';
-const WINE   = '#2B1022';
-const GROUND = '#F3F2EF';
+const WINE   = '#351421';
+const GROUND = '#F4F5F0';
 const BONE   = 'rgba(12,12,10,0.06)';
 const EXPO   = [0.16, 1, 0.3, 1];
 
@@ -206,10 +206,10 @@ function MonthPicker({ current, onSelect, onClose }) {
             style={{ backgroundColor: isActive ? INK : 'transparent' }}
             onMouseEnter={e => { if (!isActive) e.currentTarget.style.backgroundColor = 'rgba(12,12,10,0.04)'; }}
             onMouseLeave={e => { if (!isActive) e.currentTarget.style.backgroundColor = 'transparent'; }}>
-            <span className="font-sans text-[10px] uppercase tracking-[0.35em]" style={{ color: isActive ? '#F3F2EF' : 'rgba(12,12,10,0.65)' }}>
+            <span className="font-sans text-[10px] uppercase tracking-[0.35em]" style={{ color: isActive ? '#F4F5F0' : 'rgba(12,12,10,0.65)' }}>
               {MONTHS_SHORT[d.getMonth()]}
             </span>
-            <span className="font-sans text-[9px]" style={{ color: isActive ? 'rgba(244,242,239,0.55)' : 'rgba(12,12,10,0.30)' }}>
+            <span className="font-sans text-[9px]" style={{ color: isActive ? 'rgba(244,245,240,0.55)' : 'rgba(12,12,10,0.30)' }}>
               {d.getFullYear()}
             </span>
           </button>
@@ -404,7 +404,7 @@ function ReservationPanel({ suite }) {
             <AnimatePresence mode="wait">
               {loadingAvail && (
                 <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="py-4 flex items-center gap-3">
-                  <div className="w-4 h-4 border border-t-[#2B1022] border-black/10 rounded-full animate-spin" />
+                  <div className="w-4 h-4 border border-t-[#351421] border-black/10 rounded-full animate-spin" />
                   <span className="font-sans text-[9px] uppercase tracking-widest text-black/20">{t('loading')}</span>
                 </motion.div>
               )}
@@ -426,7 +426,7 @@ function ReservationPanel({ suite }) {
                   </div>
                   <button onClick={handleBooking}
                     className="w-full py-5 font-sans text-[10px] uppercase tracking-[0.55em] relative overflow-hidden transition-colors duration-700"
-                    style={{ backgroundColor: INK, color: '#F3F2EF' }}
+                    style={{ backgroundColor: INK, color: '#F4F5F0' }}
                     onMouseEnter={e => e.currentTarget.style.backgroundColor = WINE}
                     onMouseLeave={e => e.currentTarget.style.backgroundColor = INK}>
                     {t('confirm')}
@@ -435,8 +435,8 @@ function ReservationPanel({ suite }) {
               )}
               {!loadingAvail && checkIn && checkOut && !isAvailable && (
                 <motion.div key="unavail" initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                  className="p-4 text-center" style={{ border: '1px dashed rgba(43,16,34,0.20)' }}>
-                  <p className="font-serif italic text-[rgba(43,16,34,0.55)]" style={{ fontSize: '14px' }}>{t('unavailable')}</p>
+                  className="p-4 text-center" style={{ border: '1px dashed rgba(53,20,33,0.20)' }}>
+                  <p className="font-serif italic text-[rgba(53,20,33,0.55)]" style={{ fontSize: '14px' }}>{t('unavailable')}</p>
                 </motion.div>
               )}
               {!loadingAvail && (!checkIn || !checkOut) && (
@@ -478,7 +478,7 @@ function ReservationPanel({ suite }) {
               <AnimatePresence mode="wait">
                 {loadingAvail && (
                   <motion.div key="loading" initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="py-4 flex items-center gap-4">
-                    <div className="w-4 h-4 border border-t-[#2B1022] border-black/10 rounded-full animate-spin" />
+                    <div className="w-4 h-4 border border-t-[#351421] border-black/10 rounded-full animate-spin" />
                     <span className="font-sans text-[10px] uppercase tracking-widest text-black/20">{t('loading')}</span>
                   </motion.div>
                 )}
@@ -500,7 +500,7 @@ function ReservationPanel({ suite }) {
                     </div>
                     <button onClick={handleBooking}
                       className="w-full py-5 font-sans text-[10px] uppercase tracking-[0.55em] relative overflow-hidden transition-colors duration-700"
-                      style={{ backgroundColor: INK, color: '#F3F2EF' }}
+                      style={{ backgroundColor: INK, color: '#F4F5F0' }}
                       onMouseEnter={e => e.currentTarget.style.backgroundColor = WINE}
                       onMouseLeave={e => e.currentTarget.style.backgroundColor = INK}>
                       {t('confirm')}
@@ -510,8 +510,8 @@ function ReservationPanel({ suite }) {
                 )}
                 {!loadingAvail && checkIn && checkOut && !isAvailable && (
                   <motion.div key="unavail" initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-                    className="p-5" style={{ border: '1px solid rgba(43,16,34,0.15)' }}>
-                    <p className="font-serif italic text-[rgba(43,16,34,0.60)]" style={{ fontSize: '15px' }}>{t('unavailable')}</p>
+                    className="p-5" style={{ border: '1px solid rgba(53,20,33,0.15)' }}>
+                    <p className="font-serif italic text-[rgba(53,20,33,0.60)]" style={{ fontSize: '15px' }}>{t('unavailable')}</p>
                   </motion.div>
                 )}
                 {!loadingAvail && (!checkIn || !checkOut) && (
@@ -607,7 +607,7 @@ function SuiteContent({ suite }) {
         <ul className="space-y-3">
           {suite.features.map((f, i) => (
             <li key={i} className="flex items-start gap-4">
-              <span className="mt-[9px] w-1 h-1 rounded-full flex-shrink-0" style={{ backgroundColor: 'rgba(43,16,34,0.40)' }} />
+              <span className="mt-[9px] w-1 h-1 rounded-full flex-shrink-0" style={{ backgroundColor: 'rgba(53,20,33,0.40)' }} />
               <span className="font-serif text-[14px] leading-[1.75] italic" style={{ color: 'rgba(12,12,10,0.55)' }}>{f}</span>
             </li>
           ))}
@@ -692,7 +692,7 @@ function SuiteContent({ suite }) {
                 {suite.testimonial.text}
               </blockquote>
               <p className="font-sans text-[9px] uppercase tracking-[0.55em] mb-1" style={{ color: INK }}>{suite.testimonial.author}</p>
-              <p className="font-sans text-[8px] uppercase tracking-[0.40em]" style={{ color: 'rgba(43,16,34,0.40)' }}>{suite.testimonial.origin}</p>
+              <p className="font-sans text-[8px] uppercase tracking-[0.40em]" style={{ color: 'rgba(53,20,33,0.40)' }}>{suite.testimonial.origin}</p>
             </div>
           </div>
         </section>
@@ -714,7 +714,7 @@ function SuiteContent({ suite }) {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {Object.values(SUITES).filter(s => s.name !== suite.name).map((s, i) => (
-            <a key={s.id} href={`/${locale}/hebergement/${s.name}`}
+            <a key={s.name} href={`/${locale}/hebergement/${s.name}`}
               className="group block" style={{ borderTop: '1px solid rgba(12,12,10,0.06)' }}>
               <div className="relative overflow-hidden mb-4" style={{ aspectRatio: '16/10' }}>
                 <img src={s.images[0]} alt={s.name}
@@ -761,7 +761,7 @@ export default function SuiteDetailPage({ params }) {
     <Suspense fallback={
       <div className="h-screen flex items-center justify-center" style={{ backgroundColor: GROUND }}>
         <div className="flex flex-col items-center gap-4">
-          <div className="w-px h-12 animate-pulse" style={{ backgroundColor: 'rgba(43,16,34,0.3)' }} />
+          <div className="w-px h-12 animate-pulse" style={{ backgroundColor: 'rgba(53,20,33,0.3)' }} />
           <span className="font-sans text-[8.5px] uppercase tracking-[0.55em]" style={{ color: 'rgba(12,12,10,0.3)' }}>Chargement</span>
         </div>
       </div>

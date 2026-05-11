@@ -8,7 +8,7 @@ import { useLocale } from '@/lib/useTranslations';
 import ContactSection from '../../../../../components/Contact';
 
 const INK  = '#0C0C0A';
-const WINE = '#2B1022';
+const WINE = '#351421';
 const BONE = 'rgba(12,12,10,0.06)';
 const EXPO = [0.16, 1, 0.3, 1];
 
@@ -18,7 +18,7 @@ const SUITES = {
     ouverture: 'Printemps 2026', ambiance: 'Éclat contemporain',
     description: 'Un volume contemporain baigné de lumière. Conçue pour deux, Nova allie minimalisme et chaleur dans un esprit de retraite exclusive.',
     descriptionLong: "Nova est pensée pour ceux qui cherchent l'essentiel — un espace épuré, lumineux, sans superflu. Matières naturelles, lignes sobres, lumière naturelle filtrée. Deux personnes, un seul espace, une présence totale.",
-    images: ['/Visuels/Salon Nova.jpg', '/Visuels/Cuisine Nova.jpg', '/Visuels/Chambre Nova.jpg', '/Visuels/SDB nova.jpg'],
+    images: ['/Nova/2.jpg', '/Nova/3.jpg', '/Nova/4.jpg', '/Nova/5.jpg'],
     features: ['Suite double premium', 'Terrasse privée', 'Accès spa & recovery', 'Vue sur les vignes', 'Literie haut de gamme', 'Salle de bain walk-in'],
     floorplan: 'Entrée · Séjour 30 m² · Suite parentale (lit king) · Salle de bain · Terrasse privée 12 m²',
     address: '71 rue du Général de Gaulle\n67520 Marlenheim\nAlsace, France',
@@ -34,7 +34,7 @@ const SUITES = {
     ouverture: 'Printemps 2026', ambiance: 'Douceur minérale',
     description: "Douceur minérale et vue imprenable. Opal s'inspire des pierres naturelles d'Alsace pour créer un cocon hors du temps.",
     descriptionLong: "Opal tire son nom des pierres précieuses d'Alsace — une référence à la richesse minérale du territoire. La suite accueille jusqu'à 4 personnes dans un espace généreux où chaque texture rappelle la beauté brute de la région.",
-    images: ['/Visuels/Opal Salon.jpg', '/Visuels/Jardin Opal.jpg'],
+    images: ['/Opal/1.jpg', '/Opal/2.jpg'],
     features: ['Suite familiale', 'Décoration minérale', 'Cuisine équipée', 'Accès spa & recovery', 'Deux chambres', 'Salon ouvert'],
     floorplan: 'Entrée · Salon 35 m² · Cuisine équipée · Chambre 1 (lit king) · Chambre 2 (lits jumeaux) · Salle de bain · WC',
     address: '71 rue du Général de Gaulle\n67520 Marlenheim\nAlsace, France',
@@ -50,7 +50,7 @@ const SUITES = {
     ouverture: 'Été 2026', ambiance: 'Héritage & modernité',
     description: "La plus grande suite du domaine. Asta est conçue pour les groupes et les familles qui souhaitent partager un espace d'exception sans compromis.",
     descriptionLong: "Asta, du vieux norrois signifiant « divin », est la suite de référence du domaine. 170 m² pensés pour accueillir jusqu'à 8 personnes dans un luxe discret. Un espace partagé sans concessions, pour les séjours qui deviennent des souvenirs.",
-    images: ['/Visuels/Etoile.jpg'],
+    images: ['/Asta/1.jpg'],
     features: ['Suite de groupe', '170 m² de surface', 'Salon commun', 'Cuisine ouverte', 'Accès privatif spa', '4 chambres', 'Terrasse panoramique'],
     floorplan: 'Entrée · Grand salon 60 m² · Cuisine ouverte · 4 chambres · 3 salles de bain · WC · Terrasse panoramique 40 m²',
     address: '71 rue du Général de Gaulle\n67520 Marlenheim\nAlsace, France',
@@ -78,7 +78,7 @@ function R({ children, d = 0, y = 28, className = '' }) {
 
 function Cap({ children, light = false, accent = false, className = '' }) {
   return (
-    <span className={`inline-block font-sans text-[11px] tracking-[0.55em] uppercase ${accent ? 'text-[#2B1022]' : light ? 'text-[rgba(244,245,240,0.38)]' : 'text-[rgba(12,12,10,0.35)]'} ${className}`}>
+    <span className={`inline-block font-sans text-[11px] tracking-[0.55em] uppercase ${accent ? 'text-[#351421]' : light ? 'text-[rgba(244,245,240,0.38)]' : 'text-[rgba(12,12,10,0.35)]'} ${className}`}>
       {children}
     </span>
   );
@@ -213,7 +213,7 @@ function InterestForm({ suite, onClose }) {
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
       style={{ backgroundColor: 'rgba(12,12,10,0.55)', backdropFilter: 'blur(8px)' }}
       onClick={onClose}>
-      <motion.div className="w-full md:max-w-lg bg-[#F3F2EF] p-8 md:p-12"
+      <motion.div className="w-full md:max-w-lg bg-[#F4F5F0] p-8 md:p-12"
         initial={{ y: 40, opacity: 0 }} animate={{ y: 0, opacity: 1 }} exit={{ y: 20, opacity: 0 }}
         transition={{ duration: 0.5, ease: EXPO }}
         onClick={e => e.stopPropagation()}>
@@ -268,7 +268,7 @@ function InterestForm({ suite, onClose }) {
               ))}
               <button type="submit" disabled={sending}
                 className="w-full py-4 font-sans text-[10px] uppercase tracking-[0.55em] transition-all duration-500 disabled:opacity-40"
-                style={{ backgroundColor: INK, color: '#F3F2EF' }}
+                style={{ backgroundColor: INK, color: '#F4F5F0' }}
                 onMouseEnter={e => e.currentTarget.style.backgroundColor = WINE}
                 onMouseLeave={e => e.currentTarget.style.backgroundColor = INK}>
                 {sending ? 'Envoi…' : 'Envoyer ma demande'}
@@ -283,7 +283,7 @@ function InterestForm({ suite, onClose }) {
               Merci pour votre intérêt.
             </p>
             <p className="font-sans text-[11px] uppercase tracking-[0.40em]"
-              style={{ color: 'rgba(43,16,34,0.50)' }}>
+              style={{ color: 'rgba(53,20,33,0.50)' }}>
               Nous vous contacterons à l'ouverture des réservations.
             </p>
             <button onClick={onClose}
@@ -310,7 +310,7 @@ function SuiteContent({ suite }) {
         <ul className="space-y-3">
           {suite.features.map((f, i) => (
             <li key={i} className="flex items-start gap-4">
-              <span className="mt-[9px] w-1 h-1 rounded-full flex-shrink-0" style={{ backgroundColor: 'rgba(43,16,34,0.40)' }} />
+              <span className="mt-[9px] w-1 h-1 rounded-full flex-shrink-0" style={{ backgroundColor: 'rgba(53,20,33,0.40)' }} />
               <span className="font-serif text-[14px] leading-[1.75] italic" style={{ color: 'rgba(12,12,10,0.55)' }}>{f}</span>
             </li>
           ))}
@@ -336,7 +336,7 @@ function SuiteContent({ suite }) {
   ];
 
   return (
-    <motion.div className="min-h-screen bg-[#F3F2EF]"
+    <motion.div className="min-h-screen bg-[#F4F5F0]"
       initial={{ opacity: 0 }} animate={{ opacity: 1 }}
       transition={{ duration: 0.7, ease: EXPO }}>
 
@@ -363,7 +363,7 @@ function SuiteContent({ suite }) {
             <div className="flex items-center gap-3 mb-5">
               <div className="w-4 h-px" style={{ backgroundColor: WINE, opacity: 0.5 }} />
               <span className="font-sans text-[9px] uppercase tracking-[0.50em]"
-                style={{ color: 'rgba(43,16,34,0.65)' }}>{suite.ouverture}</span>
+                style={{ color: 'rgba(53,20,33,0.65)' }}>{suite.ouverture}</span>
             </div>
 
             <h1 className="font-serif font-light leading-[0.88] tracking-[-0.03em] mb-5"
@@ -452,7 +452,7 @@ function SuiteContent({ suite }) {
                       {suite.name}
                     </h2>
                     <p className="font-sans text-[9px] uppercase tracking-[0.40em]"
-                      style={{ color: 'rgba(43,16,34,0.55)' }}>
+                      style={{ color: 'rgba(53,20,33,0.55)' }}>
                       {suite.ouverture}
                     </p>
                   </div>
@@ -484,7 +484,7 @@ function SuiteContent({ suite }) {
                   <div className="flex items-center gap-3 mb-6">
                     <div className="w-4 h-px" style={{ backgroundColor: WINE, opacity: 0.4 }} />
                     <span className="font-sans text-[9px] uppercase tracking-[0.50em]"
-                      style={{ color: 'rgba(43,16,34,0.55)' }}>Accès prioritaire</span>
+                      style={{ color: 'rgba(53,20,33,0.55)' }}>Accès prioritaire</span>
                   </div>
                   <h3 className="font-serif font-light italic leading-[0.95] mb-6"
                     style={{ fontSize: 'clamp(26px, 3vw, 42px)', color: INK }}>
@@ -509,7 +509,7 @@ function SuiteContent({ suite }) {
 
                 <button onClick={() => setFormOpen(true)}
                   className="w-full py-5 font-sans text-[10px] uppercase tracking-[0.55em] transition-all duration-500"
-                  style={{ backgroundColor: INK, color: '#F3F2EF' }}
+                  style={{ backgroundColor: INK, color: '#F4F5F0' }}
                   onMouseEnter={e => e.currentTarget.style.backgroundColor = WINE}
                   onMouseLeave={e => e.currentTarget.style.backgroundColor = INK}>
                   Je manifeste mon intérêt
@@ -541,7 +541,7 @@ function SuiteContent({ suite }) {
                   <div className="absolute inset-0 bg-[rgba(12,12,10,0)] group-hover:bg-[rgba(12,12,10,0.12)] transition-all duration-500" />
                   <div className="absolute top-4 left-4">
                     <span className="font-sans text-[8px] uppercase tracking-[0.40em] px-2 py-1"
-                      style={{ backgroundColor: 'rgba(12,12,10,0.55)', color: 'rgba(244,242,239,0.65)' }}>
+                      style={{ backgroundColor: 'rgba(12,12,10,0.55)', color: 'rgba(244,245,240,0.65)' }}>
                       {s.ouverture}
                     </span>
                   </div>
@@ -583,9 +583,9 @@ export default function SuiteProchainementPage({ params }) {
   if (!suite) notFound();
   return (
     <Suspense fallback={
-      <div className="h-screen flex items-center justify-center bg-[#F3F2EF]">
+      <div className="h-screen flex items-center justify-center bg-[#F4F5F0]">
         <div className="flex flex-col items-center gap-4">
-          <div className="w-px h-12 animate-pulse" style={{ backgroundColor: 'rgba(43,16,34,0.3)' }} />
+          <div className="w-px h-12 animate-pulse" style={{ backgroundColor: 'rgba(53,20,33,0.3)' }} />
           <span className="font-sans text-[8.5px] uppercase tracking-[0.55em]" style={{ color: 'rgba(12,12,10,0.3)' }}>Chargement</span>
         </div>
       </div>

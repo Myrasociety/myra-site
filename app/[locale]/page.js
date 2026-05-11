@@ -6,7 +6,7 @@ import Link from 'next/link';
 import { useTranslations, useLocale } from '@/lib/useTranslations';
 
 const INK  = '#0C0C0A';
-const WINE = '#2B1022';
+const WINE = '#351421';
 const ASH  = 'rgba(12,12,10,0.42)';
 const BONE = 'rgba(12,12,10,0.06)';
 const EASE = [0.16, 1, 0.3, 1];
@@ -35,7 +35,7 @@ function Cap({ children, accent = false, light = false, className = '' }) {
 
 function Trait({ light = false, className = '' }) {
   return <div className={`h-px w-8 flex-shrink-0 ${className}`}
-    style={{ backgroundColor: light ? 'rgba(255,255,255,0.15)' : 'rgba(43,16,34,0.40)' }} />;
+    style={{ backgroundColor: light ? 'rgba(255,255,255,0.15)' : 'rgba(53,20,33,0.40)' }} />;
 }
 
 function Btn({ children, dark = false, href, onClick, className = '' }) {
@@ -49,7 +49,7 @@ function Btn({ children, dark = false, href, onClick, className = '' }) {
       style={{
         padding: '15px 36px',
         border: `1px solid ${hov ? WINE : dark ? 'rgba(255,255,255,0.18)' : BONE}`,
-        color: hov ? '#F3F2EF' : dark ? 'rgba(255,255,255,0.65)' : INK,
+        color: hov ? '#F4F5F0' : dark ? 'rgba(255,255,255,0.65)' : INK,
         transition: 'border-color 0.5s, color 0.5s',
       }}>
       <motion.span className="absolute inset-0" style={{ backgroundColor: WINE }}
@@ -169,7 +169,7 @@ function Hero() {
                     onFocus={() => setFocused(true)} onBlur={() => setFocused(false)}
                     placeholder={t('placeholder')}
                     className="flex-1 bg-transparent font-sans text-[10px] tracking-[0.20em] uppercase text-white placeholder:text-[rgba(255,255,255,0.14)] outline-none" />
-                  <button type="submit" className="w-7 h-7 flex items-center justify-center border border-[rgba(255,255,255,0.12)] hover:border-[#2B1022] transition-all duration-500 flex-shrink-0">
+                  <button type="submit" className="w-7 h-7 flex items-center justify-center border border-[rgba(255,255,255,0.12)] hover:border-[#351421] transition-all duration-500 flex-shrink-0">
                     <svg width="10" height="10" fill="none" stroke="currentColor" strokeWidth="1.2" className="text-[rgba(255,255,255,0.35)]" viewBox="0 0 24 24">
                       <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" />
                     </svg>
@@ -223,7 +223,7 @@ function Statement() {
   ];
 
   return (
-    <section className="bg-[#F3F2EF] py-16 md:py-32 overflow-hidden">
+    <section className="bg-[#F4F5F0] py-16 md:py-32 overflow-hidden">
       <div className="px-6 md:px-16">
         <div className="grid grid-cols-12 gap-6 md:gap-16">
           
@@ -259,7 +259,7 @@ function Statement() {
                       )}
                     </div>
                     <div className="mt-2 md:mt-4 flex items-center gap-2">
-                      <div className="w-3 h-px bg-[#2B1022]/30" />
+                      <div className="w-3 h-px bg-[#351421]/30" />
                       <span className="font-sans text-[8px] md:text-[9px] uppercase tracking-[0.30em] md:tracking-[0.40em] text-[#0C0C0A]/40">
                         {s.label}
                       </span>
@@ -384,22 +384,22 @@ function EquinoxSections() {
     { num: '02', label: t('s3_tags'), title: 'Table & Nutrition',
       description: 'Restaurant diététique, circuits courts, accords pensés pour votre métabolisme. Une table réelle, pas un catalogue. La cuisine comme acte de soin.',
       href: `/${locale}/soutenir`, cta: 'En savoir plus',
-      images: ['/Visuels/Restaurant.jpg','/Restaurant/B.jpg', '/Restaurant/A.jpg'], reverse: true },
+      images: ['/Restaurant/B.jpg', '/Restaurant/1.jpg', '/Restaurant/A.jpg', '/Restaurant/B.jpg'], reverse: true },
     { num: '03', label: t('s2_tags'), title: 'Récupération & Spa',
       description: "200 m² dédiés à la récupération active. Sauna, hammam, balnéo, soins. Un espace pour revenir à soi, sans compromis sur l'intensité.",
       href: `/${locale}/soutenir`, cta: 'Découvrir le spa',
-      images: ['/Visuels/Hammam.jpg','/Visuels/Piscine.jpg','/Visuels/Massage.jpg','/Spa/A.jpg'], reverse: false },
+      images: ['/Spa/A.jpg', '/Spa/1.jpg', '/Spa/3.jpg', '/Spa/A.jpg'], reverse: false },
   ];
 
   return (
     <>
       {SECTIONS.map((s, idx) => (
-        <section key={s.num} className="bg-[#F3F2EF] overflow-hidden">
+        <section key={s.num} className="bg-[#F4F5F0] overflow-hidden">
           <div className="max-w-container mx-auto py-10 md:py-24 relative">
 
             {/* MOBILE — titre + label + description + CTA avant l'image */}
             <div className="md:hidden px-6 pb-6">
- <div className="flex items-center gap-3 mb-3 hidden md:flex">
+              <div className="flex items-center gap-3 mb-3">
                 <div className="w-4 h-px" style={{ backgroundColor: WINE, opacity: 0.5 }} />
                 <Cap accent>{s.label}</Cap>
               </div>
@@ -489,7 +489,7 @@ function Citation() {
 function Complexe() {
   const t = useTranslations('complexe');
   return (
-    <section className="bg-[#F3F2EF] overflow-hidden">
+    <section className="bg-[#F4F5F0] overflow-hidden">
       <div className="max-w-container mx-auto py-16 md:py-28 px-6 md:px-0">
         <div className="grid grid-cols-12 gap-6 md:gap-8 items-start">
           <div className="col-span-12 md:col-span-3">
@@ -518,7 +518,7 @@ function Complexe() {
           <div className="col-span-12 md:col-span-8 md:col-start-5">
             <R d={0.1}>
               <div className="relative w-full overflow-hidden" style={{ aspectRatio: '4/3' }}>
-                <motion.img src="/Visuels/Exterieur 71.jpg" alt="Le Complexe MYRA"
+                <motion.img src="/Complexe/1.jpg" alt="Le Complexe MYRA"
                   className="w-full h-full object-cover"
                   style={{ filter: 'saturate(0.72) contrast(1.04)' }}
                   whileHover={{ scale: 1.02 }} transition={{ duration: 2.5, ease: EASE }} />
@@ -537,7 +537,7 @@ function Complexe() {
 function DoubleImage() {
   const t = useTranslations('double');
   return (
-    <section className="bg-[#F3F2EF] overflow-hidden">
+    <section className="bg-[#F4F5F0] overflow-hidden">
       <div className="max-w-container mx-auto py-14 md:py-20 px-6 md:px-0">
 
         {/* Texte — au dessus sur mobile */}
@@ -598,11 +598,11 @@ function DoubleImage() {
 function Gallery() {
   const t = useTranslations('gallery');
   const GALLERY_IMGS = [
-    { src: '/Visuels/Exterieur.jpg',   label: t('img1') },
-    { src: '/Visuels/Coaching.jpg',    label: t('img2') },
-    { src: '/Visuels/Restaurant.jpg', label: t('img3') },
-    { src: '/Visuels/Vestiaire.jpg',        label: t('img4') },
-    { src: '/Visuels/Exterieur Extension.jpg',   label: t('img5') },
+    { src: '/Complexe/A.jpg',   label: t('img1') },
+    { src: '/Fitness/2.jpg',    label: t('img2') },
+    { src: '/Restaurant/1.jpg', label: t('img3') },
+    { src: '/Spa/1.jpg',        label: t('img4') },
+    { src: '/Complexe/6.jpg',   label: t('img5') },
   ];
   const DURATION = 5000;
   const [cur, setCur] = useState(0);
@@ -684,7 +684,7 @@ function Gallery() {
             initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
             transition={{ duration: 0.4 }}>
             <span className="font-sans text-[10px] uppercase tracking-[0.55em]"
-              style={{ color: 'rgba(244,242,239,0.45)' }}>
+              style={{ color: 'rgba(244,245,240,0.45)' }}>
               {GALLERY_IMGS[cur].label}
             </span>
           </motion.div>
@@ -694,7 +694,7 @@ function Gallery() {
       {/* Compteur — caché sur mobile */}
       <div className="absolute bottom-16 right-8 md:right-14 z-10 hidden md:block">
         <span className="font-sans text-[10px] tracking-[0.45em] tabular-nums"
-          style={{ color: 'rgba(244,242,239,0.30)' }}>
+          style={{ color: 'rgba(244,245,240,0.30)' }}>
           {String(cur + 1).padStart(2, '0')} / {String(GALLERY_IMGS.length).padStart(2, '0')}
         </span>
       </div>
@@ -708,7 +708,7 @@ function Gallery() {
               style={{ backgroundColor: 'rgba(255,255,255,0.12)', height: 2 }}>
               {i === cur && (
                 <motion.div className="absolute top-0 left-0 h-full"
-                  style={{ backgroundColor: '#F3F2EF', width: `${progress * 100}%` }} />
+                  style={{ backgroundColor: '#F4F5F0', width: `${progress * 100}%` }} />
               )}
               {i < cur && (
                 <div className="absolute inset-0" style={{ backgroundColor: 'rgba(255,255,255,0.55)' }} />
@@ -734,40 +734,13 @@ function Equipe() {
     { src: '/Jérémy.jpg', name: 'Jérémy P.', role: 'Directeur Général', quote: t('jeremy_quote'), instagram: 'https://instagram.com/myra.society', linkedin: 'https://www.linkedin.com/in/jeremy-paulen/' },
   ];
 
-  const Selector = () => (
-    <div className="flex items-center gap-6">
-      {EQUIPE.map((m, i) => (
-        <button key={i} onClick={() => setAct(i)} className="flex items-center gap-4 outline-none">
-          <motion.div className="relative overflow-hidden flex-shrink-0" style={{ width: 52, height: 64 }}
-            animate={{ opacity: i === act ? 1 : 0.25, filter: i === act ? 'grayscale(1) contrast(1.05)' : 'grayscale(1)' }}
-            transition={{ duration: 0.4 }}>
-            <img src={m.src} alt={m.name} className="w-full h-full object-cover object-top" />
-            {i === act && <div className="absolute bottom-0 left-0 right-0 h-[2px]" style={{ backgroundColor: WINE }} />}
-          </motion.div>
-          <div className="text-left">
-            <p className="font-sans text-[10px] uppercase tracking-[0.30em]" style={{ color: i === act ? INK : 'rgba(12,12,10,0.25)' }}>{m.name}</p>
-            <p className="font-sans text-[9px] uppercase tracking-[0.25em] mt-0.5" style={{ color: 'rgba(12,12,10,0.20)' }}>{m.role}</p>
-          </div>
-        </button>
-      ))}
-    </div>
-  );
-
   return (
-    <section className="bg-[#F3F2EF] overflow-hidden">
+    <section className="bg-[#F4F5F0] overflow-hidden">
       <div className="max-w-container mx-auto py-14 md:py-20 px-6 md:px-0">
         <div className="flex items-center gap-4 mb-12 md:mb-16">
           <Trait /><Cap accent>{t('label')}</Cap>
         </div>
-
-        {/* Thumbnails — au dessus du portrait sur mobile */}
-        <div className="lg:hidden mb-6">
-          <Selector />
-        </div>
-
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-0" style={{ borderTop: '1px solid rgba(12,12,10,0.06)' }}>
-
-          {/* Portrait */}
           <div className="relative overflow-hidden" style={{ aspectRatio: '4/5', minHeight: 380 }}>
             <AnimatePresence mode="wait">
               <motion.img key={EQUIPE[act].src} src={EQUIPE[act].src} alt={EQUIPE[act].name}
@@ -777,11 +750,8 @@ function Equipe() {
                 transition={{ duration: 0.6, ease: EASE }} />
             </AnimatePresence>
           </div>
-
-          {/* Contenu droite */}
           <div className="flex flex-col justify-between px-0 md:px-14 py-10 md:py-0"
             style={{ borderLeft: '1px solid rgba(12,12,10,0.06)' }}>
-
             <div className="md:pt-2">
               <AnimatePresence mode="wait">
                 <motion.div key={act}
@@ -798,11 +768,23 @@ function Equipe() {
                 </motion.div>
               </AnimatePresence>
             </div>
-
             <div>
-              {/* Thumbnails desktop — dans le bas */}
-              <div className="hidden lg:flex items-center gap-6 mb-6">
-                <Selector />
+              {/* Sélecteur — au dessus des liens sur mobile */}
+              <div className="flex items-center gap-6 mb-6">
+                {EQUIPE.map((m, i) => (
+                  <button key={i} onClick={() => setAct(i)} className="flex items-center gap-4 outline-none">
+                    <motion.div className="relative overflow-hidden flex-shrink-0" style={{ width: 52, height: 64 }}
+                      animate={{ opacity: i === act ? 1 : 0.25, filter: i === act ? 'grayscale(1) contrast(1.05)' : 'grayscale(1)' }}
+                      transition={{ duration: 0.4 }}>
+                      <img src={m.src} alt={m.name} className="w-full h-full object-cover object-top" />
+                      {i === act && <div className="absolute bottom-0 left-0 right-0 h-[2px]" style={{ backgroundColor: WINE }} />}
+                    </motion.div>
+                    <div className="text-left">
+                      <p className="font-sans text-[10px] uppercase tracking-[0.30em]" style={{ color: i === act ? INK : 'rgba(12,12,10,0.25)' }}>{m.name}</p>
+                      <p className="font-sans text-[9px] uppercase tracking-[0.25em] mt-0.5" style={{ color: 'rgba(12,12,10,0.20)' }}>{m.role}</p>
+                    </div>
+                  </button>
+                ))}
               </div>
               <div className="flex items-center gap-6 pt-6" style={{ borderTop: '1px solid rgba(12,12,10,0.06)' }}>
                 {['instagram', 'linkedin'].map(r => (
@@ -864,8 +846,8 @@ function SupportPoster() {
       </motion.div>
       <div className="relative z-10 px-6 md:px-16 py-6 flex items-center justify-between"
         style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
-        <span className="font-sans text-[8px] tracking-[0.30em] uppercase" style={{ color: 'rgba(244,242,239,0.18)' }}>{t('copyright')}</span>
-        <span className="font-sans text-[8px] tracking-[0.30em] uppercase" style={{ color: 'rgba(244,242,239,0.18)' }}>{t('location')}</span>
+        <span className="font-sans text-[8px] tracking-[0.30em] uppercase" style={{ color: 'rgba(244,245,240,0.18)' }}>{t('copyright')}</span>
+        <span className="font-sans text-[8px] tracking-[0.30em] uppercase" style={{ color: 'rgba(244,245,240,0.18)' }}>{t('location')}</span>
       </div>
     </section>
   );
@@ -873,7 +855,7 @@ function SupportPoster() {
 
 export default function Page() {
   return (
-    <main className="bg-[#F3F2EF]">
+    <main className="bg-[#F4F5F0]">
       <Hero />
       <Statement />
       <EquinoxSections />
