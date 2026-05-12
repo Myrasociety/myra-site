@@ -3,6 +3,7 @@
 import { useState, useMemo, useRef, useEffect } from 'react';
 import { motion, AnimatePresence, useInView, useMotionValue, animate } from 'framer-motion';
 import Link from 'next/link';
+import Image from 'next/image';
 import { useTranslations, useLocale } from '@/lib/useTranslations';
 import { useRouter } from 'next/navigation';
 import { useRates, useAvailability, toKey } from '../../../lib/useSmoobu';
@@ -14,14 +15,27 @@ const BONE = 'rgba(12,12,10,0.06)';
 const EASE = [0.19, 1, 0.22, 1];
 const EXPO = [0.16, 1, 0.3, 1];
 
+function useReducedMotionSafe() {
+  const [reduced, setReduced] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setReduced(mq.matches);
+    const h = (e) => setReduced(e.matches);
+    mq.addEventListener('change', h);
+    return () => mq.removeEventListener('change', h);
+  }, []);
+  return reduced;
+}
+
 function R({ children, d = 0, y = 28, className = '' }) {
   const ref = useRef(null);
   const io  = useInView(ref, { once: true, margin: '-80px' });
+  const reduced = useReducedMotionSafe();
   return (
     <motion.div ref={ref} className={className}
-      initial={{ opacity: 0, y, filter: 'blur(4px)' }}
+      initial={{ opacity: 0, y: reduced ? 0 : y, filter: reduced ? 'blur(0px)' : 'blur(4px)' }}
       animate={io ? { opacity: 1, y: 0, filter: 'blur(0px)' } : {}}
-      transition={{ duration: 1.6, ease: [0.16, 1, 0.3, 1], delay: d }}>
+      transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1], delay: d }}>
       {children}
     </motion.div>
   );
@@ -36,8 +50,8 @@ function Cap({ children, light = false, accent = false, className = '' }) {
 }
 
 function Trait({ light = false, className = '' }) {
-  return <div className={`h-px w-8 flex-shrink-0 ${className}`}
-    style={{ backgroundColor: light ? 'rgba(244,245,240,0.15)' : 'rgba(53,20,33,0.35)' }} />;
+  return <div className={`h-px w-4 flex-shrink-0 ${className}`}
+    style={{ backgroundColor: light ? 'rgba(244,245,240,0.15)' : 'rgba(53,20,33,0.40)' }} />;
 }
 
 const SUITES = [
@@ -83,22 +97,26 @@ function ImageGallery({ images, name }) {
     <div className="relative w-full h-full group/gal overflow-hidden" style={{ backgroundColor: BONE }}
       onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
       <motion.img key={idx} src={images[idx]} alt={`${name} — vue ${idx + 1}`}
+        loading="lazy" decoding="async"
         className="absolute inset-0 w-full h-full object-cover"
         initial={{ opacity: 0 }} animate={{ opacity: 1 }}
         transition={{ duration: 0.6, ease: EASE }}
-        style={{ filter: 'saturate(0.85)' }} />
+        style={{ filter: 'saturate(0.85) brightness(0.92) contrast(1.04)' }} />
       <div className="absolute inset-0 hidden md:flex items-center justify-between px-4 opacity-0 group-hover/gal:opacity-100 transition-opacity duration-500 z-20 pointer-events-none">
-        <button onClick={prev} className="pointer-events-auto w-9 h-9 flex items-center justify-center bg-[#F4F5F0]/80 hover:bg-[#F4F5F0] backdrop-blur-sm transition-all duration-300">
+        <button type="button" onClick={prev} aria-label="Image précédente" className="pointer-events-auto w-9 h-9 flex items-center justify-center bg-[#F4F5F0]/80 hover:bg-[#F4F5F0] backdrop-blur-sm transition-all duration-300">
           <svg width="11" height="11" fill="none" stroke={INK} strokeWidth="1.5" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" strokeLinecap="round" /></svg>
         </button>
-        <button onClick={next} className="pointer-events-auto w-9 h-9 flex items-center justify-center bg-[#F4F5F0]/80 hover:bg-[#F4F5F0] backdrop-blur-sm transition-all duration-300">
+        <button type="button" onClick={next} aria-label="Image suivante" className="pointer-events-auto w-9 h-9 flex items-center justify-center bg-[#F4F5F0]/80 hover:bg-[#F4F5F0] backdrop-blur-sm transition-all duration-300">
           <svg width="11" height="11" fill="none" stroke={INK} strokeWidth="1.5" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6" strokeLinecap="round" /></svg>
         </button>
       </div>
-      <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2 z-10 pointer-events-none">
+      <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex gap-2 z-10">
         {images.map((_, i) => (
-          <div key={i} className="h-px transition-all duration-500"
-            style={{ width: i === idx ? 24 : 10, backgroundColor: i === idx ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.35)' }} />
+          <button key={i} type="button" onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIdx(i); }}
+            aria-label={`Image ${i + 1} sur ${images.length}`}
+            aria-current={i === idx ? 'true' : undefined}
+            className="h-px p-0 transition-all duration-500 outline-none cursor-pointer"
+            style={{ width: i === idx ? 24 : 10, backgroundColor: i === idx ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.35)', border: 'none' }} />
         ))}
       </div>
     </div>
@@ -125,22 +143,23 @@ function ToComeGallery({ images, name }) {
     <div className="relative w-full h-full group/toc overflow-hidden" style={{ backgroundColor: BONE }}
       onTouchStart={onTouchStart} onTouchEnd={onTouchEnd}>
       <motion.img key={idx} src={images[idx]} alt={`${name} — vue ${idx + 1}`}
+        loading="lazy" decoding="async"
         className="absolute inset-0 w-full h-full object-cover"
         initial={{ opacity: 0 }} animate={{ opacity: 1 }}
         transition={{ duration: 0.6, ease: EASE }}
-        style={{ filter: 'saturate(0.85)' }} />
+        style={{ filter: 'saturate(0.85) brightness(0.92) contrast(1.04)' }} />
       {/* Flèches — toujours visibles au hover, sur desktop ET mobile */}
       {images.length > 1 && (
         <div className="absolute inset-0 flex items-center justify-between px-3 z-20 pointer-events-none
           opacity-0 group-hover/toc:opacity-100 transition-opacity duration-400">
-          <button onClick={prev}
+          <button type="button" onClick={prev} aria-label="Image précédente"
             className="pointer-events-auto w-8 h-8 flex items-center justify-center transition-all duration-300"
             style={{ backgroundColor: 'rgba(12,12,10,0.50)', backdropFilter: 'blur(8px)' }}>
             <svg width="10" height="10" fill="none" stroke="rgba(244,245,240,0.80)" strokeWidth="1.5" viewBox="0 0 24 24">
               <path d="M15 18l-6-6 6-6" strokeLinecap="round" />
             </svg>
           </button>
-          <button onClick={next}
+          <button type="button" onClick={next} aria-label="Image suivante"
             className="pointer-events-auto w-8 h-8 flex items-center justify-center transition-all duration-300"
             style={{ backgroundColor: 'rgba(12,12,10,0.50)', backdropFilter: 'blur(8px)' }}>
             <svg width="10" height="10" fill="none" stroke="rgba(244,245,240,0.80)" strokeWidth="1.5" viewBox="0 0 24 24">
@@ -149,10 +168,13 @@ function ToComeGallery({ images, name }) {
           </button>
         </div>
       )}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10 pointer-events-none">
+      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2 z-10">
         {images.map((_, i) => (
-          <div key={i} className="h-px transition-all duration-500"
-            style={{ width: i === idx ? 20 : 8, backgroundColor: i === idx ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.30)' }} />
+          <button key={i} type="button" onClick={(e) => { e.preventDefault(); e.stopPropagation(); setIdx(i); }}
+            aria-label={`Image ${i + 1} sur ${images.length}`}
+            aria-current={i === idx ? 'true' : undefined}
+            className="h-px p-0 transition-all duration-500 outline-none cursor-pointer"
+            style={{ width: i === idx ? 20 : 8, backgroundColor: i === idx ? 'rgba(255,255,255,0.9)' : 'rgba(255,255,255,0.30)', border: 'none' }} />
         ))}
       </div>
     </div>
@@ -177,7 +199,7 @@ function SuiteCard({ suite, datesSelected, checkIn, checkOut, isToCome = false, 
   const price = suite.priceInfo ? suite.priceInfo.total : suite.minPrice;
 
   return (
-    <div className={`group transition-all duration-[1200ms] ${isOff ? 'opacity-20 pointer-events-none' : ''}`}>
+    <article aria-labelledby={`suite-${suite.id}-name`} className={`group transition-all duration-[1200ms] ${isOff ? 'opacity-20 pointer-events-none' : ''}`}>
       {isToCome ? (
         /* Desktop: Link cliquable avec galerie dédiée */
         <Link href={`/${locale}/hebergement/prochainement/${suite.id}`}
@@ -195,7 +217,7 @@ function SuiteCard({ suite, datesSelected, checkIn, checkOut, isToCome = false, 
             <div className="flex items-center gap-2 px-4 py-2"
               style={{ backgroundColor: 'rgba(12,12,10,0.55)', backdropFilter: 'blur(8px)' }}>
               <span className="font-sans text-[8px] uppercase tracking-[0.40em]"
-                style={{ color: 'rgba(244,245,240,0.70)' }}>Découvrir</span>
+                style={{ color: 'rgba(244,245,240,0.70)' }}>{t('discover')}</span>
               <svg width="8" height="8" fill="none" stroke="rgba(244,245,240,0.70)" strokeWidth="1.5" viewBox="0 0 24 24">
                 <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" />
               </svg>
@@ -210,7 +232,7 @@ function SuiteCard({ suite, datesSelected, checkIn, checkOut, isToCome = false, 
       <div className="pt-1">
         <R>
           <div className="flex justify-between items-baseline mb-2 gap-3">
-            <h3 className="font-serif font-light italic leading-[0.95]"
+            <h3 id={`suite-${suite.id}-name`} className="font-serif font-light italic leading-[0.95]"
               style={{ fontSize: 'clamp(22px, 3vw, 42px)', color: dark ? 'rgba(244,245,240,0.85)' : '#0C0C0A' }}>
               {suite.name}
             </h3>
@@ -238,13 +260,17 @@ function SuiteCard({ suite, datesSelected, checkIn, checkOut, isToCome = false, 
             {suite.excerpt}
           </p>
           {!isToCome && (
-            <div className="hidden md:flex items-center gap-3 mt-5 opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-              <Trait /><Cap accent>{t('discover')}</Cap>
+            <div className="flex items-center gap-2 mt-5 transition-opacity duration-500 opacity-60 group-hover:opacity-100">
+              <Cap accent>{t('discover')}</Cap>
+              <svg width="10" height="10" fill="none" stroke={WINE} strokeWidth="1.5" viewBox="0 0 24 24"
+                className="transition-transform duration-500 group-hover:translate-x-1">
+                <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" />
+              </svg>
             </div>
           )}
         </R>
       </div>
-    </div>
+    </article>
   );
 }
 
@@ -414,6 +440,7 @@ function Hero({ checkIn, checkOut, guests, setGuests, onDateChange, panelOpen, s
   const barRef = useRef(null);
   const [dir, setDir] = useState('bottom');
   const datesSelected = !!(checkIn && checkOut);
+  const reducedMotion = useReducedMotionSafe();
 
   useEffect(() => {
     if (panelOpen && barRef.current) {
@@ -423,30 +450,40 @@ function Hero({ checkIn, checkOut, guests, setGuests, onDateChange, panelOpen, s
   }, [panelOpen]);
 
   return (
-    <section className="relative w-full flex flex-col bg-[#0C0C0A]" style={{ height: '100dvh', minHeight: 680 }}>
+    <section id="hero" className="relative w-full flex flex-col bg-[#0C0C0A]" style={{ height: '100dvh', minHeight: 680 }}>
       <div className="absolute inset-0 overflow-hidden">
         <motion.img src="/Complexe/1.jpg" alt="Domaine MYRA"
+          loading="eager" fetchPriority="high"
           className="w-full h-full object-cover"
-          style={{ filter: 'brightness(0.35) contrast(1.1)' }}
+          style={{ filter: 'saturate(0.85) brightness(0.35) contrast(1.1)' }}
           initial={{ scale: 1.04 }} animate={{ scale: 1 }}
           transition={{ duration: 3.5, ease: EASE }} />
       </div>
       <div className="absolute inset-0"
         style={{ background: 'linear-gradient(to bottom, transparent 30%, rgba(12,12,10,0.92) 100%)' }} />
 
+      {/* Grain analogique — section Ink */}
+      <div className="absolute inset-0 pointer-events-none z-[1]"
+        style={{
+          opacity: 0.035,
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+          backgroundSize: '128px',
+        }}
+      />
+
       <div className="flex-1" />
 
       <div className="relative z-10 w-full pb-4 md:pb-6">
         <div className="max-w-container mx-auto px-6 md:px-16">
-          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 2, ease: EASE, delay: 0.2 }}>
+          <motion.div initial={{ opacity: 0, y: reducedMotion ? 0 : 30 }} animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.4, ease: EASE, delay: 0.2 }}>
             <div className="flex items-center gap-3 md:gap-4">
               <h1 className="font-serif font-light italic text-white leading-[0.85] tracking-[-0.04em]"
                 style={{ fontSize: 'clamp(48px, 9vw, 130px)' }}>
                 {t('hero_title')}
               </h1>
-              <img src="/myra-logo.svg" alt="MYRA"
-                style={{ height: 'clamp(30px, 5.5vw, 80px)', filter: 'brightness(0) invert(1)', opacity: 0.45 }} />
+              <Image src="/myra-logo.svg" alt="MYRA" width={80} height={80}
+                style={{ height: 'clamp(30px, 5.5vw, 80px)', width: 'auto', filter: 'brightness(0) invert(1)', opacity: 0.45 }} />
             </div>
           </motion.div>
         </div>
@@ -455,15 +492,16 @@ function Hero({ checkIn, checkOut, guests, setGuests, onDateChange, panelOpen, s
       <div className="relative z-40 w-full pb-8 md:pb-12" ref={filterRef}>
         <div className="max-w-container mx-auto px-6 md:px-16">
           <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}
-            transition={{ duration: 1.2, ease: EASE, delay: 0.8 }}>
+            transition={{ duration: 1.4, ease: EASE, delay: 0.8 }}>
             <p className="hidden md:block font-sans text-[9px] uppercase tracking-[0.45em] mb-5"
               style={{ color: 'rgba(244,245,240,0.18)' }}>
               71 rue du Général de Gaulle — 67520 Marlenheim, Alsace
             </p>
-            <div className="relative" ref={barRef}>
-              <AnimatePresence>
+            <form role="search" onSubmit={(e) => e.preventDefault()} className="relative" ref={barRef}>
+              <AnimatePresence mode="wait">
                 {panelOpen && (
                   <motion.div
+                    id="hero-search-panel"
                     initial={{ opacity: 0, y: dir === 'top' ? -8 : 8 }}
                     animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0 }}
                     transition={{ duration: 0.4, ease: EASE }}
@@ -475,9 +513,11 @@ function Hero({ checkIn, checkOut, guests, setGuests, onDateChange, panelOpen, s
                       ) : (
                         <div className="max-w-xl">
                           <Cap className="block mb-8">{t('guests_label')}</Cap>
-                          <div className="flex flex-wrap gap-3">
+                          <div className="flex flex-wrap gap-3" role="group" aria-label={t('guests_label')}>
                             {[1,2,3,4,5,6].map(n => (
                               <button key={n} onClick={() => { setGuests(n); setPanelOpen(null); }}
+                                aria-label={`${n} ${n > 1 ? t('persons') : t('person')}`}
+                                aria-pressed={guests === n}
                                 className="w-12 h-12 md:w-14 md:h-14 transition-all duration-500 border font-sans text-[13px]"
                                 style={{ backgroundColor: guests === n ? INK : 'transparent', color: guests === n ? '#F4F5F0' : 'rgba(12,12,10,0.40)', borderColor: guests === n ? INK : BONE }}>
                                 {n}
@@ -498,7 +538,9 @@ function Hero({ checkIn, checkOut, guests, setGuests, onDateChange, panelOpen, s
                   backdropFilter: 'blur(24px)',
                   WebkitBackdropFilter: 'blur(24px)',
                 }}>
-                <button onClick={() => setPanelOpen(panelOpen === 'dates' ? null : 'dates')}
+                <button type="button" onClick={() => setPanelOpen(panelOpen === 'dates' ? null : 'dates')}
+                  aria-expanded={panelOpen === 'dates'}
+                  aria-controls="hero-search-panel"
                   className="flex items-center gap-4 px-5 py-4 md:flex-1 md:py-5 md:pl-6 md:pr-8 outline-none text-left transition-colors"
                   style={{ borderBottom: '1px solid rgba(244,245,240,0.08)' }}
                   onMouseEnter={e => e.currentTarget.style.backgroundColor='rgba(244,245,240,0.04)'}
@@ -511,7 +553,9 @@ function Hero({ checkIn, checkOut, guests, setGuests, onDateChange, panelOpen, s
                   </span>
                 </button>
                 <div className="flex md:contents">
-                  <button onClick={() => setPanelOpen(panelOpen === 'guests' ? null : 'guests')}
+                  <button type="button" onClick={() => setPanelOpen(panelOpen === 'guests' ? null : 'guests')}
+                    aria-expanded={panelOpen === 'guests'}
+                    aria-controls="hero-search-panel"
                     className="flex-1 flex items-center gap-4 px-5 py-4 md:w-auto md:py-5 md:px-8 outline-none text-left transition-colors"
                     style={{ borderRight: '1px solid rgba(244,245,240,0.08)' }}
                     onMouseEnter={e => e.currentTarget.style.backgroundColor='rgba(244,245,240,0.04)'}
@@ -523,16 +567,24 @@ function Hero({ checkIn, checkOut, guests, setGuests, onDateChange, panelOpen, s
                       {guests > 0 ? `${guests}` : '—'}
                     </span>
                   </button>
-                  <button onClick={() => document.getElementById('collection')?.scrollIntoView({ behavior: 'smooth' })}
-                    className="px-5 py-4 md:py-5 md:pl-8 md:pr-6 font-sans text-[9px] uppercase tracking-[0.45em] outline-none transition-colors"
-                    style={{ color: 'rgba(244,245,240,0.45)' }}
-                    onMouseEnter={e => e.currentTarget.style.color='rgba(244,245,240,0.90)'}
-                    onMouseLeave={e => e.currentTarget.style.color='rgba(244,245,240,0.45)'}>
-                    {isLoading ? '…' : t('search_verify')}
+                  <button type="submit" onClick={() => document.getElementById('collection')?.scrollIntoView({ behavior: 'smooth' })}
+                    className="group flex items-center gap-3 px-5 py-4 md:py-5 md:pl-8 md:pr-6 font-sans text-[9px] uppercase tracking-[0.45em] outline-none transition-colors"
+                    style={{ color: 'rgba(244,245,240,0.55)' }}
+                    onMouseEnter={e => e.currentTarget.style.color='rgba(244,245,240,0.95)'}
+                    onMouseLeave={e => e.currentTarget.style.color='rgba(244,245,240,0.55)'}>
+                    <span className="relative">
+                      {isLoading ? '…' : t('search_verify')}
+                      <span className="absolute -bottom-1 left-0 h-px w-0 group-hover:w-full transition-all duration-500" style={{ backgroundColor: WINE }} />
+                    </span>
+                    {!isLoading && (
+                      <svg width="10" height="10" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24" className="transition-transform duration-500 group-hover:translate-x-1">
+                        <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" />
+                      </svg>
+                    )}
                   </button>
                 </div>
               </div>
-            </div>
+            </form>
           </motion.div>
         </div>
       </div>
@@ -556,9 +608,14 @@ export default function HebergementPage() {
   const datesSelected = !!(checkIn && checkOut);
 
   useEffect(() => {
-    const h = (e) => { if (panelRef.current && !panelRef.current.contains(e.target)) setPanelOpen(null); };
-    document.addEventListener('mousedown', h);
-    return () => document.removeEventListener('mousedown', h);
+    const onClick = (e) => { if (panelRef.current && !panelRef.current.contains(e.target)) setPanelOpen(null); };
+    const onKey = (e) => { if (e.key === 'Escape') setPanelOpen(null); };
+    document.addEventListener('mousedown', onClick);
+    document.addEventListener('keydown', onKey);
+    return () => {
+      document.removeEventListener('mousedown', onClick);
+      document.removeEventListener('keydown', onKey);
+    };
   }, []);
 
   const handleDateChange = (d) => {
@@ -589,57 +646,75 @@ export default function HebergementPage() {
       </div>
 
       {/* ── COLLECTION ── */}
-      <section id="collection">
+      <section id="collection" aria-labelledby="collection-label">
         <div className="max-w-container mx-auto py-16 md:py-32 px-6 md:px-0">
           <div className="flex items-end justify-between mb-10 md:mb-20 pb-6 md:pb-10"
             style={{ borderBottom: '1px solid rgba(12,12,10,0.06)' }}>
-            <R><div className="flex items-center gap-5"><Trait /><Cap accent>{t('collection_label')}</Cap></div></R>
-            <div className="flex items-center gap-4">
+            <R>
+              <div className="flex items-center gap-5">
+                <Trait />
+                <h2 id="collection-label" className="inline-block font-sans text-[11px] tracking-[0.55em] uppercase m-0" style={{ color: WINE }}>
+                  {t('collection_label')}
+                </h2>
+              </div>
+            </R>
+            <div className="flex items-center gap-4" aria-live="polite">
               {availLoading && (
-                <motion.span className="w-1.5 h-1.5 rounded-full bg-[#351421]"
+                <motion.span role="status" aria-label={t('search_checking')}
+                  className="w-1.5 h-1.5 rounded-full bg-[#351421]"
                   animate={{ opacity: [1, 0.3, 1] }} transition={{ duration: 1.5, repeat: Infinity }} />
               )}
-              <Cap>
-                {datesSelected
-                  ? `${availableCount} ${availableCount !== 1 ? t('availables') : t('available')}`
-                  : `${visible.length} ${visible.length > 1 ? t('suites') : t('suite')}`}
-              </Cap>
+              <div className="flex items-baseline gap-2">
+                <span className="font-serif font-light italic" style={{ fontSize: '17px', color: 'rgba(12,12,10,0.55)', lineHeight: 1 }}>
+                  {datesSelected ? availableCount : visible.length}
+                </span>
+                <span className="font-sans text-[9px] uppercase tracking-[0.45em]" style={{ color: 'rgba(12,12,10,0.32)' }}>
+                  {datesSelected
+                    ? (availableCount !== 1 ? t('availables') : t('available'))
+                    : (visible.length > 1 ? t('suites') : t('suite'))}
+                </span>
+              </div>
             </div>
           </div>
-          <div className="hidden md:grid grid-cols-2 gap-x-10 gap-y-24">
-            {visible.map((s, i) => (
-              <motion.div key={s.id}
-                initial={{ opacity: 0, y: 32, filter: 'blur(4px)' }}
-                whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                viewport={{ once: true }}
-                transition={{ duration: 1.4, ease: EXPO, delay: i * 0.12 }}>
-                <SuiteCard suite={s} datesSelected={datesSelected} checkIn={checkIn} checkOut={checkOut} />
-              </motion.div>
-            ))}
-          </div>
-          <div className="md:hidden flex flex-col gap-14">
-            {visible.map((s, i) => (
-              <motion.div key={s.id}
-                initial={{ opacity: 0, y: 24, filter: 'blur(4px)' }}
-                whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                viewport={{ once: true }}
-                transition={{ duration: 1.2, ease: EXPO, delay: i * 0.08 }}>
-                <SuiteCard suite={s} datesSelected={datesSelected} checkIn={checkIn} checkOut={checkOut} />
-              </motion.div>
-            ))}
-          </div>
+          {visible.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-20 md:py-32">
+              <div className="flex items-center gap-4">
+                <div className="w-8 h-px" style={{ backgroundColor: WINE, opacity: 0.45 }} />
+                <span aria-hidden="true" className="font-serif font-light italic" style={{ fontSize: '32px', color: 'rgba(12,12,10,0.40)', lineHeight: 1 }}>—</span>
+                <div className="w-8 h-px" style={{ backgroundColor: WINE, opacity: 0.45 }} />
+              </div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-14 md:gap-x-10 md:gap-y-24">
+              {visible.map((s, i) => (
+                <R key={s.id} d={i * 0.12} y={32}>
+                  <SuiteCard suite={s} datesSelected={datesSelected} checkIn={checkIn} checkOut={checkOut} />
+                </R>
+              ))}
+            </div>
+          )}
         </div>
       </section>
 
       {/* ── PROCHAINEMENT ── */}
-      <section style={{ backgroundColor: INK }}>
-        <div className="max-w-container mx-auto py-16 md:py-32 px-6 md:px-0">
+      <section id="prochainement" aria-labelledby="prochainement-label" className="relative" style={{ backgroundColor: INK }}>
+        {/* Grain analogique — section Ink */}
+        <div className="absolute inset-0 pointer-events-none z-[1]"
+          style={{
+            opacity: 0.035,
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+            backgroundSize: '128px',
+          }}
+        />
+        <div className="relative z-[2] max-w-container mx-auto py-16 md:py-32 px-6 md:px-0">
           <div className="flex items-end justify-between mb-10 md:mb-20 pb-6 md:pb-10"
             style={{ borderBottom: '1px solid rgba(244,245,240,0.06)' }}>
             <R>
               <div className="flex items-center gap-5">
-                <div className="w-8 h-px" style={{ backgroundColor: WINE, opacity: 0.4 }} />
-                <Cap light>{t('coming_soon_label')}</Cap>
+                <div className="w-4 h-px" style={{ backgroundColor: WINE, opacity: 0.4 }} />
+                <h2 id="prochainement-label" className="inline-block font-sans text-[11px] tracking-[0.55em] uppercase m-0" style={{ color: 'rgba(244,245,240,0.38)' }}>
+                  {t('coming_soon_label')}
+                </h2>
               </div>
             </R>
           </div>
@@ -647,26 +722,18 @@ export default function HebergementPage() {
           {/* Desktop — 3 colonnes */}
           <div className="hidden md:grid grid-cols-3 gap-x-8 gap-y-20">
             {TO_COME.map((s, i) => (
-              <motion.div key={s.id}
-                initial={{ opacity: 0, y: 32, filter: 'blur(4px)' }}
-                whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                viewport={{ once: true }}
-                transition={{ duration: 1.4, ease: EXPO, delay: i * 0.12 }}>
+              <R key={s.id} d={i * 0.12} y={32}>
                 <SuiteCard suite={s} datesSelected={false} checkIn={checkIn} checkOut={checkOut} isToCome={true} dark={true} />
-              </motion.div>
+              </R>
             ))}
           </div>
 
           {/* Mobile — 2 colonnes compactes */}
           <div className="md:hidden grid grid-cols-2 gap-4">
             {TO_COME.map((s, i) => (
-              <motion.div key={s.id}
-                initial={{ opacity: 0, y: 24, filter: 'blur(4px)' }}
-                whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                viewport={{ once: true }}
-                transition={{ duration: 1.2, ease: EXPO, delay: i * 0.08 }}>
-                <div>
-                  <div onClick={(e) => { e.stopPropagation(); router.push(`/${locale}/hebergement/prochainement/${s.id}`); }} className="cursor-pointer">
+              <R key={s.id} d={i * 0.08} y={24}>
+                <article aria-labelledby={`tocome-${s.id}-name`}>
+                  <Link href={`/${locale}/hebergement/prochainement/${s.id}`} className="block">
                     <div className="relative overflow-hidden mb-3" style={{ aspectRatio: '3/4' }}>
                       <ToComeGallery images={s.images} name={s.name} />
                       <div className="absolute top-3 left-3 z-30">
@@ -676,20 +743,25 @@ export default function HebergementPage() {
                         </span>
                       </div>
                     </div>
-                    <h3 className="font-serif font-light italic mb-1"
+                    <h3 id={`tocome-${s.id}-name`} className="font-serif font-light italic mb-1"
                       style={{ fontSize: '17px', color: 'rgba(244,245,240,0.80)' }}>
                       {s.name}
                     </h3>
-                    <div className="flex items-center gap-2">
-                      <span className="font-sans text-[9px] uppercase tracking-[0.28em]"
-                        style={{ color: 'rgba(244,245,240,0.28)' }}>{s.surface}</span>
-                      <span className="w-px h-2.5" style={{ backgroundColor: 'rgba(244,245,240,0.10)' }} />
-                      <span className="font-sans text-[9px] uppercase tracking-[0.28em]"
-                        style={{ color: 'rgba(244,245,240,0.20)' }}>{s.guests} pers.</span>
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center gap-2">
+                        <span className="font-sans text-[9px] uppercase tracking-[0.28em]"
+                          style={{ color: 'rgba(244,245,240,0.28)' }}>{s.surface}</span>
+                        <span className="w-px h-2.5" style={{ backgroundColor: 'rgba(244,245,240,0.10)' }} />
+                        <span className="font-sans text-[9px] uppercase tracking-[0.28em]"
+                          style={{ color: 'rgba(244,245,240,0.20)' }}>{s.guests} {s.guests > 1 ? t('persons') : t('person')}</span>
+                      </div>
+                      <svg aria-hidden="true" width="9" height="9" fill="none" stroke={WINE} strokeWidth="1.5" viewBox="0 0 24 24" style={{ opacity: 0.55 }}>
+                        <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" />
+                      </svg>
                     </div>
-                  </div>
-                </div>
-              </motion.div>
+                  </Link>
+                </article>
+              </R>
             ))}
           </div>
         </div>

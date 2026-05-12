@@ -8,16 +8,15 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans:  ['var(--font-geist-sans)', 'system-ui', 'sans-serif'],
-        serif: ['var(--font-serif)', 'Georgia', 'serif'],
+        sans:  ['var(--font-sans)',  'system-ui', 'sans-serif'],
+        serif: ['var(--font-serif)', 'Georgia',   'serif'],
       },
       colors: {
         porcelain: '#F4F5F0',
         stone:     '#D8D5CD',
         ink:       '#0C0C0A',
-        wood:      '#2A1712',
-        bordeaux:  '#2B1022',
         denim:     '#465364',
+        bordeaux:  '#351421',
       },
       maxWidth: {
         container: '1440px',
