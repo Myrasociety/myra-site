@@ -500,20 +500,20 @@ function EquinoxSections() {
       description: 'Restaurant diététique, circuits courts, accords pensés pour votre métabolisme. Une table réelle, pas un catalogue. La cuisine comme acte de soin.',
       href: `/${locale}/nous-rejoindre`, cta: 'En savoir plus',
       images: ['/Visuels/Restaurant.jpg', '/Restaurant/B.jpg', '/Restaurant/A.jpg'], reverse: true },
-    { id: 'recovery', num: '03', label: t('s2_tags'), title: 'Récupération & Spa',
-      description: "200 m² dédiés à la récupération active. Sauna, hammam, balnéo, soins. Un espace pour revenir à soi, sans compromis sur l'intensité.",
-      href: `/${locale}/nous-rejoindre`, cta: 'Découvrir le spa',
-      images: ['/Visuels/Coaching.jpg', '/Visuels/Hammam.jpg', '/Visuels/Massage.jpg'], reverse: false },
+    { id: 'recovery', num: '03', label: t('s2_tags'), title: 'Spa, Fitness & Récupération',
+      description: "200 m² dédiés au corps en mouvement et au repos. Plateau performance, sauna, hammam, balnéo, soins. Un espace pour revenir à soi, sans compromis sur l'intensité.",
+      href: `/${locale}/nous-rejoindre`, cta: "Découvrir l'espace",
+      images: ['/Visuels/Coaching.jpg', '/Visuels/Hammam.jpg', '/Fitness/A.jpg', '/Visuels/Massage.jpg'], reverse: false },
   ];
 
   return (
-    <div className="md:block flex overflow-x-auto md:overflow-visible snap-x md:snap-none snap-mandatory">
+    <div className="block">
       {SECTIONS.map((s) => {
         const headingId = `${s.id}-title`;
         const isSignature = s.num === '01';
         return (
           <section key={s.num} id={s.id} aria-labelledby={headingId}
-            className="w-[90vw] shrink-0 md:w-auto md:shrink snap-start bg-[#F4F5F0] overflow-hidden">
+            className="w-full bg-[#F4F5F0] overflow-hidden">
             <div className={`max-w-container mx-auto relative ${isSignature ? 'py-16 md:py-32' : 'py-14 md:py-24'}`}>
               <div className="grid grid-cols-1 md:grid-cols-12 gap-0 items-stretch" style={{ direction: s.reverse ? 'rtl' : 'ltr' }}>
                 {/* Galerie — col-span-7 desktop (image dominante) */}
