@@ -315,7 +315,7 @@ function Statement() {
   const subhead = parts.slice(2).join(' ');
 
   return (
-    <section aria-labelledby="statement-label" className="bg-[#F4F5F0] section-xl overflow-hidden">
+    <section aria-labelledby="statement-label" className="bg-[#F4F5F0] overflow-hidden py-14 md:py-24">
       <div className="editorial-grid">
 
         {/* Eyebrow */}
@@ -334,7 +334,7 @@ function Statement() {
         <div className="col-span-12 md:col-span-9 mt-6 md:mt-0">
           <R d={0.1}>
             <h2 className="font-serif font-light italic text-[#0C0C0A] m-0"
-              style={{ fontSize: 'clamp(48px, 8vw, 128px)', lineHeight: 0.92, letterSpacing: '-0.02em' }}>
+              style={{ fontSize: 'clamp(40px, 6vw, 96px)', lineHeight: 0.95, letterSpacing: '-0.02em' }}>
               {heading}
             </h2>
           </R>
@@ -514,7 +514,7 @@ function EquinoxSections() {
         return (
           <section key={s.num} id={s.id} aria-labelledby={headingId}
             className="w-full bg-[#F4F5F0] overflow-hidden">
-            <div className={`max-w-container mx-auto relative ${isSignature ? 'py-16 md:py-32' : 'py-14 md:py-24'}`}>
+            <div className={`max-w-container mx-auto relative ${isSignature ? 'py-12 md:py-20' : 'py-10 md:py-16'}`}>
               <div className="grid grid-cols-1 md:grid-cols-12 gap-0 items-stretch" style={{ direction: s.reverse ? 'rtl' : 'ltr' }}>
                 {/* Galerie — col-span-7 desktop (image dominante) */}
                 <div style={{ direction: 'ltr' }} className="md:col-span-7 order-2 md:order-none">
@@ -1023,7 +1023,7 @@ function Equipe() {
   };
 
   return (
-    <section id="equipe" aria-labelledby="equipe-label" className="bg-[#F4F5F0] section-lg overflow-hidden">
+    <section id="equipe" aria-labelledby="equipe-label" className="bg-[#F4F5F0] overflow-hidden py-12 md:py-20">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(peopleJsonLd) }} />
       <div className="max-w-container mx-auto px-6 md:px-0">
         <div className="flex items-center gap-4 mb-12 md:mb-16">
@@ -1112,7 +1112,7 @@ function SupportPoster() {
   const locale = useLocale();
   const reducedMotion = useReducedMotionSafe();
   return (
-    <section id="soutenir-cta" aria-labelledby="poster-title" className="relative overflow-hidden" style={{ backgroundColor: INK, minHeight: 500 }}>
+    <section id="soutenir-cta" aria-labelledby="poster-title" className="relative overflow-hidden" style={{ backgroundColor: INK, minHeight: 380 }}>
       <motion.img src="/DA/Double visage.jpg" alt="" loading="lazy" decoding="async"
         className="absolute inset-0 w-full h-full object-cover"
         style={{ filter: 'grayscale(1) brightness(0.42) contrast(1.10)' }}
@@ -1128,8 +1128,8 @@ function SupportPoster() {
           backgroundSize: '128px',
         }}
       />
-      <motion.div className="relative z-10 flex flex-col items-center justify-center text-center px-6 md:px-8 py-16 md:py-32"
-        style={{ minHeight: 500 }}
+      <motion.div className="relative z-10 flex flex-col items-center justify-center text-center px-6 md:px-8 py-12 md:py-20"
+        style={{ minHeight: 380 }}
         initial={{ opacity: 0, y: reducedMotion ? 0 : 28 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
         transition={{ duration: 1.4, ease: EASE }}>
         <div className="max-w-[560px] w-full">
