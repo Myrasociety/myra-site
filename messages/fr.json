@@ -83,8 +83,8 @@
   },
   "team": {
     "label": "L'Équipe",
-    "tina_quote": "La performance n'est pas un acte. C'est une habitude de précision.",
-    "jeremy_quote": "Work hard. Recover hard. Back to life."
+    "tina_quote": "Elle veille à ce que chaque parcours suive un protocole précis — suivi détaillé des performances et accompagnement sur mesure.",
+    "jeremy_quote": "Il travaille l'expérience et l'hospitalité du lieu. Pour qu'on s'y sente chez soi, et qu'une communauté s'y forme."
   },
   "poster": {
     "label": "Nous soutenir",
@@ -167,12 +167,19 @@
     "hero_edition": "Édition",
     "hero_lieu_val": "Marlenheim / Alsace",
     "hero_edition_val": "Avril 2025",
-    "genese_label": "01 — Genèse",
+    "genese_label": "01 — L'Origine",
     "genese_title": "À l'origine de MYRA",
     "genese_p1": "MYRA est née d'un refus. Celui de vivre à moitié. Un lieu pour travailler fort, récupérer fort, et revenir. Ancré à Marlenheim — day one. Pas la ligne d'arrivée.",
     "genese_p2": "Marlenheim est le prototype vivant. The blueprint. On y pose les fondations, on verrouille les codes. L'expansion suit.",
     "genese_location": "Alsace · France",
-    "services_label": "02 — Services",
+    "services_label": "02 — Le Présent",
+    "avenir_label": "03 — L'Avenir",
+    "avenir_title": "Marlenheim n'est qu'un commencement.",
+    "avenir_speaker_name": "Tina F.",
+    "avenir_speaker_role": "Co-fondatrice · Head Coach",
+    "avenir_p1": "Vous lisez ces lignes alors que Marlenheim n'est encore qu'un commencement. C'est notre première maison — le premier laboratoire. Une preuve qu'on peut habiter le soin autrement, sans concession.",
+    "avenir_p2": "Ce que nous construisons ici n'est qu'une étape. D'autres maisons MYRA suivront, ailleurs, différentes par leur territoire mais portées par la même exigence. Marlenheim est le jour un. Pas la ligne d'arrivée.",
+    "avenir_location": "2026 → Horizon",
     "services_subtitle": "Trois disciplines. Un standard.",
     "s1_label": "La Table",
     "s1_desc": "Produits du marché, cuisine du moment. Une table réelle — pas un catalogue.",

@@ -1033,7 +1033,7 @@ function Equipe() {
           </h2>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-0" style={{ borderTop: '1px solid rgba(12,12,10,0.06)' }}>
-          <div className="lg:col-span-7 relative overflow-hidden" style={{ aspectRatio: '4/5', minHeight: 380 }}>
+          <div className="lg:col-span-8 relative overflow-hidden" style={{ aspectRatio: '4/5', minHeight: 460 }}>
             <AnimatePresence mode="wait">
               <motion.img key={EQUIPE[act].src} src={EQUIPE[act].src} alt={EQUIPE[act].name} loading="lazy" decoding="async"
                 className="absolute inset-0 w-full h-full object-cover object-top"
@@ -1042,7 +1042,7 @@ function Equipe() {
                 transition={{ duration: 0.6, ease: EASE }} />
             </AnimatePresence>
           </div>
-          <div className="lg:col-span-5 flex flex-col justify-between px-0 md:px-14 py-10 md:py-0"
+          <div className="lg:col-span-4 flex flex-col justify-between px-0 lg:px-10 py-10 lg:py-0"
             style={{ borderLeft: '1px solid rgba(12,12,10,0.06)' }}>
             <div className="md:pt-2">
               <AnimatePresence mode="wait">
@@ -1058,7 +1058,7 @@ function Equipe() {
                   <blockquote className="m-0 p-0">
                     <p className="font-serif font-light italic leading-[1.6] m-0"
                       style={{ fontSize: 'clamp(18px, 2vw, 26px)', color: 'rgba(12,12,10,0.68)' }}>
-                      &laquo;&nbsp;{EQUIPE[act].quote}&nbsp;&raquo;
+                      {EQUIPE[act].quote}
                     </p>
                   </blockquote>
                 </motion.div>

@@ -231,32 +231,32 @@ function SuiteCard({ suite, datesSelected, checkIn, checkOut, isToCome = false, 
       )}
       <div className="pt-1">
         <R>
-          <div className="flex justify-between items-baseline mb-2 gap-3">
+          <div className="flex justify-between items-baseline mb-3 gap-3">
             <h3 id={`suite-${suite.id}-name`} className="font-serif font-light italic leading-[0.95]"
-              style={{ fontSize: 'clamp(22px, 3vw, 42px)', color: dark ? 'rgba(244,245,240,0.85)' : '#0C0C0A' }}>
+              style={{ fontSize: 'clamp(26px, 3.4vw, 48px)', letterSpacing: '-0.01em', color: dark ? 'rgba(244,245,240,0.85)' : '#0C0C0A' }}>
               {suite.name}
             </h3>
             {price && (
-              <div className="flex items-baseline gap-1 flex-shrink-0">
-                <span className="font-sans text-[8px] uppercase tracking-[0.25em]"
-                  style={{ color: dark ? 'rgba(244,245,240,0.25)' : 'rgba(12,12,10,0.30)' }}>
+              <div className="flex items-baseline gap-1.5 flex-shrink-0">
+                <span className="font-sans text-[9px] uppercase tracking-[0.30em]"
+                  style={{ color: dark ? 'rgba(244,245,240,0.30)' : 'rgba(12,12,10,0.35)' }}>
                   {suite.priceInfo ? t('total') : t('from')}
                 </span>
-                <p className="font-serif font-light"
-                  style={{ fontSize: 'clamp(15px, 1.8vw, 24px)', color: dark ? 'rgba(244,245,240,0.75)' : '#0C0C0A' }}>
+                <p className="font-serif font-light m-0"
+                  style={{ fontSize: 'clamp(16px, 1.8vw, 24px)', color: dark ? 'rgba(244,245,240,0.78)' : '#0C0C0A' }}>
                   {Math.round(price).toLocaleString('fr-FR')} €
                 </p>
               </div>
             )}
           </div>
-          <div className="flex items-center gap-3 mb-3">
+          <div className="flex items-center gap-3 mb-4">
             <Cap light={dark}>{suite.surface}</Cap>
-            <span className="w-px h-3" style={{ backgroundColor: dark ? 'rgba(244,245,240,0.10)' : BONE }} />
+            <span className="w-px h-3" style={{ backgroundColor: dark ? 'rgba(244,245,240,0.12)' : BONE }} />
             <Cap light={dark}>{suite.guests} {t('max_guests')}</Cap>
           </div>
-          <div className="h-px w-full mb-3" style={{ backgroundColor: dark ? 'rgba(244,245,240,0.06)' : BONE }} />
-          <p className="font-serif font-light italic"
-            style={{ fontSize: '14px', lineHeight: 1.72, color: dark ? 'rgba(244,245,240,0.35)' : 'rgba(12,12,10,0.42)' }}>
+          <div className="h-px w-full mb-4" style={{ backgroundColor: dark ? 'rgba(244,245,240,0.08)' : BONE }} />
+          <p className="font-serif font-light italic m-0"
+            style={{ fontSize: '15px', lineHeight: 1.85, color: dark ? 'rgba(244,245,240,0.40)' : 'rgba(12,12,10,0.48)' }}>
             {suite.excerpt}
           </p>
           {!isToCome && (
@@ -455,12 +455,12 @@ function Hero({ checkIn, checkOut, guests, setGuests, onDateChange, panelOpen, s
         <motion.img src="/Complexe/1.jpg" alt="Domaine MYRA"
           loading="eager" fetchPriority="high"
           className="w-full h-full object-cover"
-          style={{ filter: 'saturate(0.85) brightness(0.35) contrast(1.1)' }}
+          style={{ filter: 'saturate(0.85) brightness(0.58) contrast(1.06)' }}
           initial={{ scale: 1.04 }} animate={{ scale: 1 }}
           transition={{ duration: 3.5, ease: EASE }} />
       </div>
       <div className="absolute inset-0"
-        style={{ background: 'linear-gradient(to bottom, transparent 30%, rgba(12,12,10,0.92) 100%)' }} />
+        style={{ background: 'linear-gradient(to bottom, rgba(12,12,10,0.20) 0%, transparent 35%, rgba(12,12,10,0.85) 100%)' }} />
 
       {/* Grain analogique — section Ink */}
       <div className="absolute inset-0 pointer-events-none z-[1]"
@@ -533,7 +533,7 @@ function Hero({ checkIn, checkOut, guests, setGuests, onDateChange, panelOpen, s
 
               <div className="flex flex-col md:flex-row items-stretch"
                 style={{
-                  border: '1px solid rgba(244,245,240,0.12)',
+                  border: '1px solid rgba(244,245,240,0.18)',
                   backgroundColor: 'rgba(244,245,240,0.08)',
                   backdropFilter: 'blur(24px)',
                   WebkitBackdropFilter: 'blur(24px)',
@@ -546,7 +546,7 @@ function Hero({ checkIn, checkOut, guests, setGuests, onDateChange, panelOpen, s
                   onMouseEnter={e => e.currentTarget.style.backgroundColor='rgba(244,245,240,0.04)'}
                   onMouseLeave={e => e.currentTarget.style.backgroundColor='transparent'}>
                   <span className="font-sans text-[9px] uppercase tracking-[0.45em] flex-shrink-0"
-                    style={{ color: 'rgba(244,245,240,0.40)' }}>{t('search_dates')}</span>
+                    style={{ color: 'rgba(244,245,240,0.48)' }}>{t('search_dates')}</span>
                   <span className="font-sans text-[10px] uppercase tracking-[0.25em]"
                     style={{ color: datesSelected ? 'rgba(244,245,240,0.85)' : 'rgba(244,245,240,0.35)' }}>
                     {datesSelected ? `${fmtShort(checkIn)} — ${fmtShort(checkOut)}` : '—'}
@@ -569,9 +569,9 @@ function Hero({ checkIn, checkOut, guests, setGuests, onDateChange, panelOpen, s
                   </button>
                   <button type="submit" onClick={() => document.getElementById('collection')?.scrollIntoView({ behavior: 'smooth' })}
                     className="group flex items-center gap-3 px-5 py-4 md:py-5 md:pl-8 md:pr-6 font-sans text-[9px] uppercase tracking-[0.45em] outline-none transition-colors"
-                    style={{ color: 'rgba(244,245,240,0.55)' }}
-                    onMouseEnter={e => e.currentTarget.style.color='rgba(244,245,240,0.95)'}
-                    onMouseLeave={e => e.currentTarget.style.color='rgba(244,245,240,0.55)'}>
+                    style={{ color: 'rgba(244,245,240,0.70)' }}
+                    onMouseEnter={e => e.currentTarget.style.color='#F4F5F0'}
+                    onMouseLeave={e => e.currentTarget.style.color='rgba(244,245,240,0.70)'}>
                     <span className="relative">
                       {isLoading ? '…' : t('search_verify')}
                       <span className="absolute -bottom-1 left-0 h-px w-0 group-hover:w-full transition-all duration-500" style={{ backgroundColor: WINE }} />
@@ -685,7 +685,7 @@ export default function HebergementPage() {
               </div>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-14 md:gap-x-10 md:gap-y-24">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-14 md:gap-x-10 md:gap-y-28">
               {visible.map((s, i) => (
                 <R key={s.id} d={i * 0.12} y={32}>
                   <SuiteCard suite={s} datesSelected={datesSelected} checkIn={checkIn} checkOut={checkOut} />
@@ -707,16 +707,24 @@ export default function HebergementPage() {
           }}
         />
         <div className="relative z-[2] max-w-container mx-auto py-16 md:py-32 px-6 md:px-0">
-          <div className="flex items-end justify-between mb-10 md:mb-20 pb-6 md:pb-10"
-            style={{ borderBottom: '1px solid rgba(244,245,240,0.06)' }}>
+          <div className="flex items-end justify-between mb-12 md:mb-20 pb-6 md:pb-10"
+            style={{ borderBottom: '1px solid rgba(244,245,240,0.08)' }}>
             <R>
               <div className="flex items-center gap-5">
                 <div className="w-4 h-px" style={{ backgroundColor: WINE, opacity: 0.4 }} />
-                <h2 id="prochainement-label" className="inline-block font-sans text-[11px] tracking-[0.55em] uppercase m-0" style={{ color: 'rgba(244,245,240,0.38)' }}>
+                <h2 id="prochainement-label" className="inline-block font-sans text-[11px] tracking-[0.55em] uppercase m-0" style={{ color: 'rgba(244,245,240,0.45)' }}>
                   {t('coming_soon_label')}
                 </h2>
               </div>
             </R>
+            <div className="flex items-baseline gap-2">
+              <span className="font-serif font-light italic" style={{ fontSize: '17px', color: 'rgba(244,245,240,0.55)', lineHeight: 1 }}>
+                {TO_COME.length}
+              </span>
+              <span className="font-sans text-[9px] uppercase tracking-[0.45em]" style={{ color: 'rgba(244,245,240,0.32)' }}>
+                {TO_COME.length > 1 ? t('suites') : t('suite')}
+              </span>
+            </div>
           </div>
 
           {/* Desktop — 3 colonnes */}
@@ -728,34 +736,34 @@ export default function HebergementPage() {
             ))}
           </div>
 
-          {/* Mobile — 2 colonnes compactes */}
-          <div className="md:hidden grid grid-cols-2 gap-4">
+          {/* Mobile — stack vertical 1 colonne (cohérence avec Collection) */}
+          <div className="md:hidden grid grid-cols-1 gap-12">
             {TO_COME.map((s, i) => (
               <R key={s.id} d={i * 0.08} y={24}>
                 <article aria-labelledby={`tocome-${s.id}-name`}>
                   <Link href={`/${locale}/hebergement/prochainement/${s.id}`} className="block">
-                    <div className="relative overflow-hidden mb-3" style={{ aspectRatio: '3/4' }}>
+                    <div className="relative overflow-hidden mb-5" style={{ aspectRatio: '3/4' }}>
                       <ToComeGallery images={s.images} name={s.name} />
-                      <div className="absolute top-3 left-3 z-30">
-                        <span className="font-sans text-[8px] uppercase tracking-[0.30em] px-2 py-1"
-                          style={{ backgroundColor: 'rgba(12,12,10,0.60)', color: 'rgba(244,245,240,0.55)' }}>
+                      <div className="absolute top-4 left-4 z-30">
+                        <span className="font-sans text-[9px] uppercase tracking-[0.35em] px-2.5 py-1"
+                          style={{ backgroundColor: 'rgba(12,12,10,0.60)', color: 'rgba(244,245,240,0.65)' }}>
                           {t('coming_soon_badge')}
                         </span>
                       </div>
                     </div>
-                    <h3 id={`tocome-${s.id}-name`} className="font-serif font-light italic mb-1"
-                      style={{ fontSize: '17px', color: 'rgba(244,245,240,0.80)' }}>
+                    <h3 id={`tocome-${s.id}-name`} className="font-serif font-light italic mb-2"
+                      style={{ fontSize: '22px', color: 'rgba(244,245,240,0.85)', lineHeight: 1 }}>
                       {s.name}
                     </h3>
                     <div className="flex items-center justify-between gap-2">
-                      <div className="flex items-center gap-2">
-                        <span className="font-sans text-[9px] uppercase tracking-[0.28em]"
-                          style={{ color: 'rgba(244,245,240,0.28)' }}>{s.surface}</span>
-                        <span className="w-px h-2.5" style={{ backgroundColor: 'rgba(244,245,240,0.10)' }} />
-                        <span className="font-sans text-[9px] uppercase tracking-[0.28em]"
-                          style={{ color: 'rgba(244,245,240,0.20)' }}>{s.guests} {s.guests > 1 ? t('persons') : t('person')}</span>
+                      <div className="flex items-center gap-3">
+                        <span className="font-sans text-[10px] uppercase tracking-[0.30em]"
+                          style={{ color: 'rgba(244,245,240,0.35)' }}>{s.surface}</span>
+                        <span className="w-px h-3" style={{ backgroundColor: 'rgba(244,245,240,0.12)' }} />
+                        <span className="font-sans text-[10px] uppercase tracking-[0.30em]"
+                          style={{ color: 'rgba(244,245,240,0.25)' }}>{s.guests} {s.guests > 1 ? t('persons') : t('person')}</span>
                       </div>
-                      <svg aria-hidden="true" width="9" height="9" fill="none" stroke={WINE} strokeWidth="1.5" viewBox="0 0 24 24" style={{ opacity: 0.55 }}>
+                      <svg aria-hidden="true" width="10" height="10" fill="none" stroke={WINE} strokeWidth="1.5" viewBox="0 0 24 24" style={{ opacity: 0.65 }}>
                         <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" />
                       </svg>
                     </div>

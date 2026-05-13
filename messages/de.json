@@ -83,8 +83,8 @@
   },
   "team": {
     "label": "Das Team",
-    "tina_quote": "Performance ist keine Handlung. Es ist eine Gewohnheit der Präzision.",
-    "jeremy_quote": "Hart arbeiten. Hart erholen. Zurück ins Leben."
+    "tina_quote": "Sie achtet darauf, dass jeder Weg einem präzisen Protokoll folgt — detaillierte Leistungsverfolgung und maßgeschneiderte Begleitung.",
+    "jeremy_quote": "Er gestaltet die Erfahrung und die Gastfreundschaft des Ortes. Damit man sich zu Hause fühlt und eine Gemeinschaft entsteht."
   },
   "poster": {
     "label": "Uns unterstützen",
@@ -165,12 +165,19 @@
     "hero_edition": "Ausgabe",
     "hero_lieu_val": "Marlenheim / Elsass",
     "hero_edition_val": "April 2025",
-    "genese_label": "01 — Entstehung",
+    "genese_label": "01 — Der Ursprung",
     "genese_title": "Der Ursprung von MYRA",
     "genese_p1": "MYRA entstand aus einer Weigerung. Der Weigerung, nur halb zu leben. Ein Ort, um hart zu arbeiten, hart zu erholen und zurückzukehren. Verwurzelt in Marlenheim — day one. Nicht die Ziellinie.",
     "genese_p2": "Marlenheim ist der lebende Prototyp. The blueprint. Wir legen die Grundlagen, verriegeln die Codes. Die Expansion folgt.",
     "genese_location": "Elsass · Frankreich",
-    "services_label": "02 — Dienstleistungen",
+    "services_label": "02 — Die Gegenwart",
+    "avenir_label": "03 — Die Zukunft",
+    "avenir_title": "Marlenheim ist nur der Anfang.",
+    "avenir_speaker_name": "Tina F.",
+    "avenir_speaker_role": "Mitgründerin · Head Coach",
+    "avenir_p1": "Sie lesen diese Zeilen, während Marlenheim noch ein Anfang ist. Es ist unser erstes Haus — das erste Labor. Ein Beweis, dass man Pflege anders bewohnen kann, ohne Kompromisse.",
+    "avenir_p2": "Was wir hier bauen, ist nur ein Schritt. Weitere MYRA-Häuser werden folgen, anderswo, verschieden in ihrem Gebiet, aber getragen vom selben Anspruch. Marlenheim ist Tag eins. Nicht die Ziellinie.",
+    "avenir_location": "2026 → Horizont",
     "services_subtitle": "Drei Disziplinen. Ein Standard.",
     "s1_label": "Der Tisch",
     "s1_desc": "Marktprodukte, Küche des Augenblicks. Ein echter Tisch — kein Katalog.",

@@ -83,8 +83,8 @@
   },
   "team": {
     "label": "The Team",
-    "tina_quote": "Performance is not an act. It is a habit of precision.",
-    "jeremy_quote": "Work hard. Recover hard. Back to life."
+    "tina_quote": "She ensures each journey follows a precise protocol — detailed performance tracking and bespoke guidance.",
+    "jeremy_quote": "He shapes the experience and the hospitality of the place. So one feels at home, and a community forms here."
   },
   "poster": {
     "label": "Support us",
@@ -165,12 +165,19 @@
     "hero_edition": "Edition",
     "hero_lieu_val": "Marlenheim / Alsace",
     "hero_edition_val": "April 2025",
-    "genese_label": "01 — Genesis",
+    "genese_label": "01 — The Origin",
     "genese_title": "The origin of MYRA",
     "genese_p1": "MYRA was born from a refusal. The refusal to live halfway. A place to work hard, recover hard, and come back. Rooted in Marlenheim — day one. Not the finish line.",
     "genese_p2": "Marlenheim is the living prototype. The blueprint. We lay the foundations, lock in the codes. Expansion follows.",
     "genese_location": "Alsace · France",
-    "services_label": "02 — Services",
+    "services_label": "02 — The Present",
+    "avenir_label": "03 — The Future",
+    "avenir_title": "Marlenheim is only the beginning.",
+    "avenir_speaker_name": "Tina F.",
+    "avenir_speaker_role": "Co-founder · Head Coach",
+    "avenir_p1": "You are reading these lines while Marlenheim is still only a beginning. It is our first house — the first laboratory. A proof that one can inhabit care differently, without compromise.",
+    "avenir_p2": "What we are building here is just one step. Other MYRA houses will follow, elsewhere, different in their territory but carried by the same exigence. Marlenheim is day one. Not the finish line.",
+    "avenir_location": "2026 → Horizon",
     "services_subtitle": "Three disciplines. One standard.",
     "s1_label": "The Table",
     "s1_desc": "Market produce, cuisine of the moment. A real table — not a catalogue.",
