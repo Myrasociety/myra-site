@@ -26,12 +26,31 @@
     "stat_3_label": "Hauptdisziplinen"
   },
   "complexe": {
-    "label": "Architektonisches Erbe",
-    "text": "Ein vollständig restauriertes Bauernhaus. Ein einzigartiger Ort, neu gedacht für Spitzeninfrastrukturen ohne seine ursprüngliche Seele zu verleugnen."
+    "label": "Der Komplex",
+    "title": "Ein ehemaliger Bauernhof, zum Haus der Pflege geworden.",
+    "text": "In Marlenheim findet MYRA Platz in einem ehemaligen elsässischen Bauernhof, einst gedacht zum Empfangen, Beherbergen und Zusammenkommen. Das Projekt setzt diese Erinnerung fort und verwandelt sie in ein zeitgenössisches Haus, das dem Körper, der Ruhe und der Beziehung gewidmet ist.",
+    "text_2": "Die bestehenden Volumen, der Hof, der Stein, die rohen Materialien und die Stille des Geländes werden zum Ausgangspunkt einer neuen Art, das Wohlbefinden zu bewohnen. Hier dient die Architektur nicht nur als Kulisse: Sie leitet den Rhythmus, schützt die Intimität und verleiht dem Ort seine Tiefe.",
+    "space_1": "Private Suiten",
+    "space_2": "Performance-Raum",
+    "space_3": "Spa",
+    "space_4": "Gesunde Tafel",
+    "space_5": "Begegnungsorte"
+  },
+  "communaute": {
+    "label": "Gemeinschaft",
+    "tagline": "Ein privater Kreis.",
+    "cta": "Beitreten",
+    "welcome": "Willkommen.",
+    "description": "MYRA beitreten heißt, in einen privaten Kreis einzutreten, in dem Körper, Ruhe und Begegnung kultiviert werden. Ein Haus, mehr als ein Ort — ein Rahmen, den jene wählen, die mehr von ihrem Alltag verlangen und das Verlangen teilen, die Pflege mit Anspruch und Präsenz zu bewohnen."
   },
   "double": {
     "label": "Gastfreundschaft & Exzellenz",
-    "text": "Als echter Lebensraum konzipiert, vereint das Anwesen alles, was Gleichgewicht und Fortschritt fördert."
+    "text": "MYRA vereint private Suiten, Performance-Raum, Spa, gesunde Tafel und Begegnungsorte in einem neu interpretierten ehemaligen Bauernhof. Jeder Raum verlängert dieselbe Absicht: Energie wiederherstellen, den Körper kultivieren, Verbindung schaffen.",
+    "space_1": "Private Suiten",
+    "space_2": "Performance-Raum",
+    "space_3": "Spa",
+    "space_4": "Gesunde Tafel",
+    "space_5": "Begegnungsorte"
   },
   "citation": {
     "text": "In einem intimen Rahmen gestaltet MYRA eine neue Vision des Verhältnisses zum Körper. Mehr als ein Ort — ein Standard.",
@@ -40,6 +59,7 @@
   },
   "services": {
     "label": "Unsere Rituale",
+    "intro": "Drei Disziplinen, ein Standard.",
     "s1_title": "Körperliche Vorbereitung",
     "s1_desc": "Fortgeschrittene Protokolle. Privates Coaching. Präzise biomechanische Überwachung.",
     "s1_tags": "Performance · Elite Coaching",

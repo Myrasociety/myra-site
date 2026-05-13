@@ -150,7 +150,7 @@ function Hero() {
           poster="/Complexe/1.jpg"
           aria-label="Vidéo d'ambiance — Domaine MYRA en Alsace"
           className="w-full h-full object-cover"
-          style={{ filter: 'saturate(0.85) brightness(0.52) contrast(1.06)', opacity: 0.85 }}
+          style={{ filter: 'saturate(0.85) brightness(0.62) contrast(1.06)', opacity: 0.85 }}
         >
           <source src="https://52nwkkdv96g3ruub.public.blob.vercel-storage.com/Alsace.mp4" type="video/mp4" />
         </video>
@@ -307,66 +307,47 @@ function Hero() {
 // ════════════════════════════════════════════════════════════════════════════
 function Statement() {
   const t = useTranslations('statement');
-  const STATS = [
-    { val: '1 500', unit: 'm²', label: t('stat_1_label') },
-    { val: '12',    unit: '',   label: t('stat_2_label') },
-    { val: '3',     unit: '',   label: t('stat_3_label') },
-  ];
+
+  // Split la tagline en heading (2 premières phrases) + subhead (le reste)
+  const tagline = t('tagline');
+  const parts = tagline.split(/\.\s+/).filter(Boolean).map(s => s.endsWith('.') ? s : s + '.');
+  const heading = parts.slice(0, 2).join(' ');
+  const subhead = parts.slice(2).join(' ');
 
   return (
-    <section aria-labelledby="statement-label" className="bg-[#F4F5F0] py-20 md:py-40 overflow-hidden">
-      <div className="px-6 md:px-16">
-        <div className="grid grid-cols-12 gap-6 md:gap-16">
+    <section aria-labelledby="statement-label" className="bg-[#F4F5F0] section-xl overflow-hidden">
+      <div className="editorial-grid">
 
-          <div className="col-span-12 md:col-span-3">
-            <R>
-              <div className="flex items-center gap-3">
-                <div className="w-4 h-px" style={{ backgroundColor: WINE, opacity: 0.4 }} />
-                <Cap accent>
-                  <span id="statement-label">{t('label')}</span>
-                </Cap>
-              </div>
-            </R>
-          </div>
-
-          <div className="col-span-12 md:col-span-9">
-            <R d={0.1}>
-              <h2 className="font-sans font-light uppercase text-[#0C0C0A]/60 m-0"
-                style={{ fontSize: 'clamp(16px, 2vw, 26px)', lineHeight: 1.7, letterSpacing: '0.10em' }}>
-                {t('tagline')}
-              </h2>
-            </R>
-
-            {/* Stats — moment "wow", typo poussée */}
-            <dl className="mt-14 md:mt-32 grid grid-cols-3 gap-6 md:gap-12 m-0">
-              {STATS.map((s, i) => (
-                <R key={i} d={0.2 + i * 0.1}>
-                  <div className="flex flex-col items-start group">
-                    <dt className="flex items-baseline gap-1 md:gap-2 flex-wrap m-0">
-                      <span className="font-serif font-light tracking-tighter text-[#0C0C0A]"
-                        style={{ fontSize: 'clamp(40px, 6vw, 80px)', lineHeight: 0.85 }}>
-                        {s.val}
-                      </span>
-                      {s.unit && (
-                        <span className="font-sans uppercase tracking-widest text-[#0C0C0A]/40"
-                          style={{ fontSize: 'clamp(10px, 1vw, 14px)' }}>
-                          {s.unit}
-                        </span>
-                      )}
-                    </dt>
-                    <dd className="mt-3 md:mt-6 flex items-center gap-2 m-0">
-                      <div className="w-3 md:w-4 h-px bg-[#351421]/30" />
-                      <span className="font-sans uppercase text-[#0C0C0A]/40"
-                        style={{ fontSize: 'clamp(8px, 0.75vw, 10px)', letterSpacing: '0.35em' }}>
-                        {s.label}
-                      </span>
-                    </dd>
-                  </div>
-                </R>
-              ))}
-            </dl>
-          </div>
+        {/* Eyebrow */}
+        <div className="col-span-12 md:col-span-3">
+          <R>
+            <div className="flex items-center gap-3">
+              <div className="w-4 h-px" style={{ backgroundColor: WINE, opacity: 0.4 }} />
+              <Cap accent>
+                <span id="statement-label">{t('label')}</span>
+              </Cap>
+            </div>
+          </R>
         </div>
+
+        {/* Manifesto — gros titre + sous-phrase d'action */}
+        <div className="col-span-12 md:col-span-9 mt-6 md:mt-0">
+          <R d={0.1}>
+            <h2 className="font-serif font-light italic text-[#0C0C0A] m-0"
+              style={{ fontSize: 'clamp(48px, 8vw, 128px)', lineHeight: 0.92, letterSpacing: '-0.02em' }}>
+              {heading}
+            </h2>
+          </R>
+          {subhead && (
+            <R d={0.2}>
+              <p className="font-serif font-light italic mt-7 md:mt-12 m-0"
+                style={{ fontSize: 'clamp(20px, 2.5vw, 36px)', lineHeight: 1.3, color: 'rgba(12,12,10,0.42)' }}>
+                {subhead}
+              </p>
+            </R>
+          )}
+        </div>
+
       </div>
     </section>
   );
@@ -478,6 +459,34 @@ function SectionContent({ num, label, title, description, href, cta, headingId, 
   );
 }
 
+function ServicesIntro() {
+  const t = useTranslations('services');
+  return (
+    <section id="services-intro" aria-labelledby="services-intro-label"
+      className="bg-[#F4F5F0] overflow-hidden py-10 md:py-16">
+      <div className="editorial-grid">
+        <div className="col-span-12">
+          <R>
+            <div className="flex items-center gap-3 mb-6 md:mb-8">
+              <div className="w-4 h-px" style={{ backgroundColor: WINE, opacity: 0.4 }} />
+              <h2 id="services-intro-label" className="font-sans text-[11px] tracking-[0.55em] uppercase m-0"
+                style={{ color: WINE }}>
+                {t('label')}
+              </h2>
+            </div>
+          </R>
+          <R d={0.1}>
+            <p className="font-serif font-light italic text-[#0C0C0A] m-0 whitespace-nowrap md:whitespace-normal"
+              style={{ fontSize: 'clamp(26px, 3.8vw, 60px)', lineHeight: 1.1, letterSpacing: '-0.02em' }}>
+              {t('intro')}
+            </p>
+          </R>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function EquinoxSections() {
   const locale = useLocale();
   const t = useTranslations('services');
@@ -490,11 +499,11 @@ function EquinoxSections() {
     { id: 'table', num: '02', label: t('s3_tags'), title: 'Table & Nutrition',
       description: 'Restaurant diététique, circuits courts, accords pensés pour votre métabolisme. Une table réelle, pas un catalogue. La cuisine comme acte de soin.',
       href: `/${locale}/nous-rejoindre`, cta: 'En savoir plus',
-      images: ['/Restaurant/B.jpg', '/Restaurant/1.jpg', '/Restaurant/A.jpg', '/Restaurant/B.jpg'], reverse: true },
+      images: ['/Visuels/Restaurant.jpg', '/Restaurant/B.jpg', '/Restaurant/A.jpg'], reverse: true },
     { id: 'recovery', num: '03', label: t('s2_tags'), title: 'Récupération & Spa',
       description: "200 m² dédiés à la récupération active. Sauna, hammam, balnéo, soins. Un espace pour revenir à soi, sans compromis sur l'intensité.",
       href: `/${locale}/nous-rejoindre`, cta: 'Découvrir le spa',
-      images: ['/Spa/A.jpg', '/Spa/1.jpg', '/Spa/3.jpg', '/Spa/A.jpg'], reverse: false },
+      images: ['/Visuels/Coaching.jpg', '/Visuels/Hammam.jpg', '/Visuels/Massage.jpg'], reverse: false },
   ];
 
   return (
@@ -632,31 +641,137 @@ function Citation() {
 function Complexe() {
   const t = useTranslations('complexe');
   return (
-    <section id="complexe" aria-labelledby="complexe-label" className="bg-[#F4F5F0] overflow-hidden">
-      <div className="max-w-container mx-auto py-14 md:py-24 px-6 md:px-0">
-        <div className="grid grid-cols-12 gap-6 md:gap-8 items-start">
-          <div className="col-span-12 md:col-span-2">
+    <section id="complexe" aria-labelledby="complexe-label"
+      className="bg-[#F4F5F0] section-lg overflow-hidden">
+      <div className="editorial-grid">
+
+        {/* LEFT — grid 3 lignes : top (label) / middle (titre+paragraphes centrés vertical) / bottom (vide) — aligné à gauche */}
+        <div className="col-span-12 md:col-span-6 md:col-start-1 order-2 md:order-1
+          py-10 md:py-0 px-4 md:px-8 lg:px-14
+          md:min-h-[78vh]
+          grid grid-rows-[auto_auto_auto] md:grid-rows-[auto_1fr_auto]
+          text-left gap-y-10 md:gap-y-0">
+
+          {/* TOP — label seul, aligné gauche */}
+          <div className="flex items-center justify-start w-full">
             <R>
-              <div className="space-y-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-4 h-px" style={{ backgroundColor: WINE, opacity: 0.4 }} />
-                  <h3 id="complexe-label" className="font-sans text-[11px] tracking-[0.55em] uppercase m-0" style={{ color: WINE }}>
-                    {t('label')}
-                  </h3>
-                </div>
-                <p className="font-sans text-[11px] leading-[2.8] font-light tracking-[0.06em]"
-                  style={{ color: 'rgba(12,12,10,0.38)' }}>{t('text')}</p>
+              <div className="flex items-center gap-3">
+                <div className="w-4 h-px" style={{ backgroundColor: WINE, opacity: 0.4 }} />
+                <h3 id="complexe-label" className="font-sans text-[11px] tracking-[0.55em] uppercase m-0"
+                  style={{ color: WINE }}>
+                  {t('label')}
+                </h3>
               </div>
             </R>
           </div>
-          <div className="col-span-12 md:col-span-9 md:col-start-4">
-            <R d={0.1}>
-              <div className="relative w-full overflow-hidden" style={{ aspectRatio: '4/3' }}>
-                <motion.img src="/Complexe/1.jpg" alt={`MYRA — ${t('label')}`} loading="lazy" decoding="async"
-                  className="w-full h-full object-cover"
-                  style={{ filter: 'saturate(0.85) brightness(0.92) contrast(1.04)' }}
-                  whileHover={{ scale: 1.02 }} transition={{ duration: 2.5, ease: EASE }} />
-              </div>
+
+          {/* MIDDLE — titre + paragraphes ensemble, centrés verticalement mais aligné gauche */}
+          <div className="flex items-center justify-start w-full">
+            <div className="space-y-7 md:space-y-10 max-w-md">
+              <R d={0.15}>
+                <h2 className="font-serif font-light italic text-[#0C0C0A] m-0"
+                  style={{ fontSize: 'clamp(28px, 3.8vw, 52px)', lineHeight: 1.05, letterSpacing: '-0.02em' }}>
+                  {t('title')}
+                </h2>
+              </R>
+              <R d={0.25}>
+                <div className="space-y-7 md:space-y-9">
+                  <p className="font-sans font-light text-[rgba(12,12,10,0.55)] m-0"
+                    style={{ fontSize: '13px', lineHeight: 1.9 }}>
+                    {t('text')}
+                  </p>
+                  <p className="font-sans font-light text-[rgba(12,12,10,0.55)] m-0"
+                    style={{ fontSize: '13px', lineHeight: 1.9 }}>
+                    {t('text_2')}
+                  </p>
+                </div>
+              </R>
+            </div>
+          </div>
+
+          {/* BOTTOM — vide pour Complexe */}
+          <div aria-hidden="true" />
+        </div>
+
+        {/* RIGHT — image carrée, contenue dans la hauteur d'une page */}
+        <div className="col-span-12 md:col-span-6 md:col-start-7 order-1 md:order-2">
+          <R d={0.1}>
+            <div className="relative overflow-hidden mx-auto"
+              style={{ aspectRatio: '1/1', maxHeight: '78vh' }}>
+              <motion.img src="/Visuels/Exterieur 71.jpg" alt={`MYRA — ${t('label')}`}
+                loading="lazy" decoding="async"
+                className="w-full h-full object-cover"
+                style={{ filter: 'saturate(0.85) brightness(0.92) contrast(1.04)' }}
+                whileHover={{ scale: 1.02 }} transition={{ duration: 2.5, ease: EASE }} />
+            </div>
+          </R>
+        </div>
+
+      </div>
+    </section>
+  );
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// 05 — COMMUNAUTÉ PRIVÉE (banner cinématique)
+// ════════════════════════════════════════════════════════════════════════════
+function CommunautePrivee() {
+  const t = useTranslations('communaute');
+  const locale = useLocale();
+  return (
+    <section id="communaute" aria-labelledby="communaute-label"
+      className="bg-[#F4F5F0] section-lg overflow-hidden">
+      <div className="editorial-grid">
+
+        {/* Banner image avec titre + texte + CTA superposés en overlay */}
+        <div className="col-span-12 relative overflow-hidden"
+          style={{ height: 'clamp(540px, 78vh, 820px)' }}>
+
+          {/* Image cinématique */}
+          <motion.img src="/Visuels/Communauté.jpg" alt={t('label')}
+            loading="lazy" decoding="async"
+            className="absolute inset-0 w-full h-full object-cover"
+            style={{ filter: 'saturate(0.85) brightness(0.58) contrast(1.06)' }}
+            initial={{ scale: 1.06 }} whileInView={{ scale: 1 }} viewport={{ once: true }}
+            transition={{ duration: 4, ease: EASE }} />
+
+          {/* Voile dégradé renforcé pour la lisibilité du texte overlay */}
+          <div className="absolute inset-0 pointer-events-none"
+            style={{ background: 'linear-gradient(to bottom, rgba(12,12,10,0.40) 0%, rgba(12,12,10,0.28) 45%, rgba(12,12,10,0.58) 100%)' }} />
+
+          {/* Grain analogique */}
+          <div aria-hidden="true" className="absolute inset-0 pointer-events-none z-[1]"
+            style={{
+              opacity: 0.035,
+              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+              backgroundSize: '128px',
+            }} />
+
+          {/* Overlay : titre + texte + CTA stack centré */}
+          <div className="relative z-[2] h-full flex flex-col items-center justify-center text-center px-6 md:px-16 gap-8 md:gap-12">
+            <R>
+              <h3 className="font-serif font-light italic m-0"
+                style={{ fontSize: 'clamp(44px, 6.5vw, 96px)', lineHeight: 0.95, letterSpacing: '-0.02em', color: '#F4F5F0' }}>
+                {t('welcome')}
+              </h3>
+            </R>
+            <R d={0.12}>
+              <p className="font-sans font-light m-0 max-w-xl mx-auto"
+                style={{ fontSize: 'clamp(13px, 1.05vw, 15px)', lineHeight: 1.9, color: 'rgba(244,245,240,0.72)' }}>
+                {t('description')}
+              </p>
+            </R>
+            <R d={0.24}>
+              <Link href={`/${locale}/nous-rejoindre`} aria-label={t('cta')}
+                className="inline-flex items-center px-8 md:px-12 py-4 md:py-5
+                  border border-[rgba(244,245,240,0.30)] hover:border-[#F4F5F0]
+                  backdrop-blur-md bg-[rgba(244,245,240,0.06)] hover:bg-[rgba(244,245,240,0.14)]
+                  transition-all duration-500">
+                <span className="font-sans uppercase text-[#F4F5F0]"
+                  style={{ fontSize: '10px', letterSpacing: '0.45em' }}>
+                  {t('cta')}
+                </span>
+              </Link>
             </R>
           </div>
         </div>
@@ -670,50 +785,84 @@ function Complexe() {
 // ════════════════════════════════════════════════════════════════════════════
 function DoubleImage() {
   const t = useTranslations('double');
+  const spaces = [t('space_1'), t('space_2'), t('space_3'), t('space_4'), t('space_5')];
   return (
-    <section id="hospitalite" aria-labelledby="double-label" className="bg-[#F4F5F0] overflow-hidden">
-      <div className="max-w-container mx-auto py-14 md:py-24 px-6 md:px-0">
-        <div className="grid grid-cols-12 gap-4 items-end">
-          {/* Texte — un seul bloc : col-span-12 mobile (au-dessus), col-span-2 desktop (droite, resserré) */}
-          <div className="col-span-12 md:col-span-2 order-1 md:order-3 mb-8 md:mb-0">
-            <R>
-              <div className="space-y-4 md:pb-1">
-                <div className="flex items-center gap-3">
-                  <div className="w-4 h-px" style={{ backgroundColor: WINE, opacity: 0.4 }} />
-                  <h3 id="double-label" className="font-sans text-[11px] tracking-[0.55em] uppercase m-0" style={{ color: WINE }}>
-                    {t('label')}
-                  </h3>
-                </div>
-                <p className="font-sans text-[12px] leading-[2.4] font-light tracking-[0.04em]"
-                  style={{ color: 'rgba(12,12,10,0.42)' }}>{t('text')}</p>
-              </div>
-            </R>
-          </div>
+    <section id="hospitalite" aria-labelledby="double-label"
+      className="bg-[#F4F5F0] section-lg overflow-hidden">
+      <div className="editorial-grid">
 
-          {/* Image 1 — gauche desktop, première colonne mobile */}
-          <div className="col-span-6 md:col-span-6 order-2 md:order-1">
-            <R>
-              <div className="relative overflow-hidden" style={{ aspectRatio: '3/4' }}>
-                <motion.img src="/Complexe/C.jpg" alt="MYRA — Complexe" loading="lazy" decoding="async"
+        {/* LEFT — 2 images portrait side by side, calées à la hauteur d'une page */}
+        <div className="col-span-12 md:col-span-7 md:col-start-1 order-1">
+          <R d={0.1}>
+            <div className="grid grid-cols-2 gap-2 md:gap-3 md:h-[78vh]">
+              <div className="relative overflow-hidden aspect-[3/4] md:aspect-auto md:h-full">
+                <motion.img src="/Complexe/C.jpg" alt="MYRA — Complexe"
+                  loading="lazy" decoding="async"
                   className="w-full h-full object-cover"
                   style={{ filter: 'saturate(0.85) brightness(0.92) contrast(1.04)' }}
                   whileHover={{ scale: 1.03 }} transition={{ duration: 2, ease: EASE }} />
               </div>
-            </R>
-          </div>
-
-          {/* Image 2 — milieu desktop, deuxième colonne mobile */}
-          <div className="col-span-6 md:col-span-4 order-3 md:order-2">
-            <R d={0.1}>
-              <div className="relative overflow-hidden" style={{ aspectRatio: '4/5' }}>
-                <motion.img src="/Fitness/C.jpg" alt="MYRA — Fitness" loading="lazy" decoding="async"
+              <div className="relative overflow-hidden aspect-[3/4] md:aspect-auto md:h-full">
+                <motion.img src="/Fitness/C.jpg" alt="MYRA — Fitness"
+                  loading="lazy" decoding="async"
                   className="w-full h-full object-cover"
                   style={{ filter: 'saturate(0.85) brightness(0.92) contrast(1.04)' }}
                   whileHover={{ scale: 1.03 }} transition={{ duration: 2, ease: EASE }} />
               </div>
-            </R>
-          </div>
+            </div>
+          </R>
         </div>
+
+        {/* RIGHT — grid 3 lignes : top (label) / middle (paragraphe centré vertical) / bottom (liste) */}
+        <div className="col-span-12 md:col-span-4 md:col-start-9 order-2
+          py-10 md:py-0 px-4 md:px-8 lg:px-14
+          md:min-h-[78vh]
+          grid grid-rows-[auto_auto_auto] md:grid-rows-[auto_1fr_auto]
+          text-center gap-y-10 md:gap-y-0">
+
+          {/* TOP — label */}
+          <div className="flex items-center justify-center w-full">
+            <R>
+              <div className="flex items-center gap-3">
+                <div className="w-4 h-px" style={{ backgroundColor: WINE, opacity: 0.4 }} />
+                <h3 id="double-label" className="font-sans text-[11px] tracking-[0.55em] uppercase m-0"
+                  style={{ color: WINE }}>
+                  {t('label')}
+                </h3>
+                <div className="w-4 h-px" style={{ backgroundColor: WINE, opacity: 0.4 }} />
+              </div>
+            </R>
+          </div>
+
+          {/* MIDDLE — paragraphe centré vertical */}
+          <div className="flex items-center justify-center w-full">
+            <R d={0.15} className="w-full">
+              <p className="font-sans font-light text-[rgba(12,12,10,0.55)] m-0 max-w-md mx-auto"
+                style={{ fontSize: '13px', lineHeight: 1.9 }}>
+                {t('text')}
+              </p>
+            </R>
+          </div>
+
+          {/* BOTTOM — liste horizontale */}
+          <R d={0.35}>
+            <ul role="list" className="m-0 p-0 list-none flex flex-wrap items-center justify-center gap-x-3 gap-y-2 max-w-sm mx-auto">
+              {spaces.map((s, i) => (
+                <li key={i} className="flex items-center gap-3">
+                  <span className="font-sans uppercase whitespace-nowrap"
+                    style={{ fontSize: '10px', letterSpacing: '0.28em', color: 'rgba(12,12,10,0.45)' }}>
+                    {s}
+                  </span>
+                  {i < spaces.length - 1 && (
+                    <span aria-hidden="true" style={{ color: 'rgba(12,12,10,0.20)', fontSize: '5px' }}>●</span>
+                  )}
+                </li>
+              ))}
+            </ul>
+          </R>
+
+        </div>
+
       </div>
     </section>
   );
@@ -874,9 +1023,9 @@ function Equipe() {
   };
 
   return (
-    <section id="equipe" aria-labelledby="equipe-label" className="bg-[#F4F5F0] overflow-hidden">
+    <section id="equipe" aria-labelledby="equipe-label" className="bg-[#F4F5F0] section-lg overflow-hidden">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(peopleJsonLd) }} />
-      <div className="max-w-container mx-auto py-14 md:py-24 px-6 md:px-0">
+      <div className="max-w-container mx-auto px-6 md:px-0">
         <div className="flex items-center gap-4 mb-12 md:mb-16">
           <Trait />
           <h2 id="equipe-label" className="font-sans text-[11px] tracking-[0.55em] uppercase m-0" style={{ color: WINE }}>
@@ -966,7 +1115,7 @@ function SupportPoster() {
     <section id="soutenir-cta" aria-labelledby="poster-title" className="relative overflow-hidden" style={{ backgroundColor: INK, minHeight: 500 }}>
       <motion.img src="/DA/Double visage.jpg" alt="" loading="lazy" decoding="async"
         className="absolute inset-0 w-full h-full object-cover"
-        style={{ filter: 'grayscale(1) brightness(0.28) contrast(1.12)' }}
+        style={{ filter: 'grayscale(1) brightness(0.42) contrast(1.10)' }}
         initial={{ scale: 1.06 }} whileInView={{ scale: 1 }} viewport={{ once: true }}
         transition={{ duration: 3, ease: EASE }} />
       <div className="absolute inset-0"
@@ -1014,14 +1163,22 @@ function SupportPoster() {
 export default function Page() {
   return (
     <main className="bg-[#F4F5F0]">
+      {/* 1 — Hero manifeste */}
       <Hero />
+      {/* 2 — Bloc manifeste */}
       <Statement />
-      <EquinoxSections />
-      <Citation />
+      {/* 3 — Bloc complexe MYRA */}
       <Complexe />
+      {/* 4 — Bloc recovery / body ritual */}
       <DoubleImage />
-      <Gallery />
+      {/* 5 — Bloc équipe / experts */}
       <Equipe />
+      {/* 6 — Bloc communauté privée */}
+      <CommunautePrivee />
+      {/* 7 — Collection d'expériences (intro + carrousels) */}
+      <ServicesIntro />
+      <EquinoxSections />
+      {/* 8 — Bloc expansion */}
       <SupportPoster />
     </main>
   );

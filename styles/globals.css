@@ -148,3 +148,57 @@ h1, h2, h3 { color: #0C0C0A; }
 .bg-black h2 {
   color: #F4F5F0;
 }
+
+/* ════════════════════════════════════════════════════════════════════════════
+   EDITORIAL DESIGN SYSTEM
+   Système commun pour expérience magazine / hospitality / concept club.
+   À utiliser sur toutes les sections — règle générale :
+     1. Label court uppercase  2. Titre fort  3. Texte court
+     4. Visuel ou tension de grille  5. CTA clair
+   ════════════════════════════════════════════════════════════════════════════ */
+
+/* Grille éditoriale commune */
+.editorial-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  column-gap: clamp(12px, 1.6vw, 24px);
+  padding-inline: clamp(20px, 4vw, 72px);
+}
+
+/* Espacements verticaux par section */
+.section-xl { padding-block: clamp(96px, 14vw, 180px); }
+.section-lg { padding-block: clamp(72px, 10vw, 140px); }
+
+/* Typographie éditoriale */
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: clamp(10px, 0.75vw, 12px);
+}
+
+.editorial-title {
+  max-width: 11ch;
+  line-height: 0.92;
+}
+
+.editorial-copy {
+  max-width: 560px;
+  line-height: 1.45;
+}
+
+/* Rythme image — 4 formats réutilisables */
+.image-portrait   { aspect-ratio: 3 / 4;  object-fit: cover; }
+.image-landscape  { aspect-ratio: 16 / 9; object-fit: cover; }
+.image-square     { aspect-ratio: 1 / 1;  object-fit: cover; }
+.image-cinematic  { aspect-ratio: 21 / 9; object-fit: cover; }
+
+/* Composition asymétrique mode / architecture / corps */
+.editorial-image-cluster {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: clamp(12px, 1.4vw, 20px);
+}
+
+.cluster-main     { grid-column: 5 / 13; }
+.cluster-small-a  { grid-column: 1 / 4; align-self: start; }
+.cluster-small-b  { grid-column: 3 / 6; align-self: end; }

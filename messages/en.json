@@ -26,12 +26,31 @@
     "stat_3_label": "Master disciplines"
   },
   "complexe": {
-    "label": "Architectural Heritage",
-    "text": "A fully restored farmhouse. A singular place reimagined to house cutting-edge facilities without ever denying its original soul."
+    "label": "The complex",
+    "title": "A former farmhouse turned house of care.",
+    "text": "In Marlenheim, MYRA takes place in a former Alsatian farmhouse, once designed to welcome, lodge and gather. The project extends this memory by transforming it into a contemporary house dedicated to the body, rest and connection.",
+    "text_2": "The existing volumes, the courtyard, the stone, the raw materials and the silence of the territory become the starting point of a new way to inhabit well-being. Here, architecture is not merely a backdrop: it guides the rhythm, protects intimacy and gives the place its depth.",
+    "space_1": "Private suites",
+    "space_2": "Performance space",
+    "space_3": "Spa",
+    "space_4": "Healthy table",
+    "space_5": "Gathering places"
+  },
+  "communaute": {
+    "label": "Community",
+    "tagline": "A private circle.",
+    "cta": "Join us",
+    "welcome": "Welcome.",
+    "description": "Joining MYRA means entering a private circle where body, rest and encounter are cultivated. A house more than a place — a setting chosen by those who demand more of their daily life, and share the desire to inhabit care with rigour and presence."
   },
   "double": {
     "label": "Hospitality & Excellence",
-    "text": "Conceived as a true living space, the estate brings together everything that fosters balance and progress."
+    "text": "MYRA brings together private suites, performance space, spa, healthy table and gathering places within a reinterpreted former farmhouse. Each space extends the same intention: restore energy, cultivate the body, create connection.",
+    "space_1": "Private suites",
+    "space_2": "Performance space",
+    "space_3": "Spa",
+    "space_4": "Healthy table",
+    "space_5": "Gathering places"
   },
   "citation": {
     "text": "In an intimate setting, MYRA shapes a new vision of the relationship with the body. More than a place — a standard.",
@@ -40,6 +59,7 @@
   },
   "services": {
     "label": "Our rituals",
+    "intro": "Three disciplines, one standard.",
     "s1_title": "Physical Preparation",
     "s1_desc": "Advanced protocols. Private coaching. Precision biomechanical monitoring.",
     "s1_tags": "Performance · Elite Coaching",

@@ -26,12 +26,31 @@
     "stat_3_label": "Disciplines maîtres"
   },
   "complexe": {
-    "label": "L'Héritage Architectural",
-    "text": "Ancien corps de ferme entièrement réhabilité. Un lieu singulier repensé pour accueillir des infrastructures de pointe sans jamais renier son âme d'origine."
+    "label": "Le complexe",
+    "title": "Un ancien corps de ferme devenu maison de soin.",
+    "text": "À Marlenheim, MYRA prend place dans un ancien corps de ferme alsacien, autrefois pensé pour accueillir, loger et rassembler. Le projet prolonge cette mémoire en la transformant en une maison contemporaine dédiée au corps, au repos et à la relation.",
+    "text_2": "Les volumes existants, la cour, la pierre, les matières brutes et le silence du territoire deviennent le point de départ d'une nouvelle manière d'habiter le bien-être. Ici, l'architecture ne sert pas seulement de décor : elle guide le rythme, protège l'intimité et donne au lieu sa profondeur.",
+    "space_1": "Suites privées",
+    "space_2": "Espace de performance",
+    "space_3": "Spa",
+    "space_4": "Table saine",
+    "space_5": "Lieux de rencontre"
+  },
+  "communaute": {
+    "label": "Communauté",
+    "tagline": "Un cercle privé.",
+    "cta": "Nous rejoindre",
+    "welcome": "Bienvenue.",
+    "description": "Rejoindre MYRA, c'est entrer dans un cercle privé où l'on cultive le corps, le repos et la rencontre. Une maison plus qu'un lieu — un cadre choisi pour ceux qui exigent davantage de leur quotidien, et qui partagent l'envie d'habiter le soin avec exigence et présence."
   },
   "double": {
     "label": "Hospitalité & Dépassement",
-    "text": "Pensé comme un véritable lieu de vie, le domaine réunit tout ce qui favorise l'équilibre et la progression."
+    "text": "MYRA rassemble suites privées, espace de performance, spa, table saine et lieux de rencontre dans un ancien corps de ferme réinterprété. Chaque espace prolonge la même intention : restaurer l'énergie, cultiver le corps et créer du lien.",
+    "space_1": "Suites privées",
+    "space_2": "Espace de performance",
+    "space_3": "Spa",
+    "space_4": "Table saine",
+    "space_5": "Lieux de rencontre"
   },
   "citation": {
     "text": "Dans un cadre intime, MYRA façonne une vision nouvelle du rapport au corps. Plus qu'un lieu — un standard.",
@@ -40,6 +59,7 @@
   },
   "services": {
     "label": "Nos rituels",
+    "intro": "Trois disciplines, un standard.",
     "s1_title": "Préparation Physique",
     "s1_desc": "Protocoles poussés. Coaching privé. Suivi biomécanique de précision.",
     "s1_tags": "Performance · Coaching Élite",
