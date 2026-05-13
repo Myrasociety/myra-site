@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState, useEffect, useRef, Suspense } from 'react';
+import Link from 'next/link';
 import { notFound, useSearchParams } from 'next/navigation';
 import { motion, AnimatePresence, useMotionValue, animate } from 'framer-motion';
 import { useTranslations, useLocale } from '@/lib/useTranslations';
@@ -15,6 +16,24 @@ const EXPO   = [0.16, 1, 0.3, 1];
 
 const MONTHS_FR = ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
 const MONTHS_SHORT = ['Jan','Fév','Mar','Avr','Mai','Jun','Jul','Aoû','Sep','Oct','Nov','Déc'];
+
+const MONTHS_LONG = {
+  fr: ['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'],
+  en: ['January','February','March','April','May','June','July','August','September','October','November','December'],
+  de: ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'],
+};
+
+function useReducedMotionSafe() {
+  const [reduced, setReduced] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setReduced(mq.matches);
+    const h = (e) => setReduced(e.matches);
+    mq.addEventListener('change', h);
+    return () => mq.removeEventListener('change', h);
+  }, []);
+  return reduced;
+}
 
 const SUITES = {
   'Edwige': {
@@ -92,8 +111,13 @@ function EquinoxGallery({ images, name }) {
     else snapTo(cur);
   };
 
+  const handleKeyDown = (e) => {
+    if (e.key === 'ArrowLeft')  { e.preventDefault(); snapTo(cur - 1); }
+    if (e.key === 'ArrowRight') { e.preventDefault(); snapTo(cur + 1); }
+  };
+
   return (
-    <div className="w-full">
+    <div className="w-full" role="region" aria-roledescription="carousel" aria-label={name} tabIndex={0} onKeyDown={handleKeyDown}>
       <div ref={wrapRef} className="relative overflow-hidden">
         {slideW > 0 && (
           <motion.div
@@ -107,9 +131,10 @@ function EquinoxGallery({ images, name }) {
                 style={{ flexShrink: 0, width: slideW, aspectRatio: '21/10', overflow: 'hidden' }}
                 animate={{ opacity: i === cur ? 1 : 0.22, scale: i === cur ? 1 : 1 }}
                 transition={{ duration: 0.6, ease: EXPO }}>
-                <img src={src} alt={`${name} ${i + 1}`}
+                <img src={src} alt={`${name} — vue ${i + 1}`}
+                  loading="lazy" decoding="async"
                   className="w-full h-full object-cover select-none pointer-events-none"
-                  style={{ filter: 'saturate(0.92)' }} />
+                  style={{ filter: 'saturate(0.85) brightness(0.92) contrast(1.04)' }} />
               </motion.div>
             ))}
           </motion.div>
@@ -119,9 +144,11 @@ function EquinoxGallery({ images, name }) {
       <div className="max-w-container mx-auto px-6 md:px-20 mt-5 md:mt-10">
         <div className="flex items-center gap-2 w-full opacity-50">
           {images.map((_, i) => (
-            <button key={i} onClick={() => snapTo(i)}
-              className="h-[1px] transition-all duration-700 outline-none"
-              style={{ flex: i === cur ? 8 : 1, backgroundColor: i === cur ? INK : 'rgba(12,12,10,0.12)' }} />
+            <button key={i} type="button" onClick={() => snapTo(i)}
+              aria-label={`Image ${i + 1} sur ${total}`}
+              aria-current={i === cur ? 'true' : undefined}
+              className="h-[1px] transition-all duration-700 outline-none cursor-pointer"
+              style={{ flex: i === cur ? 8 : 1, backgroundColor: i === cur ? INK : 'rgba(12,12,10,0.12)', border: 'none', padding: 0 }} />
           ))}
         </div>
       </div>
@@ -130,7 +157,7 @@ function EquinoxGallery({ images, name }) {
 }
 
 // ─── LIGHTBOX ─────────────────────────────────────────────────────────────────
-function Lightbox({ images, index, onClose, onPrev, onNext }) {
+function Lightbox({ images, index, name = '', onClose, onPrev, onNext }) {
   useEffect(() => {
     const h = (e) => { if (e.key==='Escape') onClose(); if (e.key==='ArrowLeft') onPrev(); if (e.key==='ArrowRight') onNext(); };
     window.addEventListener('keydown', h);
@@ -138,22 +165,27 @@ function Lightbox({ images, index, onClose, onPrev, onNext }) {
     return () => { window.removeEventListener('keydown', h); document.body.style.overflow = ''; };
   }, [onClose, onPrev, onNext]);
   return (
-    <motion.div className="fixed inset-0 z-[100] bg-[#0C0C0A] flex flex-col items-center justify-center"
+    <motion.div role="dialog" aria-modal="true" aria-label={name ? `Galerie ${name}` : 'Galerie'}
+      className="fixed inset-0 z-[100] bg-[#0C0C0A] flex flex-col items-center justify-center"
       initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.5 }}>
-      <button onClick={onClose} className="absolute top-8 right-6 md:right-10 z-[110] outline-none"
+      <button type="button" onClick={onClose} aria-label="Fermer"
+        className="absolute top-8 right-6 md:right-10 z-[110] outline-none"
         style={{ color: 'rgba(255,255,255,0.40)' }}>
         <svg width="22" height="22" fill="none" stroke="currentColor" strokeWidth="1" viewBox="0 0 24 24"><path d="M18 6L6 18M6 6l12 12" strokeLinecap="round" /></svg>
       </button>
-      <button onClick={onPrev} className="absolute left-4 md:left-10 p-3 z-[110]" style={{ color: 'rgba(255,255,255,0.20)' }}>
+      <button type="button" onClick={onPrev} aria-label="Image précédente"
+        className="absolute left-4 md:left-10 p-3 z-[110]" style={{ color: 'rgba(255,255,255,0.20)' }}>
         <svg width="32" height="32" fill="none" stroke="currentColor" strokeWidth="1" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7" strokeLinecap="round" /></svg>
       </button>
-      <button onClick={onNext} className="absolute right-4 md:right-10 p-3 z-[110]" style={{ color: 'rgba(255,255,255,0.20)' }}>
+      <button type="button" onClick={onNext} aria-label="Image suivante"
+        className="absolute right-4 md:right-10 p-3 z-[110]" style={{ color: 'rgba(255,255,255,0.20)' }}>
         <svg width="32" height="32" fill="none" stroke="currentColor" strokeWidth="1" viewBox="0 0 24 24"><path d="M9 5l7 7-7 7" strokeLinecap="round" /></svg>
       </button>
       <AnimatePresence mode="wait">
         <motion.div key={index} className="w-[92vw] md:w-[80vw] h-[65vh] md:h-[72vh] flex items-center justify-center"
           initial={{ opacity: 0, scale: 0.98 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0 }} transition={{ duration: 0.5, ease: EXPO }}>
-          <img src={images[index]} alt="" className="max-w-full max-h-full object-contain" />
+          <img src={images[index]} alt={name ? `${name} — vue ${index + 1}` : `Vue ${index + 1}`}
+            className="max-w-full max-h-full object-contain" />
         </motion.div>
       </AnimatePresence>
       <div className="absolute bottom-6">
@@ -170,20 +202,30 @@ function Accordion({ items }) {
   const [open, setOpen] = useState(null);
   return (
     <div>
-      {items.map((item, i) => (
-        <div key={i} style={{ borderBottom: `1px solid ${BONE}` }}>
-          <button onClick={() => setOpen(open===i?null:i)} className="w-full flex items-center justify-between py-5 text-left outline-none">
-            <span className="font-sans text-[10px] uppercase tracking-[0.45em] transition-colors duration-500" style={{ color: open===i ? INK : 'rgba(12,12,10,0.38)' }}>{item.label}</span>
-            <div className="relative w-4 h-4 flex-shrink-0 ml-6">
-              <span className="absolute top-1/2 left-0 w-full h-px -translate-y-1/2" style={{ backgroundColor: 'rgba(12,12,10,0.2)' }} />
-              <motion.span className="absolute top-0 left-1/2 w-px h-full -translate-x-1/2" style={{ backgroundColor: 'rgba(12,12,10,0.2)' }} animate={{ opacity: open===i ? 0 : 1 }} transition={{ duration: 0.25 }} />
-            </div>
-          </button>
-          <motion.div initial={false} animate={{ height: open===i ? 'auto' : 0, opacity: open===i ? 1 : 0 }} transition={{ duration: 0.55, ease: EXPO }} style={{ overflow: 'hidden' }}>
-            <div className="pb-6">{item.content}</div>
-          </motion.div>
-        </div>
-      ))}
+      {items.map((item, i) => {
+        const btnId = `accordion-btn-${i}`;
+        const panelId = `accordion-panel-${i}`;
+        const isOpen = open === i;
+        return (
+          <div key={i} style={{ borderBottom: `1px solid ${BONE}` }}>
+            <h3 className="m-0">
+              <button type="button" id={btnId} aria-expanded={isOpen} aria-controls={panelId}
+                onClick={() => setOpen(isOpen ? null : i)}
+                className="w-full flex items-center justify-between py-5 text-left outline-none">
+                <span className="font-sans text-[10px] uppercase tracking-[0.45em] transition-colors duration-500" style={{ color: isOpen ? INK : 'rgba(12,12,10,0.38)' }}>{item.label}</span>
+                <div className="relative w-4 h-4 flex-shrink-0 ml-6">
+                  <span className="absolute top-1/2 left-0 w-full h-px -translate-y-1/2" style={{ backgroundColor: 'rgba(12,12,10,0.2)' }} />
+                  <motion.span className="absolute top-0 left-1/2 w-px h-full -translate-x-1/2" style={{ backgroundColor: 'rgba(12,12,10,0.2)' }} animate={{ opacity: isOpen ? 0 : 1 }} transition={{ duration: 0.25 }} />
+                </div>
+              </button>
+            </h3>
+            <motion.div id={panelId} role="region" aria-labelledby={btnId} aria-hidden={!isOpen}
+              initial={false} animate={{ height: isOpen ? 'auto' : 0, opacity: isOpen ? 1 : 0 }} transition={{ duration: 0.55, ease: EXPO }} style={{ overflow: 'hidden' }}>
+              <div className="pb-6">{item.content}</div>
+            </motion.div>
+          </div>
+        );
+      })}
     </div>
   );
 }
@@ -300,16 +342,33 @@ function ReservationPanel({ suite }) {
   const nights    = checkIn && checkOut ? Math.round((checkOut - checkIn) / 86400000) : 0;
   const fmtDay    = (d) => d?.toLocaleDateString(locale === 'de' ? 'de-DE' : locale === 'en' ? 'en-GB' : 'fr-FR', { day: 'numeric', month: 'long' }) ?? '—';
   const monthNames = MONTHS[locale] || MONTHS.fr;
+  const monthsLong = MONTHS_LONG[locale] || MONTHS_LONG.fr;
   const dayNames   = DAYS[locale]   || DAYS.fr;
 
+  // Escape ferme le picker
+  useEffect(() => {
+    if (!picker) return;
+    const onKey = (e) => { if (e.key === 'Escape') setPicker(false); };
+    document.addEventListener('keydown', onKey);
+    return () => document.removeEventListener('keydown', onKey);
+  }, [picker]);
+
   return (
-    <section style={{ backgroundColor: INK }}>
-      <div className="max-w-container mx-auto px-6 md:px-14 lg:px-20 py-16 md:py-28">
+    <section aria-labelledby="reservation-label" className="relative" style={{ backgroundColor: INK }}>
+      {/* Grain analogique — section Ink */}
+      <div aria-hidden="true" className="absolute inset-0 pointer-events-none z-[1]"
+        style={{
+          opacity: 0.035,
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+          backgroundSize: '128px',
+        }}
+      />
+      <div className="relative z-[2] max-w-container mx-auto px-6 md:px-14 lg:px-20 py-16 md:py-28">
 
         {/* Label */}
         <div className="flex items-center gap-5 mb-10 md:mb-14">
-          <div className="h-px w-8" style={{ backgroundColor: WINE }} />
-          <span className="font-sans text-[11px] uppercase tracking-[0.65em] text-white/40">{t('reservation_label')}</span>
+          <div className="h-px w-4" style={{ backgroundColor: WINE, opacity: 0.4 }} />
+          <h2 id="reservation-label" className="font-sans text-[11px] uppercase tracking-[0.55em] text-white/40 m-0">{t('reservation_label')}</h2>
         </div>
 
         {/* Carte blanche */}
@@ -318,11 +377,11 @@ function ReservationPanel({ suite }) {
           {/* Mobile — empilé verticalement */}
           <div className="block lg:hidden p-6 md:p-10">
 
-            {/* Nom + infos */}
+            {/* Nom + infos — h2 retiré (déjà h1 en haut de page) */}
             <div className="mb-8 pb-6" style={{ borderBottom: `1px solid ${BONE}` }}>
-              <h2 className="font-serif font-light italic leading-none mb-1" style={{ fontSize: 'clamp(26px, 6vw, 40px)', color: INK }}>
+              <p className="font-serif font-light italic leading-none mb-1" style={{ fontSize: 'clamp(26px, 6vw, 40px)', color: INK }}>
                 {suite.name}
-              </h2>
+              </p>
               <p className="font-sans text-[9px] uppercase tracking-[0.40em] text-black/30">
                 {suite.surface} · {suite.capacity}
               </p>
@@ -332,27 +391,30 @@ function ReservationPanel({ suite }) {
             <div className="mb-8">
               {/* Header mois cliquable */}
               <div className="flex items-center justify-between mb-5">
-                <button onClick={() => setView(new Date(view.getFullYear(), view.getMonth() - 1, 1))}
+                <button type="button" onClick={() => setView(new Date(view.getFullYear(), view.getMonth() - 1, 1))}
+                  aria-label="Mois précédent"
                   className="w-8 h-8 flex items-center justify-center text-[rgba(12,12,10,0.22)] hover:text-[#0C0C0A] transition-colors">
                   <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" strokeLinecap="round" /></svg>
                 </button>
                 <div className="relative" onClick={e => e.stopPropagation()}>
-                  <button onClick={() => setPicker(p => !p)}
+                  <button type="button" onClick={() => setPicker(p => !p)}
+                    aria-expanded={picker} aria-haspopup="listbox"
                     className="flex items-center gap-1.5 font-sans text-[10px] uppercase tracking-[0.4em] hover:text-[#0C0C0A] transition-colors outline-none"
                     style={{ color: 'rgba(12,12,10,0.50)' }}>
-                    {MONTHS_FR[view.getMonth()]} {view.getFullYear()}
+                    {monthsLong[view.getMonth()]} {view.getFullYear()}
                     <svg width="8" height="8" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"
                       style={{ transform: picker ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>
                       <path d="M6 9l6 6 6-6" strokeLinecap="round" />
                     </svg>
                   </button>
-                  <AnimatePresence>
+                  <AnimatePresence mode="wait">
                     {picker && (
                       <MonthPicker current={view} onSelect={(d) => setView(d)} onClose={() => setPicker(false)} />
                     )}
                   </AnimatePresence>
                 </div>
-                <button onClick={() => setView(new Date(view.getFullYear(), view.getMonth() + 1, 1))}
+                <button type="button" onClick={() => setView(new Date(view.getFullYear(), view.getMonth() + 1, 1))}
+                  aria-label="Mois suivant"
                   className="w-8 h-8 flex items-center justify-center text-[rgba(12,12,10,0.22)] hover:text-[#0C0C0A] transition-colors">
                   <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6" strokeLinecap="round" /></svg>
                 </button>
@@ -372,7 +434,8 @@ function ReservationPanel({ suite }) {
                   const end = isSame(d, checkOut);
                   const range = isInRange(d);
                   return (
-                    <button key={i} onClick={() => clickDay(d)} disabled={past || av === false}
+                    <button key={i} type="button" onClick={() => clickDay(d)} disabled={past || av === false}
+                      aria-label={fmtDay(d)} aria-pressed={start || end ? 'true' : undefined}
                       className={`h-10 flex flex-col items-center justify-center transition-all duration-200
                         ${past || av === false ? 'opacity-10 cursor-not-allowed' : 'hover:bg-black/5'}
                         ${range ? 'bg-black/[0.03]' : ''}
@@ -424,11 +487,9 @@ function ReservationPanel({ suite }) {
                       </p>
                     </div>
                   </div>
-                  <button onClick={handleBooking}
-                    className="w-full py-5 font-sans text-[10px] uppercase tracking-[0.55em] relative overflow-hidden transition-colors duration-700"
-                    style={{ backgroundColor: INK, color: '#F4F5F0' }}
-                    onMouseEnter={e => e.currentTarget.style.backgroundColor = WINE}
-                    onMouseLeave={e => e.currentTarget.style.backgroundColor = INK}>
+                  <button type="button" onClick={handleBooking}
+                    className="w-full py-5 font-sans text-[10px] uppercase tracking-[0.55em] relative overflow-hidden transition-colors duration-700 bg-[#0C0C0A] hover:bg-[#351421]"
+                    style={{ color: '#F4F5F0' }}>
                     {t('confirm')}
                   </button>
                 </motion.div>
@@ -453,9 +514,9 @@ function ReservationPanel({ suite }) {
             {/* Gauche — infos + prix */}
             <div className="p-12 xl:p-16 flex flex-col gap-8" style={{ borderRight: `1px solid ${BONE}` }}>
               <div>
-                <h2 className="font-serif font-light italic leading-none mb-2" style={{ fontSize: 'clamp(28px, 3vw, 44px)', color: INK }}>
+                <p className="font-serif font-light italic leading-none mb-2" style={{ fontSize: 'clamp(28px, 3vw, 44px)', color: INK }}>
                   {suite.name}
-                </h2>
+                </p>
                 <p className="font-sans text-[9px] uppercase tracking-[0.40em] text-black/30">
                   {suite.surface} · {suite.capacity}
                 </p>
@@ -532,16 +593,17 @@ function ReservationPanel({ suite }) {
                     <svg width="12" height="12" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6" strokeLinecap="round" /></svg>
                   </button>
                   <div className="relative" onClick={e => e.stopPropagation()}>
-                    <button onClick={() => setPicker(p => !p)}
+                    <button type="button" onClick={() => setPicker(p => !p)}
+                      aria-expanded={picker} aria-haspopup="listbox"
                       className="flex items-center gap-1.5 font-sans text-[11px] uppercase tracking-[0.4em] hover:text-[#0C0C0A] transition-colors outline-none"
                       style={{ color: 'rgba(12,12,10,0.50)' }}>
-                      {MONTHS_FR[view.getMonth()]} {view.getFullYear()}
+                      {monthsLong[view.getMonth()]} {view.getFullYear()}
                       <svg width="8" height="8" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24"
                         style={{ transform: picker ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }}>
                         <path d="M6 9l6 6 6-6" strokeLinecap="round" />
                       </svg>
                     </button>
-                    <AnimatePresence>
+                    <AnimatePresence mode="wait">
                       {picker && (
                         <MonthPicker current={view} onSelect={(d) => setView(d)} onClose={() => setPicker(false)} />
                       )}
@@ -567,7 +629,8 @@ function ReservationPanel({ suite }) {
                     const end = isSame(d, checkOut);
                     const range = isInRange(d);
                     return (
-                      <button key={i} onClick={() => clickDay(d)} disabled={past || av === false}
+                      <button key={i} type="button" onClick={() => clickDay(d)} disabled={past || av === false}
+                        aria-label={fmtDay(d)} aria-pressed={start || end ? 'true' : undefined}
                         className={`h-12 flex flex-col items-center justify-center transition-all duration-200
                           ${past || av === false ? 'opacity-10 cursor-not-allowed' : 'hover:bg-black/5'}
                           ${range ? 'bg-black/[0.03]' : ''}
@@ -594,6 +657,7 @@ function ReservationPanel({ suite }) {
 function SuiteContent({ suite }) {
   const t      = useTranslations('suite');
   const locale = useLocale();
+  const reducedMotion = useReducedMotionSafe();
   const [galIdx,       setGalIdx]       = useState(0);
   const [lightboxOpen, setLightboxOpen] = useState(false);
 
@@ -626,27 +690,29 @@ function SuiteContent({ suite }) {
 
   return (
     <div className="min-h-screen" style={{ backgroundColor: GROUND }}>
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         {lightboxOpen && (
-          <Lightbox images={suite.images} index={galIdx} onClose={() => setLightboxOpen(false)} onNext={nextImg} onPrev={prevImg} />
+          <Lightbox images={suite.images} index={galIdx} name={suite.name} onClose={() => setLightboxOpen(false)} onNext={nextImg} onPrev={prevImg} />
         )}
       </AnimatePresence>
 
       {/* ── ENTÊTE ── */}
-      <section className="max-w-container mx-auto px-6 md:px-14 lg:px-20 pt-24 md:pt-36 pb-10 md:pb-14">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-14 items-end">
+      <section aria-labelledby="suite-name" className="max-w-container mx-auto px-6 md:px-14 lg:px-20 pt-24 md:pt-36 pb-10 md:pb-14">
+        <motion.div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-14 items-end"
+          initial={{ opacity: 0, y: reducedMotion ? 0 : 24, filter: 'blur(4px)' }}
+          animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
+          transition={{ duration: 1.4, ease: EXPO }}>
           <div>
-            <div className="flex items-center gap-3 font-sans text-[8px] uppercase tracking-[0.5em] mb-8"
-              style={{ color: 'rgba(12,12,10,0.28)' }}>
-              <a href={`/${locale}/hebergement`} className="transition-colors duration-400"
-                onMouseEnter={e => e.currentTarget.style.color=INK}
-                onMouseLeave={e => e.currentTarget.style.color='rgba(12,12,10,0.28)'}>
-                {t('breadcrumb')}
-              </a>
-              <span style={{ color: 'rgba(12,12,10,0.15)' }}>·</span>
-              <span>{suite.name}</span>
-            </div>
-            <h1 className="font-serif font-light leading-[0.88] tracking-[-0.03em] mb-5"
+            <Link href={`/${locale}/hebergement`}
+              className="group inline-flex items-center gap-3 mb-8 font-sans text-[8px] uppercase tracking-[0.5em] transition-colors duration-400 hover:text-[#0C0C0A]"
+              style={{ color: 'rgba(12,12,10,0.45)' }}>
+              <svg width="10" height="10" fill="none" stroke="currentColor" strokeWidth="1.2" viewBox="0 0 24 24"
+                className="transition-transform duration-500 group-hover:-translate-x-1">
+                <path d="M19 12H5M12 19l-7-7 7-7" strokeLinecap="round" />
+              </svg>
+              {t('breadcrumb')}
+            </Link>
+            <h1 id="suite-name" className="font-serif font-light leading-[0.88] tracking-[-0.03em] mb-5"
               style={{ fontSize: 'clamp(44px, 7vw, 96px)', color: INK }}>
               {suite.name}
             </h1>
@@ -663,18 +729,16 @@ function SuiteContent({ suite }) {
               {suite.description}
             </p>
           </div>
-        </div>
+        </motion.div>
       </section>
 
       {/* ── GALERIE ── */}
       <section className="pb-8 md:pb-14">
         <EquinoxGallery images={suite.images} name={suite.name} />
         <div className="flex justify-center mt-5 md:mt-6">
-          <button onClick={() => setLightboxOpen(true)}
-            className="font-sans text-[9px] uppercase tracking-[0.5em] py-2 px-5 transition-colors duration-400"
-            style={{ color: 'rgba(12,12,10,0.35)', borderBottom: '1px solid rgba(12,12,10,0.12)' }}
-            onMouseEnter={e => e.currentTarget.style.color = INK}
-            onMouseLeave={e => e.currentTarget.style.color = 'rgba(12,12,10,0.35)'}>
+          <button type="button" onClick={() => setLightboxOpen(true)}
+            className="font-sans text-[9px] uppercase tracking-[0.5em] py-2 px-5 transition-colors duration-400 text-[rgba(12,12,10,0.35)] hover:text-[#0C0C0A]"
+            style={{ borderBottom: '1px solid rgba(12,12,10,0.12)' }}>
             {t('gallery_browse')}
           </button>
         </div>
@@ -682,69 +746,95 @@ function SuiteContent({ suite }) {
 
       {/* ── TÉMOIGNAGE ── */}
       {suite.testimonial && (
-        <section className="py-16 md:py-24 text-center"
+        <section aria-label="Témoignage" className="py-16 md:py-24 text-center"
           style={{ backgroundColor: '#FFFFFF', borderTop: `1px solid ${BONE}`, borderBottom: `1px solid ${BONE}` }}>
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Review',
+            itemReviewed: { '@id': `https://myrasociety.com/${locale}/hebergement/${suite.name}#suite` },
+            reviewBody: suite.testimonial.text,
+            author: { '@type': 'Person', name: suite.testimonial.author },
+          }) }} />
           <div className="max-w-container mx-auto px-6 md:px-14 lg:px-20">
-            <div className="max-w-[680px] mx-auto">
+            <motion.figure className="max-w-[680px] mx-auto m-0"
+              initial={{ opacity: 0, y: reducedMotion ? 0 : 20, filter: 'blur(4px)' }}
+              whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }} viewport={{ once: true }}
+              transition={{ duration: 1.4, ease: EXPO }}>
               <div className="w-8 h-px mx-auto mb-8" style={{ backgroundColor: WINE, opacity: 0.4 }} />
-              <blockquote className="font-serif font-light italic leading-[1.55] mb-8"
+              <blockquote className="font-serif font-light italic leading-[1.55] mb-8 m-0 p-0"
                 style={{ fontSize: 'clamp(18px, 2.5vw, 32px)', color: 'rgba(12,12,10,0.72)' }}>
                 {suite.testimonial.text}
               </blockquote>
-              <p className="font-sans text-[9px] uppercase tracking-[0.55em] mb-1" style={{ color: INK }}>{suite.testimonial.author}</p>
-              <p className="font-sans text-[8px] uppercase tracking-[0.40em]" style={{ color: 'rgba(53,20,33,0.40)' }}>{suite.testimonial.origin}</p>
-            </div>
+              <figcaption>
+                <cite className="not-italic font-sans text-[9px] uppercase tracking-[0.55em] block mb-1" style={{ color: INK }}>{suite.testimonial.author}</cite>
+                <span className="font-sans text-[8px] uppercase tracking-[0.40em] block" style={{ color: 'rgba(53,20,33,0.40)' }}>{suite.testimonial.origin}</span>
+              </figcaption>
+            </motion.figure>
           </div>
         </section>
       )}
 
       {/* ── ACCORDÉON ── */}
       <section className="max-w-container mx-auto px-6 md:px-14 lg:px-20 py-12 md:py-20">
-        <Accordion items={accordionItems} />
+        <motion.div
+          initial={{ opacity: 0, y: reducedMotion ? 0 : 24, filter: 'blur(4px)' }}
+          whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }} viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 1.4, ease: EXPO }}>
+          <Accordion items={accordionItems} />
+        </motion.div>
       </section>
 
       {/* ── RÉSERVATION ── */}
       <ReservationPanel suite={suite} />
 
       {/* ── AUTRES SUITES ── */}
-      <section className="max-w-container mx-auto px-6 md:px-14 lg:px-20 py-16 md:py-24">
-        <div className="flex items-center gap-4 mb-10">
-          <div className="w-4 h-px" style={{ backgroundColor: WINE, opacity: 0.4 }} />
-          <span className="font-sans text-[11px] uppercase tracking-[0.55em]" style={{ color: 'rgba(12,12,10,0.35)' }}>Autres suites</span>
-        </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {Object.values(SUITES).filter(s => s.name !== suite.name).map((s, i) => (
-            <a key={s.name} href={`/${locale}/hebergement/${s.name}`}
-              className="group block" style={{ borderTop: '1px solid rgba(12,12,10,0.06)' }}>
-              <div className="relative overflow-hidden mb-4" style={{ aspectRatio: '16/10' }}>
-                <img src={s.images[0]} alt={s.name}
-                  className="w-full h-full object-cover transition-all duration-[2s] group-hover:scale-[1.03]"
-                  style={{ filter: 'saturate(0.80)' }} />
-                <div className="absolute inset-0 bg-[rgba(12,12,10,0)] group-hover:bg-[rgba(12,12,10,0.10)] transition-all duration-500" />
-              </div>
-              <div className="py-4 flex items-end justify-between">
-                <div>
-                  <h3 className="font-serif font-light italic mb-1"
-                    style={{ fontSize: '28px', color: INK }}>{s.name}</h3>
-                  <div className="flex items-center gap-3">
-                    <span className="font-sans text-[9px] uppercase tracking-[0.35em]"
-                      style={{ color: 'rgba(12,12,10,0.30)' }}>{s.surface}</span>
-                    <span className="w-px h-3" style={{ backgroundColor: BONE }} />
-                    <span className="font-sans text-[9px] uppercase tracking-[0.35em]"
-                      style={{ color: 'rgba(12,12,10,0.30)' }}>{s.capacity}</span>
+      <section id="autres-suites" aria-labelledby="autres-label" className="max-w-container mx-auto px-6 md:px-14 lg:px-20 py-16 md:py-24">
+        <motion.div
+          initial={{ opacity: 0, y: reducedMotion ? 0 : 24, filter: 'blur(4px)' }}
+          whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }} viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 1.4, ease: EXPO }}>
+          <div className="flex items-center gap-4 mb-10">
+            <div className="w-4 h-px" style={{ backgroundColor: WINE, opacity: 0.4 }} />
+            <h2 id="autres-label" className="font-sans text-[11px] uppercase tracking-[0.55em] m-0" style={{ color: 'rgba(12,12,10,0.35)' }}>Autres suites</h2>
+          </div>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {Object.values(SUITES).filter(s => s.name !== suite.name).map((s) => (
+              <article key={s.name} aria-labelledby={`other-suite-${s.name}-name`}>
+                <Link href={`/${locale}/hebergement/${s.name}`}
+                  className="group block" style={{ borderTop: '1px solid rgba(12,12,10,0.06)' }}>
+                  <div className="relative overflow-hidden mb-4" style={{ aspectRatio: '16/10' }}>
+                    <img src={s.images[0]} alt={`Suite ${s.name}`}
+                      loading="lazy" decoding="async"
+                      className="w-full h-full object-cover transition-all duration-[2s] group-hover:scale-[1.03]"
+                      style={{ filter: 'saturate(0.85) brightness(0.92) contrast(1.04)' }} />
+                    <div className="absolute inset-0 bg-[rgba(12,12,10,0)] group-hover:bg-[rgba(12,12,10,0.10)] transition-all duration-500" />
                   </div>
-                </div>
-                <div className="flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-400">
-                  <span className="font-sans text-[9px] uppercase tracking-[0.40em]"
-                    style={{ color: 'rgba(12,12,10,0.40)' }}>Voir</span>
-                  <svg width="10" height="10" fill="none" stroke="rgba(12,12,10,0.40)" strokeWidth="1.3" viewBox="0 0 24 24">
-                    <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" />
-                  </svg>
-                </div>
-              </div>
-            </a>
-          ))}
-        </div>
+                  <div className="py-4 flex items-end justify-between">
+                    <div>
+                      <h3 id={`other-suite-${s.name}-name`} className="font-serif font-light italic mb-1"
+                        style={{ fontSize: '28px', color: INK }}>{s.name}</h3>
+                      <div className="flex items-center gap-3">
+                        <span className="font-sans text-[9px] uppercase tracking-[0.35em]"
+                          style={{ color: 'rgba(12,12,10,0.30)' }}>{s.surface}</span>
+                        <span className="w-px h-3" style={{ backgroundColor: BONE }} />
+                        <span className="font-sans text-[9px] uppercase tracking-[0.35em]"
+                          style={{ color: 'rgba(12,12,10,0.30)' }}>{s.capacity}</span>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-2 opacity-60 group-hover:opacity-100 transition-opacity duration-500">
+                      <span className="font-sans text-[9px] uppercase tracking-[0.40em]"
+                        style={{ color: 'rgba(12,12,10,0.40)' }}>Voir</span>
+                      <svg width="10" height="10" fill="none" stroke="rgba(12,12,10,0.40)" strokeWidth="1.3" viewBox="0 0 24 24"
+                        className="transition-transform duration-500 group-hover:translate-x-1">
+                        <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" />
+                      </svg>
+                    </div>
+                  </div>
+                </Link>
+              </article>
+            ))}
+          </div>
+        </motion.div>
       </section>
 
       <ContactSection />

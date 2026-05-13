@@ -2,7 +2,11 @@
   "nav": {
     "hebergements": "Unterkünfte",
     "reserver": "Buchen",
-    "club": "Der Club"
+    "club": "Der Club",
+    "nous_rejoindre": "Mitmachen",
+    "news": "News",
+    "contact": "Kontakt",
+    "access_cta": "Zugang anfragen"
   },
   "hero": {
     "tagline_1": "Kein Hotel.",
@@ -84,13 +88,28 @@
     "nav_hebergements": "Unterkünfte",
     "nav_reserver": "Buchen",
     "nav_club": "Der Club",
+    "nav_nous_rejoindre": "Mitmachen",
+    "nav_news": "News",
+    "nav_contact": "Kontakt",
+    "signature": "Die Kunst, den Körper zu empfangen.",
     "send": "Abonnieren"
+  },
+  "news": {
+    "label": "Notes",
+    "tagline": "Tagebuch eines Hauses, das Form annimmt."
   },
   "contact": {
     "label": "Kontakt",
     "title_line1": "Wir halten",
     "title_line2": "einen Platz für Sie.",
     "desc": "Für Fragen, private Buchungen oder Mitgliedschaftsanfragen.",
+    "type_label": "Anfrageart",
+    "type_sejour": "Aufenthalt",
+    "type_invest": "Investition",
+    "type_partner": "Partnerschaft",
+    "type_community": "Community",
+    "type_press": "Presse",
+    "type_other": "Sonstiges",
     "name": "Name",
     "name_placeholder": "Ihr Name",
     "email": "E-Mail",

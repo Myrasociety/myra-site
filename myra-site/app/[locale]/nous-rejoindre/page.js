@@ -1,24 +1,38 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import Link from 'next/link';
 import { motion, useInView, useScroll, useTransform, AnimatePresence, useMotionValue, animate } from 'framer-motion';
 import { useTranslations, useLocale } from '@/lib/useTranslations';
 
 const INK  = '#0C0C0A';
-const WINE = '#2B1022';
+const WINE = '#351421';
 const ASH  = 'rgba(12,12,10,0.42)';
 const BONE = 'rgba(12,12,10,0.06)';
 const EXPO = [0.16, 1, 0.3, 1];
 const EASE = [0.19, 1, 0.22, 1];
 
+function useReducedMotionSafe() {
+  const [reduced, setReduced] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setReduced(mq.matches);
+    const h = (e) => setReduced(e.matches);
+    mq.addEventListener('change', h);
+    return () => mq.removeEventListener('change', h);
+  }, []);
+  return reduced;
+}
+
 function R({ children, d = 0, y = 28, className = '' }) {
   const ref = useRef(null);
   const io  = useInView(ref, { once: true, margin: '-80px' });
+  const reduced = useReducedMotionSafe();
   return (
     <motion.div ref={ref} className={className}
-      initial={{ opacity: 0, y, filter: 'blur(4px)' }}
+      initial={{ opacity: 0, y: reduced ? 0 : y, filter: reduced ? 'blur(0px)' : 'blur(4px)' }}
       animate={io ? { opacity: 1, y: 0, filter: 'blur(0px)' } : {}}
-      transition={{ duration: 1.6, ease: EASE, delay: d }}>
+      transition={{ duration: 1.4, ease: EASE, delay: d }}>
       {children}
     </motion.div>
   );
@@ -26,15 +40,15 @@ function R({ children, d = 0, y = 28, className = '' }) {
 
 function Cap({ children, light = false, accent = false, className = '' }) {
   return (
-    <span className={`inline-block font-sans text-[11px] tracking-[0.55em] uppercase ${accent ? 'text-[#2B1022]' : light ? 'text-[rgba(244,245,240,0.38)]' : 'text-[rgba(12,12,10,0.35)]'} ${className}`}>
+    <span className={`inline-block font-sans text-[11px] tracking-[0.55em] uppercase ${accent ? 'text-[#351421]' : light ? 'text-[rgba(244,245,240,0.38)]' : 'text-[rgba(12,12,10,0.35)]'} ${className}`}>
       {children}
     </span>
   );
 }
 
 function Trait({ light = false, className = '' }) {
-  return <div className={`h-px w-8 flex-shrink-0 ${className}`}
-    style={{ backgroundColor: light ? 'rgba(244,245,240,0.15)' : 'rgba(43,16,34,0.35)' }} />;
+  return <div className={`h-px w-4 flex-shrink-0 ${className}`}
+    style={{ backgroundColor: light ? 'rgba(244,245,240,0.15)' : 'rgba(53,20,33,0.40)' }} />;
 }
 
 // ════════════════════════════════════════════════════════════════════════════
@@ -43,46 +57,58 @@ function Trait({ light = false, className = '' }) {
 function Hero() {
   const t = useTranslations('soutenir');
   const ref = useRef(null);
+  const reducedMotion = useReducedMotionSafe();
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
   const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
   const scale   = useTransform(scrollYProgress, [0, 1], [1, 1.12]);
 
   return (
-    <section ref={ref} className="relative w-full overflow-hidden bg-[#0C0C0A]"
+    <section id="hero" aria-labelledby="soutenir-hero-title" ref={ref} className="relative w-full overflow-hidden bg-[#0C0C0A]"
       style={{ height: '100dvh', minHeight: 640 }}>
-      <motion.div className="absolute inset-0" style={{ scale }}>
-        <img src="/Visuels/Attente.jpg" alt="MYRA" className="w-full h-full object-cover"
-          style={{ filter: 'brightness(0.50) grayscale(18%)' }} />
+      <motion.div className="absolute inset-0" style={reducedMotion ? undefined : { scale }}>
+        <motion.img src="/Visuels/Attente.jpg" alt="MYRA Society — domaine"
+          loading="eager" fetchPriority="high"
+          className="w-full h-full object-cover"
+          style={{ filter: 'saturate(0.85) brightness(0.50) contrast(1.06)' }} />
       </motion.div>
       <div className="absolute inset-0 bg-gradient-to-b from-[#0C0C0A]/55 via-transparent to-[#0C0C0A]/90" />
       <div className="absolute inset-0 bg-gradient-to-r from-[#0C0C0A]/30 via-transparent to-transparent" />
 
+      {/* Grain analogique — section Ink */}
+      <div aria-hidden="true" className="absolute inset-0 pointer-events-none z-[1]"
+        style={{
+          opacity: 0.035,
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+          backgroundSize: '128px',
+        }}
+      />
+
       <motion.div className="absolute inset-0 flex flex-col justify-end px-6 md:px-16 pb-10 md:pb-12 z-20"
         style={{ opacity }}>
-        
+
         <motion.div className="flex flex-col items-start mb-8 md:mb-16"
-          initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 1.8, ease: EASE, delay: 0.2 }}>
-          <h1 className="font-serif font-light italic text-[#F3F2EF] leading-[1.1] tracking-[-0.02em] text-left"
+          initial={{ opacity: 0, x: reducedMotion ? 0 : -20 }} animate={{ opacity: 1, x: 0 }}
+          transition={{ duration: 1.4, ease: EASE, delay: 0.2 }}>
+          <h1 id="soutenir-hero-title" className="font-serif font-light italic text-[#F4F5F0] leading-[1.1] tracking-[-0.02em] text-left"
             style={{ fontSize: 'clamp(28px, 4vw, 56px)' }}>
             {t('hero_title').split('\n')[0]}
           </h1>
-          <h2 className="font-serif font-light text-[#F3F2EF] leading-[1.1] tracking-[-0.01em] text-left mt-2 uppercase"
+          <h2 className="font-serif font-light text-[#F4F5F0] leading-[1.1] tracking-[-0.01em] text-left mt-2 uppercase"
             style={{ fontSize: 'clamp(32px, 4.5vw, 64px)' }}>
             {t('hero_title').split('\n')[1]}
           </h2>
         </motion.div>
 
         <motion.div className="flex flex-col md:flex-row items-start md:items-end justify-between gap-6 md:gap-10"
-          initial={{ opacity: 0, y: 16 }} animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.6, ease: EASE, delay: 0.5 }}>
+          initial={{ opacity: 0, y: reducedMotion ? 0 : 16 }} animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.4, ease: EASE, delay: 0.5 }}>
           
           {/* Bouton téléchargement */}
           <motion.a href="/Pitch Deck.pdf" download whileHover={{ scale: 1.02 }}
-            className="font-sans inline-flex items-center gap-4 px-6 py-4 border border-[rgba(244,245,240,0.15)] hover:border-[#2B1022] backdrop-blur-md bg-[rgba(244,245,240,0.04)] hover:bg-[rgba(43,16,34,0.20)] transition-all duration-500">
-            <span className="text-[#F3F2EF] text-[9px] md:text-[10px] tracking-[0.30em] uppercase">{t('hero_download')}</span>
+            className="font-sans inline-flex items-center gap-4 px-6 py-4 border border-[rgba(244,245,240,0.15)] hover:border-[#351421] backdrop-blur-md bg-[rgba(244,245,240,0.04)] hover:bg-[rgba(53,20,33,0.20)] transition-all duration-500">
+            <span className="text-[#F4F5F0] text-[9px] md:text-[10px] tracking-[0.30em] uppercase">{t('hero_download')}</span>
             <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
-              <path d="M6 1V8M6 8L3 5M6 8L9 5M1 11H11" stroke="#F3F2EF" strokeWidth="1.2" />
+              <path d="M6 1V8M6 8L3 5M6 8L9 5M1 11H11" stroke="#F4F5F0" strokeWidth="1.2" />
             </svg>
           </motion.a>
 
@@ -111,7 +137,7 @@ function Hero() {
 function Genese() {
   const t = useTranslations('soutenir');
   return (
-    <section className="py-16 md:py-32 overflow-hidden">
+    <section id="genese" aria-labelledby="genese-label" className="py-16 md:py-32 overflow-hidden">
       <div className="max-w-container mx-auto px-6 md:px-0">
         <div className="flex items-center gap-8 mb-10 md:mb-16">
           <div className="h-px flex-1" style={{ backgroundColor: 'rgba(12,12,10,0.06)' }} />
@@ -119,47 +145,49 @@ function Genese() {
           <div className="h-px flex-1" style={{ backgroundColor: 'rgba(12,12,10,0.06)' }} />
         </div>
 
-        {/* Texte au dessus de l'image sur mobile */}
-        <div className="md:hidden mb-8 space-y-5">
-          <R><div className="flex items-center gap-4"><Trait /><Cap accent>{t('genese_label')}</Cap></div></R>
-          <R d={0.1}>
-            <h2 className="font-serif font-light italic leading-[1.07] text-[#0C0C0A]"
-              style={{ fontSize: 'clamp(28px, 6vw, 44px)' }}>{t('genese_title')}</h2>
-          </R>
-          <R d={0.18}><div className="w-10 h-px bg-[rgba(12,12,10,0.06)]" /></R>
-          <R d={0.25}><p className="font-sans text-[13px] leading-[2.4] font-light text-[rgba(12,12,10,0.45)]">{t('genese_p1')}</p></R>
-          <R d={0.32}><p className="font-sans text-[13px] leading-[2.4] font-light text-[rgba(12,12,10,0.45)]">{t('genese_p2')}</p></R>
-        </div>
-
         <div className="grid grid-cols-12 gap-8 items-stretch">
-          <div className="col-span-12 md:col-span-6 relative overflow-hidden" style={{ aspectRatio: '4/5' }}>
-            <motion.img src="/Complexe/3.jpg" alt="L'origine de MYRA"
+          {/* Image — DOM first, ordered after text on mobile via order */}
+          <div className="col-span-12 md:col-span-6 order-2 md:order-none relative overflow-hidden" style={{ aspectRatio: '4/5' }}>
+            <motion.img src="/Complexe/3.jpg" alt="MYRA — L'origine"
+              loading="lazy" decoding="async"
               className="w-full h-full object-cover"
-              style={{ filter: 'saturate(0.82)' }}
+              style={{ filter: 'saturate(0.85) brightness(0.92) contrast(1.04)' }}
               whileHover={{ scale: 1.04, filter: 'saturate(1)' }}
               transition={{ duration: 1.8, ease: EXPO }} />
           </div>
-          {/* Texte desktop — à droite */}
-          <div className="hidden md:flex col-span-5 col-start-8 flex-col justify-between py-6">
-            <R><div className="flex items-center gap-4"><Trait /><Cap accent>{t('genese_label')}</Cap></div></R>
-            <div className="my-14 md:my-0 space-y-6">
+          {/* Texte — order-1 mobile (au-dessus), col-start-8 desktop */}
+          <div className="col-span-12 md:col-span-5 md:col-start-8 order-1 md:order-none md:flex md:flex-col md:justify-between md:py-6 space-y-5 md:space-y-0">
+            <R>
+              <div className="flex items-center gap-4">
+                <Trait />
+                <Cap accent>
+                  <span id="genese-label">{t('genese_label')}</span>
+                </Cap>
+              </div>
+            </R>
+            <div className="space-y-5 md:space-y-6">
               <R d={0.1}>
-                <h2 className="font-serif font-light italic leading-[1.07] text-[#0C0C0A]"
-                  style={{ fontSize: 'clamp(32px, 3.8vw, 54px)' }}>{t('genese_title')}</h2>
+                <h2 className="font-serif font-light italic leading-[1.07] text-[#0C0C0A] text-[clamp(28px,6vw,44px)] md:text-[clamp(32px,3.8vw,54px)] m-0">
+                  {t('genese_title')}
+                </h2>
               </R>
-              <R d={0.18}><div className="w-14 h-px my-8 bg-[rgba(12,12,10,0.06)]" /></R>
-              <R d={0.25}><p className="font-sans text-[14px] leading-[2.6] font-light text-[rgba(12,12,10,0.45)]">{t('genese_p1')}</p></R>
-              <R d={0.35}><p className="font-sans text-[14px] leading-[2.6] font-light text-[rgba(12,12,10,0.45)]">{t('genese_p2')}</p></R>
+              <R d={0.18}>
+                <div className="w-10 md:w-14 h-px bg-[rgba(12,12,10,0.06)]" />
+              </R>
+              <R d={0.25}>
+                <p className="font-sans font-light text-[rgba(12,12,10,0.45)] text-[13px] leading-[2.4] md:text-[14px] md:leading-[2.6]">{t('genese_p1')}</p>
+              </R>
+              <R d={0.35}>
+                <p className="font-sans font-light text-[rgba(12,12,10,0.45)] text-[13px] leading-[2.4] md:text-[14px] md:leading-[2.6]">{t('genese_p2')}</p>
+              </R>
             </div>
             <R d={0.45}>
-              <div className="pt-7 border-t border-[rgba(12,12,10,0.06)]">
+              <div className="hidden md:block pt-7 border-t border-[rgba(12,12,10,0.06)]">
                 <Cap accent>{t('genese_location')}</Cap>
               </div>
             </R>
           </div>
         </div>
-
-
       </div>
     </section>
   );
@@ -170,65 +198,71 @@ function Genese() {
 // ════════════════════════════════════════════════════════════════════════════
 function Services() {
   const t = useTranslations('soutenir');
-  const [hov, setHov] = useState(null);
-
-  const SVCS = [
-    { id: 'menu',  num: '01', label: t('s1_label'), src: '/Restaurant/A.jpg', pdf: '/tarifs-restauration-myra.pdf', desc: t('s1_desc') },
-    { id: 'spa',   num: '02', label: t('s2_label'), src: '/Spa/A.jpg',        pdf: '/brochure-tarifs-spa.pdf',      desc: t('s2_desc') },
-    { id: 'sport', num: '03', label: t('s3_label'), src: '/Fitness/A.jpg',    pdf: '/offres-fitness-myra.pdf',      desc: t('s3_desc') },
+  const SERVICES = [
+    { id: 'spa',        image: '/Spa/A.jpg',        pdf: '/Pitch Deck.pdf', num: '01', label: t('s2_label'), desc: t('s2_desc') },
+    { id: 'fitness',    image: '/Fitness/A.jpg',    pdf: '/Pitch Deck.pdf', num: '02', label: t('s3_label'), desc: t('s3_desc') },
+    { id: 'restaurant', image: '/Restaurant/A.jpg', pdf: '/Pitch Deck.pdf', num: '03', label: t('s1_label'), desc: t('s1_desc') },
   ];
 
   return (
-    <section className="bg-[#F3F2EF] overflow-hidden">
-      <div className="max-w-container mx-auto py-14 md:py-20 px-6 md:px-0">
-        <div className="flex items-end justify-between mb-10 md:mb-14 pb-6 md:pb-8"
-          style={{ borderBottom: '1px solid rgba(12,12,10,0.06)' }}>
-          <R><div className="flex items-center gap-4"><Trait /><Cap accent>{t('services_label')}</Cap></div></R>
+    <section id="services" aria-labelledby="services-label" className="py-16 md:py-32 overflow-hidden">
+      <div className="max-w-container mx-auto px-6 md:px-0">
+        <div className="mb-12 md:mb-20">
+          <R>
+            <div className="flex items-center gap-4">
+              <Trait />
+              <Cap accent>
+                <span id="services-label">{t('services_label')}</span>
+              </Cap>
+            </div>
+          </R>
           <R d={0.1}>
-            <p className="font-serif font-light italic"
-              style={{ fontSize: 'clamp(12px, 1.4vw, 20px)', color: 'rgba(12,12,10,0.30)' }}>
+            <h2 className="font-serif font-light italic mt-4 m-0 text-[rgba(12,12,10,0.32)]"
+              style={{ fontSize: 'clamp(26px, 3.6vw, 48px)', lineHeight: 1.1 }}>
               {t('services_subtitle')}
-            </p>
+            </h2>
           </R>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {SVCS.map((s, i) => (
-            <motion.div key={s.id}
-              initial={{ opacity: 0, y: 24, filter: 'blur(4px)' }}
-              whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-              viewport={{ once: true }}
-              transition={{ duration: 1.2, ease: EASE, delay: i * 0.08 }}>
-              <a href={s.pdf} download
-                onMouseEnter={() => setHov(s.id)} onMouseLeave={() => setHov(null)}
-                className="block cursor-pointer outline-none">
-                <div className="relative overflow-hidden" style={{ aspectRatio: '2/3' }}>
-                  <motion.img src={s.src} alt={s.label} className="w-full h-full object-cover"
-                    animate={{ scale: hov === s.id ? 1.05 : 1, filter: hov === s.id ? 'saturate(1) brightness(0.50) contrast(1.05)' : 'saturate(0.20) brightness(0.60) contrast(1.08)' }}
-                    transition={{ scale: { duration: hov === s.id ? 1.6 : 0.4, ease: EASE }, filter: { duration: hov === s.id ? 0.8 : 0.2 } }} />
-                  <div className="absolute inset-0 pointer-events-none"
-                    style={{ background: 'linear-gradient(to top, rgba(12,12,10,0.88) 0%, rgba(12,12,10,0.20) 55%, transparent 100%)' }} />
-                  <div className="absolute top-5 left-5">
-                    <span className="font-sans text-[9px] uppercase tracking-[0.45em]" style={{ color: 'rgba(244,242,239,0.35)' }}>{s.num}</span>
-                  </div>
-                  <div className="absolute inset-0 px-7 flex flex-col items-center justify-center text-center">
-                    <h3 className="font-serif font-light leading-none mb-4"
-                      style={{ fontSize: 'clamp(22px, 2.5vw, 36px)', color: '#FFFFFF' }}>{s.label}</h3>
-                    <p className="font-sans text-[11px] leading-[2.0] font-light max-w-[180px] text-center"
-                      style={{ color: 'rgba(244,242,239,0.50)' }}>{s.desc}</p>
-                    <motion.div className="flex items-center gap-3 mt-6"
-                      animate={{ opacity: hov === s.id ? 1 : 0, y: hov === s.id ? 0 : 6 }}
-                      transition={{ duration: hov === s.id ? 0.35 : 0.15, ease: EASE }}>
-                      <span className="font-sans text-[9px] uppercase tracking-[0.45em]" style={{ color: 'rgba(244,242,239,0.40)' }}>Tarifs</span>
-                      <div className="w-7 h-7 flex items-center justify-center" style={{ border: '1px solid rgba(244,242,239,0.25)' }}>
-                        <svg width="11" height="11" fill="none" stroke="#F3F2EF" strokeWidth="1.2" viewBox="0 0 12 12">
-                          <path d="M6 1V8M6 8L3 5M6 8L9 5M1 11H11" strokeLinecap="round" />
-                        </svg>
-                      </div>
-                    </motion.div>
-                  </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-x-6 lg:gap-x-10 gap-y-14">
+          {SERVICES.map((s, i) => (
+            <R key={s.id} d={i * 0.08}>
+              <a href={s.pdf} target="_blank" rel="noopener noreferrer"
+                aria-label={`${s.label} — PDF`}
+                className="group block outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-[#351421]">
+                <div className="relative overflow-hidden mb-7 md:mb-9" style={{ aspectRatio: '3/4' }}>
+                  <motion.img src={s.image} alt={s.label}
+                    loading="lazy" decoding="async"
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1400ms] group-hover:scale-[1.04]"
+                    style={{ filter: 'saturate(0.85) brightness(0.92) contrast(1.04)' }} />
+                </div>
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-3 h-px" style={{ backgroundColor: 'rgba(53,20,33,0.40)' }} />
+                  <span className="font-sans text-[10px] uppercase tracking-[0.55em] text-[rgba(12,12,10,0.40)]">
+                    {s.num}
+                  </span>
+                </div>
+                <h3 className="font-serif font-light italic text-[#0C0C0A] m-0 mb-4"
+                  style={{ fontSize: 'clamp(26px, 2.8vw, 38px)', lineHeight: 1.0, letterSpacing: '-0.01em' }}>
+                  {s.label}
+                </h3>
+                <p className="font-sans font-light max-w-xs m-0 mb-6"
+                  style={{ fontSize: '13px', lineHeight: 2.0, color: 'rgba(12,12,10,0.45)' }}>
+                  {s.desc}
+                </p>
+                <div className="inline-flex items-center gap-3 relative pb-1">
+                  <span className="font-sans text-[9px] uppercase tracking-[0.40em] text-[rgba(12,12,10,0.45)] group-hover:text-[#351421] transition-colors duration-400">
+                    {t('cercle_decouvrir')}
+                  </span>
+                  <svg width="14" height="10" viewBox="0 0 14 10" fill="none"
+                    className="transition-transform duration-400 group-hover:translate-x-1 text-[rgba(12,12,10,0.40)] group-hover:text-[#351421]">
+                    <path d="M1 5H13M13 5L9 1M13 5L9 9" stroke="currentColor" strokeWidth="1" />
+                  </svg>
+                  <span aria-hidden="true" className="absolute bottom-0 left-0 h-px w-0 group-hover:w-full transition-all duration-500"
+                    style={{ backgroundColor: '#351421' }} />
                 </div>
               </a>
-            </motion.div>
+            </R>
           ))}
         </div>
       </div>
@@ -249,28 +283,35 @@ function Equipe() {
   ];
 
   const Selector = () => (
-    <div className="flex items-center gap-6">
+    <ul role="list" className="flex items-center gap-6 m-0 p-0 list-none">
       {EQUIPE.map((m, i) => (
-        <button key={i} onClick={() => setAct(i)} className="flex items-center gap-4 outline-none">
-          <motion.div className="relative overflow-hidden flex-shrink-0" style={{ width: 52, height: 64 }}
-            animate={{ opacity: i === act ? 1 : 0.25, filter: i === act ? 'grayscale(1) contrast(1.05)' : 'grayscale(1)' }}
-            transition={{ duration: 0.4 }}>
-            <img src={m.src} alt={m.name} className="w-full h-full object-cover object-top" />
-            {i === act && <div className="absolute bottom-0 left-0 right-0 h-[2px]" style={{ backgroundColor: WINE }} />}
-          </motion.div>
-          <div className="text-left">
-            <p className="font-sans text-[10px] uppercase tracking-[0.30em]" style={{ color: i === act ? INK : 'rgba(12,12,10,0.25)' }}>{m.name}</p>
-            <p className="font-sans text-[9px] uppercase tracking-[0.25em] mt-0.5" style={{ color: 'rgba(12,12,10,0.20)' }}>{m.role}</p>
-          </div>
-        </button>
+        <li key={i}>
+          <button type="button" onClick={() => setAct(i)} aria-label={`${m.name} — ${m.role}`} aria-pressed={i === act} className="flex items-center gap-4 outline-none">
+            <motion.div className="relative overflow-hidden flex-shrink-0" style={{ width: 52, height: 64 }}
+              animate={{ opacity: i === act ? 1 : 0.25, filter: i === act ? 'grayscale(1) contrast(1.05)' : 'grayscale(1)' }}
+              transition={{ duration: 0.4 }}>
+              <img src={m.src} alt={m.name} loading="lazy" decoding="async" className="w-full h-full object-cover object-top" />
+              {i === act && <div className="absolute bottom-0 left-0 right-0 h-[2px]" style={{ backgroundColor: WINE }} />}
+            </motion.div>
+            <div className="text-left">
+              <p className="font-sans text-[10px] uppercase tracking-[0.30em]" style={{ color: i === act ? INK : 'rgba(12,12,10,0.25)' }}>{m.name}</p>
+              <p className="font-sans text-[9px] uppercase tracking-[0.25em] mt-0.5" style={{ color: 'rgba(12,12,10,0.20)' }}>{m.role}</p>
+            </div>
+          </button>
+        </li>
       ))}
-    </div>
+    </ul>
   );
 
   return (
-    <section className="bg-[#F3F2EF] overflow-hidden">
+    <section id="equipe" aria-labelledby="equipe-label" className="bg-[#F4F5F0] overflow-hidden">
       <div className="max-w-container mx-auto py-14 md:py-20 px-6 md:px-0">
-        <div className="flex items-center gap-4 mb-12 md:mb-16"><Trait /><Cap accent>{t('label')}</Cap></div>
+        <div className="flex items-center gap-4 mb-12 md:mb-16">
+          <Trait />
+          <Cap accent>
+            <span id="equipe-label">{t('label')}</span>
+          </Cap>
+        </div>
 
         {/* Thumbnails — au dessus du portrait sur mobile */}
         <div className="lg:hidden mb-6"><Selector /></div>
@@ -278,7 +319,7 @@ function Equipe() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-0" style={{ borderTop: '1px solid rgba(12,12,10,0.06)' }}>
           <div className="relative overflow-hidden" style={{ aspectRatio: '4/5', minHeight: 380 }}>
             <AnimatePresence mode="wait">
-              <motion.img key={EQUIPE[act].src} src={EQUIPE[act].src} alt={EQUIPE[act].name}
+              <motion.img key={EQUIPE[act].src} src={EQUIPE[act].src} alt={EQUIPE[act].name} loading="lazy" decoding="async"
                 className="absolute inset-0 w-full h-full object-cover object-top"
                 style={{ filter: 'grayscale(1) contrast(1.05)' }}
                 initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
@@ -294,12 +335,16 @@ function Equipe() {
                   animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
                   exit={{ opacity: 0, y: -8 }}
                   transition={{ duration: 0.6, ease: EASE }}>
-                  <p className="font-sans text-[10px] uppercase tracking-[0.45em] mb-1" style={{ color: WINE }}>{EQUIPE[act].name}</p>
-                  <p className="font-sans text-[9px] uppercase tracking-[0.35em] mb-8" style={{ color: 'rgba(12,12,10,0.28)' }}>{EQUIPE[act].role}</p>
-                  <p className="font-serif font-light italic leading-[1.6]"
-                    style={{ fontSize: 'clamp(18px, 2vw, 26px)', color: 'rgba(12,12,10,0.68)' }}>
-                    &laquo;&nbsp;{EQUIPE[act].quote}&nbsp;&raquo;
+                  <p className="font-sans text-[10px] uppercase tracking-[0.45em] mb-1" style={{ color: WINE }}>
+                    <cite className="not-italic">{EQUIPE[act].name}</cite>
                   </p>
+                  <p className="font-sans text-[9px] uppercase tracking-[0.35em] mb-8" style={{ color: 'rgba(12,12,10,0.28)' }}>{EQUIPE[act].role}</p>
+                  <blockquote className="m-0 p-0">
+                    <p className="font-serif font-light italic leading-[1.6] m-0"
+                      style={{ fontSize: 'clamp(18px, 2vw, 26px)', color: 'rgba(12,12,10,0.68)' }}>
+                      &laquo;&nbsp;{EQUIPE[act].quote}&nbsp;&raquo;
+                    </p>
+                  </blockquote>
                 </motion.div>
               </AnimatePresence>
             </div>
@@ -308,10 +353,7 @@ function Equipe() {
               <div className="flex items-center gap-6 pt-6" style={{ borderTop: '1px solid rgba(12,12,10,0.06)' }}>
                 {['instagram', 'linkedin'].map(r => (
                   <a key={r} href={EQUIPE[act][r]} target="_blank" rel="noopener noreferrer"
-                    className="group/link relative pb-1 font-sans text-[9px] tracking-[0.40em] uppercase transition-colors duration-400"
-                    style={{ color: 'rgba(12,12,10,0.25)' }}
-                    onMouseEnter={e => e.currentTarget.style.color = INK}
-                    onMouseLeave={e => e.currentTarget.style.color = 'rgba(12,12,10,0.25)'}>
+                    className="group/link relative pb-1 font-sans text-[9px] tracking-[0.40em] uppercase transition-colors duration-400 text-[rgba(12,12,10,0.25)] hover:text-[#0C0C0A]">
                     {r.charAt(0).toUpperCase() + r.slice(1)}
                     <span className="absolute bottom-0 left-0 h-px w-0 group-hover/link:w-full transition-all duration-400" style={{ backgroundColor: WINE }} />
                   </a>
@@ -330,42 +372,31 @@ function Equipe() {
 // ════════════════════════════════════════════════════════════════════════════
 function Banner() {
   const t = useTranslations('soutenir');
+  const reducedMotion = useReducedMotionSafe();
   const words = [t('banner_w1'), t('banner_w2'), t('banner_w3')];
   return (
-    <section className="bg-[#F3F2EF] overflow-hidden">
+    <section className="bg-[#F4F5F0] overflow-hidden">
       <R y={30}>
         <div className="relative w-full overflow-hidden" style={{ height: '62vh', minHeight: 280 }}>
-          <motion.img src="/DA/Nouveau.png" alt="MYRA" className="w-full h-full object-cover"
+          <motion.img src="/DA/Nouveau.png" alt="MYRA" loading="lazy" decoding="async"
+            className="w-full h-full object-cover"
             style={{ filter: 'saturate(0.72) brightness(0.75)' }}
             initial={{ scale: 1.06 }} whileInView={{ scale: 1 }} viewport={{ once: true }}
             transition={{ duration: 3.5, ease: EXPO }} />
           <div className="absolute inset-0 bg-[rgba(12,12,10,0.45)]" />
           <div className="absolute inset-0 flex items-center justify-center px-6">
-
-            {/* Mobile — côte à côte */}
-            <div className="flex md:hidden items-center justify-center flex-wrap gap-x-4 gap-y-3">
+            <ul role="list" className="flex items-center justify-center flex-wrap md:flex-nowrap m-0 p-0 list-none">
               {words.map((w, i) => (
-                <motion.div key={w} className="flex items-center"
-                  initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-                  transition={{ duration: 1.1, ease: EXPO, delay: 0.2 + i * 0.14 }}>
-                  <span className="font-sans text-[#F3F2EF] text-[10px] tracking-[0.55em] uppercase opacity-85">{w}</span>
-                  {i < 2 && <span className="text-[#F3F2EF] opacity-30 mx-3" style={{ fontSize: '6px' }}>●</span>}
-                </motion.div>
+                <li key={w} className="flex items-center">
+                  <motion.span className="font-sans text-[#F4F5F0] uppercase opacity-85 text-[10px] md:text-[13px] tracking-[0.55em] md:tracking-[0.60em] mx-3 md:mx-10"
+                    initial={{ opacity: 0, y: reducedMotion ? 0 : 14 }} whileInView={{ opacity: 0.85, y: 0 }} viewport={{ once: true }}
+                    transition={{ duration: 1.1, ease: EXPO, delay: 0.2 + i * 0.14 }}>
+                    {w}
+                  </motion.span>
+                  {i < 2 && <span aria-hidden="true" className="text-[#F4F5F0] opacity-30" style={{ fontSize: '6px' }}>●</span>}
+                </li>
               ))}
-            </div>
-
-            {/* Desktop — comme avant */}
-            <div className="hidden md:flex items-center">
-              {words.map((w, i) => (
-                <motion.div key={w} className="flex items-center"
-                  initial={{ opacity: 0, y: 14 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-                  transition={{ duration: 1.1, ease: EXPO, delay: 0.2 + i * 0.14 }}>
-                  <span className="font-sans text-[#F3F2EF] text-[13px] tracking-[0.60em] uppercase opacity-85 mx-10">{w}</span>
-                  {i < 2 && <span className="text-[#F3F2EF] opacity-30" style={{ fontSize: '6px' }}>●</span>}
-                </motion.div>
-              ))}
-            </div>
-
+            </ul>
           </div>
         </div>
       </R>
@@ -413,20 +444,30 @@ const OFFRES = [
 
 function ModalDetails({ offre, close }) {
   const t = useTranslations('soutenir');
+  const closeBtnRef = useRef(null);
+  const modalTitleId = `modal-${offre.id}-title`;
   useEffect(() => {
     document.body.style.overflow = 'hidden';
-    return () => { document.body.style.overflow = ''; };
-  }, []);
+    const onKey = (e) => { if (e.key === 'Escape') close(); };
+    window.addEventListener('keydown', onKey);
+    if (closeBtnRef.current) closeBtnRef.current.focus();
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [close]);
   return (
     <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
       className="fixed inset-0 z-[100] flex items-center justify-end backdrop-blur-xl bg-[rgba(12,12,10,0.04)]"
       onClick={close}>
-      <motion.div initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }}
+      <motion.div role="dialog" aria-modal="true" aria-labelledby={modalTitleId}
+        initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }}
         transition={{ type: 'tween', duration: 0.6, ease: EXPO }}
         className="bg-white h-full w-full max-w-xl border-l border-[rgba(12,12,10,0.06)] flex flex-col shadow-2xl"
         onClick={e => e.stopPropagation()}>
         <div className="p-6 md:p-8 flex justify-end">
-          <button onClick={close} className="group p-2 transition-transform hover:rotate-90 duration-300 outline-none">
+          <button ref={closeBtnRef} type="button" onClick={close} aria-label="Fermer"
+            className="group p-2 transition-transform hover:rotate-90 duration-300 outline-none">
             <svg width="18" height="18" fill="none" stroke="#0C0C0A" strokeWidth="1.2" viewBox="0 0 18 18">
               <path d="M1 1L17 17M17 1L1 17" strokeLinecap="round" />
             </svg>
@@ -434,7 +475,7 @@ function ModalDetails({ offre, close }) {
         </div>
         <div className="flex-1 overflow-y-auto px-6 md:px-16 pb-12">
           <div className="flex justify-between items-end mb-10 pb-6 border-b border-[rgba(12,12,10,0.06)]">
-            <h2 className="font-serif text-[28px] md:text-[38px] font-light tracking-tight text-[#0C0C0A]">{offre.name}</h2>
+            <h2 id={modalTitleId} className="font-serif text-[28px] md:text-[38px] font-light tracking-tight text-[#0C0C0A]">{offre.name}</h2>
             <span className="font-sans text-[11px] tracking-[0.20em] uppercase text-[rgba(12,12,10,0.35)]">{offre.available} / {offre.spots}</span>
           </div>
           <p className="font-serif text-[16px] md:text-[18px] leading-[1.8] italic max-w-md text-[rgba(12,12,10,0.50)] mb-12">{offre.description}</p>
@@ -445,7 +486,7 @@ function ModalDetails({ offre, close }) {
                 <div key={i} className="flex gap-5">
                   <span className="font-serif text-[13px] italic text-[rgba(12,12,10,0.25)]">0{i + 1}</span>
                   <div>
-                    <p className="font-sans text-[11px] uppercase tracking-[0.20em] font-medium mb-1 text-[#2B1022]">{p.label}</p>
+                    <p className="font-sans text-[11px] uppercase tracking-[0.20em] font-medium mb-1 text-[#351421]">{p.label}</p>
                     <p className="font-sans text-[13px] md:text-[14px] font-light leading-[1.8] text-[rgba(12,12,10,0.65)]">{p.desc}</p>
                   </div>
                 </div>
@@ -470,9 +511,7 @@ function ModalDetails({ offre, close }) {
                 {offre.price} € <span className="font-sans text-[12px] uppercase text-[rgba(12,12,10,0.40)]">ht</span>
               </p>
             </div>
-            <button className="font-sans w-full h-14 md:h-16 border text-[9px] md:text-[11px] uppercase tracking-[0.50em] font-medium transition-all duration-500 border-[#2B1022] text-[#2B1022]"
-              onMouseEnter={e => { e.currentTarget.style.backgroundColor = '#2B1022'; e.currentTarget.style.color = '#F3F2EF'; }}
-              onMouseLeave={e => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.color = '#2B1022'; }}>
+            <button type="button" className="font-sans w-full h-14 md:h-16 border text-[9px] md:text-[11px] uppercase tracking-[0.50em] font-medium transition-all duration-500 border-[#351421] text-[#351421] hover:bg-[#351421] hover:text-[#F4F5F0]">
               {t('cercle_solliciter')}
             </button>
           </div>
@@ -486,13 +525,19 @@ function CardCercle({ offre }) {
   const t = useTranslations('soutenir');
   const [hov, setHov]   = useState(false);
   const [open, setOpen] = useState(false);
+  const handleKey = (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setOpen(true); }
+  };
   return (
     <>
-      <motion.div onClick={() => setOpen(true)}
+      <motion.div role="button" tabIndex={0}
+        aria-haspopup="dialog" aria-expanded={open} aria-label={offre.name}
+        onClick={() => setOpen(true)} onKeyDown={handleKey}
         onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
-        className="group relative border flex flex-col justify-between cursor-pointer overflow-hidden transition-all duration-700 flex-shrink-0"
+        onFocus={() => setHov(true)} onBlur={() => setHov(false)}
+        className="group relative border flex flex-col justify-between cursor-pointer overflow-hidden transition-all duration-700 flex-shrink-0 outline-none focus-visible:ring-1 focus-visible:ring-[#351421]"
         style={{ borderColor: hov ? 'rgba(12,12,10,0.20)' : 'rgba(12,12,10,0.06)', minHeight: 580, padding: '1.5rem', width: '85vw', maxWidth: 380 }}>
-        <motion.div className="absolute top-0 left-0 h-[2px] bg-[#2B1022]"
+        <motion.div className="absolute top-0 left-0 h-[2px] bg-[#351421]"
           initial={{ width: 0 }} animate={{ width: hov ? '100%' : 0 }} transition={{ duration: 0.8, ease: EXPO }} />
         <div className="absolute top-4 right-6 font-serif font-light select-none pointer-events-none"
           style={{ fontSize: '100px', color: 'rgba(12,12,10,0.04)', lineHeight: 1 }}>
@@ -522,15 +567,15 @@ function CardCercle({ offre }) {
             </div>
           </div>
           <div className="flex items-center justify-center h-12 w-32 border transition-all duration-500"
-            style={{ borderColor: '#2B1022', backgroundColor: hov ? '#2B1022' : 'transparent' }}>
+            style={{ borderColor: '#351421', backgroundColor: hov ? '#351421' : 'transparent' }}>
             <span className="font-sans text-[9px] uppercase tracking-[0.40em] font-medium transition-colors duration-500"
-              style={{ color: hov ? '#F3F2EF' : '#2B1022' }}>
+              style={{ color: hov ? '#F4F5F0' : '#351421' }}>
               {t('cercle_decouvrir')}
             </span>
           </div>
         </div>
       </motion.div>
-      <AnimatePresence>{open && <ModalDetails offre={offre} close={() => setOpen(false)} />}</AnimatePresence>
+      <AnimatePresence mode="wait">{open && <ModalDetails offre={offre} close={() => setOpen(false)} />}</AnimatePresence>
     </>
   );
 }
@@ -563,10 +608,17 @@ function SectionCercles() {
   };
 
   return (
-    <section className="py-16 md:py-32 overflow-hidden">
+    <section id="cercles" aria-labelledby="cercles-label" className="py-16 md:py-32 overflow-hidden">
       <div className="max-w-container mx-auto px-6 md:px-0">
         <div className="mb-12 md:mb-20">
-          <R><div className="flex items-center gap-4"><Trait /><Cap accent>{t('cercles_label')}</Cap></div></R>
+          <R>
+            <div className="flex items-center gap-4">
+              <Trait />
+              <Cap accent>
+                <span id="cercles-label">{t('cercles_label')}</span>
+              </Cap>
+            </div>
+          </R>
           <R d={0.1}>
             <h2 className="font-serif text-[26px] md:text-[48px] font-light italic mt-4 text-[rgba(12,12,10,0.28)]">
               {t('cercles_subtitle')}
@@ -592,7 +644,9 @@ function SectionCercles() {
           {/* Tirets navigation */}
           <div className="flex gap-2 mt-6 justify-center">
             {OFFRES.map((_, i) => (
-              <button key={i} onClick={() => snapTo(i)}
+              <button key={i} type="button" onClick={() => snapTo(i)}
+                aria-label={`Cercle ${i + 1} sur ${OFFRES.length}`}
+                aria-current={i === cur ? 'true' : undefined}
                 className="outline-none transition-all duration-400"
                 style={{ height: 2, width: i === cur ? 32 : 12, backgroundColor: i === cur ? INK : 'rgba(12,12,10,0.15)', border: 'none', padding: 0, cursor: 'pointer' }} />
             ))}
@@ -609,57 +663,83 @@ function SectionCercles() {
 const MILESTONES = [
   { id: 1, amount: 400000,  title: 'Restaurant & Bar',  status: 'done',
     desc: "Ouverture de l'espace gastronomique et du bar lounge.",
-    items: ['Cuisine professionnelle', 'Cave à vin visitable', 'Terrasse panoramique'], img: '/Visuels/Restaurant.jpg' },
+    items: ['Cuisine professionnelle', 'Cave à vin visitable', 'Terrasse panoramique'],
+    img: '/Visuels/Restaurant.jpg' },
   { id: 2, amount: 650000,  title: 'Espace Recovery',   status: 'current',
-    desc: 'Installation du centre de bien-être : Saunas, zones de récupération.',
-    items: ['Sauna bois brûlé', 'Hammam pierre naturelle', 'Zone de repos sensorielle'], img: '/Visuels/Hammam.jpg' },
+    desc: 'Installation du centre de bien-être : saunas, hammam, zones de récupération.',
+    items: ['Sauna bois brûlé', 'Hammam pierre naturelle', 'Zone de repos sensorielle'],
+    img: '/Visuels/Hammam.jpg' },
   { id: 3, amount: 1700000, title: 'Extension Piscine',  status: 'horizon',
     desc: "Un bassin extérieur à débordement et une aile aquatique couverte.",
-    items: ['Bassin de nage 25m', 'Système de filtration bio', 'Plage immergée'], img: '/Visuels/Piscine.jpg' },
+    items: ['Bassin de nage 25m', 'Système de filtration bio', 'Plage immergée'],
+    img: '/Visuels/Piscine.jpg' },
 ];
-const CURRENT_FUNDED = 520000;
-const TOTAL_GOAL     = 1700000;
 
-function StatusDot({ status }) {
+function StatusDot({ status, light = false }) {
+  const reducedMotion = useReducedMotionSafe();
+  const tint = light ? '#F4F5F0' : '#351421';
   if (status === 'done') return (
-    <svg width="10" height="10" viewBox="0 0 9 9" fill="none">
-      <path d="M1 4.5l2.5 2.5L8 2" stroke="#2B1022" strokeWidth="1.5" strokeLinecap="round" />
+    <svg aria-hidden="true" width="10" height="10" viewBox="0 0 9 9" fill="none">
+      <path d="M1 4.5l2.5 2.5L8 2" stroke={tint} strokeWidth="1.5" strokeLinecap="round" />
     </svg>
   );
   if (status === 'current') return (
-    <motion.div className="w-2 h-2 rounded-full bg-[#2B1022]"
-      animate={{ scale: [1, 1.6, 1], opacity: [1, 0.4, 1] }} transition={{ duration: 2, repeat: Infinity }} />
+    <motion.div aria-hidden="true" className="w-2 h-2 rounded-full"
+      style={{ backgroundColor: tint }}
+      animate={reducedMotion ? undefined : { scale: [1, 1.6, 1], opacity: [1, 0.4, 1] }}
+      transition={reducedMotion ? undefined : { duration: 2, repeat: Infinity }} />
   );
-  return <div className="w-2 h-2 rounded-full border border-[rgba(12,12,10,0.20)]" />;
+  return <div aria-hidden="true" className="w-2 h-2 rounded-full border"
+    style={{ borderColor: light ? 'rgba(244,245,240,0.30)' : 'rgba(12,12,10,0.20)' }} />;
 }
+
+const CURRENT_FUNDED = 520000;
+const TOTAL_GOAL     = 1700000;
 
 function FundingBar() {
   const t = useTranslations('soutenir');
+  const reducedMotion = useReducedMotionSafe();
   const progress = (CURRENT_FUNDED / TOTAL_GOAL) * 100;
   return (
-    <div className="mb-16 md:mb-32 mt-8 md:mt-12">
-      <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-4 mb-6 md:mb-8">
+    <div className="mb-16 md:mb-28 mt-8 md:mt-14">
+      <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-4 mb-7 md:mb-10">
         <div>
-          <div className="flex items-center gap-4 mb-3 md:mb-4"><Trait /><Cap accent>{t('funding_label')}</Cap></div>
-          <h2 className="font-serif leading-none text-[#0C0C0A]" style={{ fontSize: 'clamp(28px, 5vw, 64px)' }}>
+          <div className="flex items-center gap-4 mb-3 md:mb-5">
+            <Trait />
+            <Cap accent>{t('funding_label')}</Cap>
+          </div>
+          <h2 className="font-serif font-light leading-none text-[#0C0C0A] m-0"
+            style={{ fontSize: 'clamp(32px, 5vw, 72px)', letterSpacing: '-0.02em' }}>
             {CURRENT_FUNDED.toLocaleString('fr-FR')} €
-            <span className="font-serif ml-2 md:ml-4 font-light italic text-[rgba(12,12,10,0.25)]" style={{ fontSize: 'clamp(14px, 2vw, 28px)' }}>
+            <span className="font-serif ml-2 md:ml-4 font-light italic"
+              style={{ fontSize: 'clamp(14px, 2vw, 28px)', color: 'rgba(12,12,10,0.25)' }}>
               {t('funding_sur')} {TOTAL_GOAL.toLocaleString('fr-FR')} €
             </span>
           </h2>
         </div>
         <div className="md:text-right">
-          <p className="font-sans text-[15px] font-medium text-[#0C0C0A]">{Math.round(progress)}%</p>
+          <p className="font-serif font-light italic m-0"
+            style={{ fontSize: 'clamp(20px, 2vw, 28px)', color: '#0C0C0A' }}>
+            {Math.round(progress)}%
+          </p>
           <Cap className="opacity-40 mt-1">{t('funding_objectif')}</Cap>
         </div>
       </div>
-      <div className="h-px w-full relative bg-[rgba(12,12,10,0.08)]">
-        <motion.div className="absolute top-0 left-0 h-full bg-[#2B1022]"
-          initial={{ width: 0 }} whileInView={{ width: `${progress}%` }} viewport={{ once: true }}
-          transition={{ duration: 2.5, ease: EXPO }} />
+      <div role="progressbar" aria-valuenow={Math.round(progress)} aria-valuemin={0} aria-valuemax={100}
+        aria-label={t('funding_label')}
+        className="h-px w-full relative bg-[rgba(12,12,10,0.08)]">
+        <motion.div aria-hidden="true" className="absolute top-0 left-0 h-full bg-[#351421]"
+          initial={{ width: reducedMotion ? `${progress}%` : 0 }}
+          whileInView={{ width: `${progress}%` }} viewport={{ once: true }}
+          transition={{ duration: reducedMotion ? 0 : 2.5, ease: EXPO }} />
         {MILESTONES.map((m, i) => (
-          <div key={i} className="absolute top-1/2 -translate-y-1/2 w-2 h-2 rounded-full border-2"
-            style={{ left: `${(m.amount / TOTAL_GOAL) * 100}%`, backgroundColor: CURRENT_FUNDED >= m.amount ? '#2B1022' : 'rgba(12,12,10,0.12)', borderColor: 'white' }} />
+          <div key={i} aria-hidden="true"
+            className="absolute top-1/2 -translate-y-1/2 w-2 h-2 rounded-full border-2"
+            style={{
+              left: `${(m.amount / TOTAL_GOAL) * 100}%`,
+              backgroundColor: CURRENT_FUNDED >= m.amount ? '#351421' : 'rgba(12,12,10,0.12)',
+              borderColor: '#F4F5F0',
+            }} />
         ))}
       </div>
     </div>
@@ -670,55 +750,84 @@ function MRow({ m, i }) {
   const t = useTranslations('soutenir');
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: '-10% 0px' });
+  const reducedMotion = useReducedMotionSafe();
   const [hov, setHov] = useState(false);
   const unlocked = CURRENT_FUNDED >= m.amount;
   return (
-    <motion.div ref={ref} onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
-      initial={{ opacity: 0, y: 30, filter: 'blur(4px)' }} animate={isInView ? { opacity: 1, y: 0, filter: 'blur(0px)' } : {}}
-      transition={{ duration: 1, ease: EXPO, delay: i * 0.1 }}
-      className={`grid grid-cols-12 gap-4 md:gap-8 py-10 md:py-14 relative border-t border-[rgba(12,12,10,0.08)] transition-all duration-700 ${!unlocked ? 'opacity-50 grayscale' : ''}`}>
+    <motion.article ref={ref}
+      onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
+      initial={{ opacity: 0, y: reducedMotion ? 0 : 32, filter: reducedMotion ? 'blur(0px)' : 'blur(4px)' }}
+      animate={isInView ? { opacity: 1, y: 0, filter: 'blur(0px)' } : {}}
+      transition={{ duration: 1.1, ease: EXPO, delay: i * 0.1 }}
+      className={`grid grid-cols-12 gap-6 md:gap-10 py-12 md:py-16 relative border-t border-[rgba(12,12,10,0.08)] transition-all duration-700 ${!unlocked ? 'opacity-50 grayscale' : ''}`}>
       <div className="col-span-12 md:col-span-4">
-        <div className="flex items-center gap-4 mb-3 md:mb-5">
-          <span className="font-sans text-[10px] uppercase tracking-[0.40em] text-[rgba(12,12,10,0.40)]">
+        <div className="flex items-center gap-4 mb-4 md:mb-6">
+          <span className="font-sans text-[10px] uppercase tracking-[0.45em]"
+            style={{ color: 'rgba(12,12,10,0.45)' }}>
             {t('funding_palier')} {m.amount.toLocaleString('fr-FR')} €
           </span>
           <StatusDot status={unlocked ? 'done' : m.status} />
         </div>
-        <h3 className="font-serif leading-tight italic text-[#0C0C0A]" style={{ fontSize: 'clamp(22px, 3vw, 42px)' }}>{m.title}</h3>
+        <h3 className="font-serif font-light italic text-[#0C0C0A] m-0"
+          style={{ fontSize: 'clamp(26px, 3.2vw, 48px)', lineHeight: 1.05, letterSpacing: '-0.01em' }}>
+          {m.title}
+        </h3>
       </div>
-      <div className="col-span-12 md:col-span-5">
-        <p className="font-sans text-[13px] leading-[1.85] font-light mb-4 text-[rgba(12,12,10,0.45)]">{m.desc}</p>
-        <div className="space-y-2">
+      <div className="col-span-12 md:col-span-4">
+        <p className="font-sans font-light mb-6 m-0"
+          style={{ fontSize: '13px', lineHeight: 2.0, color: 'rgba(12,12,10,0.50)' }}>
+          {m.desc}
+        </p>
+        <div className="space-y-3">
           {m.items.map((it, idx) => (
-            <div key={idx} className="flex items-center gap-3">
-              <div className="w-3 h-px bg-[rgba(12,12,10,0.20)]" />
-              <span className="font-sans text-[11px] uppercase tracking-widest text-[rgba(12,12,10,0.40)]">{it}</span>
+            <div key={idx} className="flex items-center gap-4">
+              <div className="w-3 h-px" style={{ backgroundColor: 'rgba(12,12,10,0.25)' }} />
+              <span className="font-sans text-[10px] uppercase tracking-[0.40em]"
+                style={{ color: 'rgba(12,12,10,0.45)' }}>
+                {it}
+              </span>
             </div>
           ))}
         </div>
       </div>
-      <div className="hidden md:block col-span-3">
-        <div className="relative overflow-hidden aspect-[3/4]">
-          <motion.img src={m.img} alt={m.title} className="w-full h-full object-cover"
-            animate={{ scale: hov ? 1.08 : 1 }} transition={{ duration: 1.2, ease: 'easeOut' }} />
-          {!unlocked && <div className="absolute inset-0 backdrop-blur-[1px] bg-[rgba(244,245,240,0.18)]" />}
+      <div className="hidden md:block col-span-4">
+        <div className="relative overflow-hidden" style={{ aspectRatio: '4/5' }}>
+          <motion.img src={m.img} alt={m.title} loading="lazy" decoding="async"
+            className="w-full h-full object-cover"
+            style={{ filter: 'saturate(0.85) brightness(0.92) contrast(1.04)' }}
+            animate={{ scale: hov ? 1.06 : 1 }}
+            transition={{ duration: 1.2, ease: EXPO }} />
+          {!unlocked && (
+            <div aria-hidden="true" className="absolute inset-0 backdrop-blur-[1px]"
+              style={{ backgroundColor: 'rgba(244,245,240,0.18)' }} />
+          )}
         </div>
       </div>
-    </motion.div>
+    </motion.article>
   );
 }
 
 function Timeline() {
   const t = useTranslations('soutenir');
   return (
-    <section className="py-16 md:py-32 overflow-hidden">
+    <section id="timeline" aria-labelledby="timeline-label" className="py-16 md:py-32 overflow-hidden">
       <div className="max-w-container mx-auto px-6 md:px-0">
         <div className="mb-12 md:mb-20">
-          <div className="flex items-center gap-4 mb-4 md:mb-6"><Trait /><Cap accent>{t('timeline_label')}</Cap></div>
-          <p className="font-serif text-[18px] md:text-[26px] italic max-w-xl text-[rgba(12,12,10,0.35)]">{t('timeline_subtitle')}</p>
+          <div className="flex items-center gap-4 mb-4 md:mb-6">
+            <Trait />
+            <Cap accent>
+              <span id="timeline-label">{t('timeline_label')}</span>
+            </Cap>
+          </div>
+          <p className="font-serif font-light italic m-0 max-w-xl"
+            style={{ fontSize: 'clamp(20px, 2.6vw, 30px)', lineHeight: 1.25, color: 'rgba(12,12,10,0.40)' }}>
+            {t('timeline_subtitle')}
+          </p>
         </div>
         <FundingBar />
-        <div className="mt-10 md:mt-24">{MILESTONES.map((m, i) => <MRow key={m.id} m={m} i={i} />)}</div>
+        <div className="mt-10 md:mt-20">
+          {MILESTONES.map((m, i) => <MRow key={m.id} m={m} i={i} />)}
+        </div>
       </div>
     </section>
   );
@@ -730,12 +839,13 @@ function Timeline() {
 function Final() {
   const t = useTranslations('soutenir');
   return (
-    <section className="overflow-hidden">
+    <section id="final" aria-labelledby="final-title" className="overflow-hidden">
       <R y={30} d={0.2} className="w-full mb-16 md:mb-24">
         <div className="relative group w-full" style={{ aspectRatio: '16/9', minHeight: '280px' }}>
-          <img src="/Complexe/4.jpg" alt="MYRA Alsace"
+          <motion.img src="/Complexe/4.jpg" alt="MYRA Society — Marlenheim, Alsace"
+            loading="lazy" decoding="async"
             className="w-full h-full object-cover transition-transform duration-[1200ms] group-hover:scale-[1.03]"
-            style={{ filter: 'grayscale(0.1) brightness(0.78)' }} />
+            style={{ filter: 'saturate(0.85) brightness(0.78) contrast(1.04)' }} />
           <div className="absolute inset-0 flex items-center justify-center">
             <motion.a href="/Pitch Deck.pdf" download="Pitch Deck.pdf" whileHover={{ scale: 1.05 }}
               className="font-sans inline-flex items-center gap-4 px-6 md:px-10 py-4 md:py-5 backdrop-blur-md border border-[rgba(244,245,240,0.30)] bg-[rgba(244,245,240,0.10)] hover:bg-[rgba(244,245,240,0.16)] transition-all">
@@ -750,7 +860,7 @@ function Final() {
       <div className="max-w-container mx-auto px-6 md:px-0 pb-20 md:pb-44">
         <div className="flex flex-col md:flex-row justify-between items-start gap-10 md:gap-14">
           <R d={0.16} y={24}>
-            <h2 className="font-serif font-light tracking-tight text-[#0C0C0A]"
+            <h2 id="final-title" className="font-serif font-light tracking-tight text-[#0C0C0A]"
               style={{ fontSize: 'clamp(48px, 8vw, 128px)', lineHeight: 0.88 }}>
               {t('final_thanks').includes('you') ? <>{t('final_thanks').replace('you.', '')}<em>you.</em></> : t('final_thanks')}
             </h2>
@@ -766,7 +876,7 @@ function Final() {
   );
 }
 
-export default function SoutenirPage() {
+export default function NousRejoindrePage() {
   return (
     <main>
       <Hero />

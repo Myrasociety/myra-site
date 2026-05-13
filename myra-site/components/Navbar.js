@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import { usePathname, useRouter } from 'next/navigation';
 import { useLocale, useTranslations } from '@/lib/useTranslations';
 
@@ -15,12 +16,7 @@ export default function Navbar() {
   const locale = useLocale();
   const t = useTranslations('nav');
 
-  const HERO_PAGES = [
-    `/${locale}`,
-    `/${locale}/hebergement`,
-    `/${locale}/soutenir`,
-  ];
-
+  const HERO_PAGES = [`/${locale}`, `/${locale}/hebergement`, `/${locale}/nous-rejoindre`];
   const hasHero = HERO_PAGES.some(p => pathname === p) && !pathname.includes('/hebergement/');
 
   useEffect(() => {
@@ -31,13 +27,12 @@ export default function Navbar() {
   }, []);
 
   useEffect(() => {
-    const update = () => setTime(
-      new Intl.DateTimeFormat('fr-FR', { timeZone: 'Europe/Paris', hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date())
-    );
+    const tag = locale === 'de' ? 'de-DE' : locale === 'en' ? 'en-GB' : 'fr-FR';
+    const update = () => setTime(new Intl.DateTimeFormat(tag, { timeZone: 'Europe/Paris', hour: '2-digit', minute: '2-digit', hour12: false }).format(new Date()));
     update();
     const id = setInterval(update, 1000);
     return () => clearInterval(id);
-  }, []);
+  }, [locale]);
 
   useEffect(() => { setMenuOpen(false); }, [pathname]);
 
@@ -45,17 +40,13 @@ export default function Navbar() {
   const isActive = (href) => pathname === `/${locale}${href}` || pathname === href;
 
   const isSolid = !hasHero || scrolled || menuOpen;
-  const bgStyle = isSolid
-    ? 'bg-[#0C0C0A] border-b border-white/[0.05] py-4'
-    : 'bg-transparent py-6';
-
-  const textCol = 'rgba(255,255,255,0.60)';
-  const textAct = '#FFFFFF';
+  const bgStyle = isSolid ? 'bg-[#0C0C0A] border-b border-[rgba(216,213,205,0.05)] py-4' : 'bg-transparent py-6';
 
   const NAV_LINKS = [
-    { label: t('hebergements'), href: '/hebergement' },
-    { label: t('reserver'),     href: '/contact' },
-    { label: t('club'),         href: '/soutenir' },
+    { label: t('hebergements'),  href: '/hebergement' },
+    { label: t('nous_rejoindre'), href: '/nous-rejoindre' },
+    { label: t('news'),          href: '/news' },
+    { label: t('contact'),       href: '/contact' },
   ];
 
   const IconInstagram = ({ size = 14 }) => (
@@ -84,11 +75,9 @@ export default function Navbar() {
             {NAV_LINKS.map(({ label, href }) => {
               const active = isActive(href);
               return (
-                <Link key={href} href={`/${locale}${href}`}
-                  className="group relative font-sans text-[9px] tracking-[0.25em] uppercase transition-colors duration-400"
-                  style={{ color: active ? textAct : textCol }}>
+                <Link key={href} href={`/${locale}${href}`} className="group relative font-sans text-[9px] tracking-[0.25em] uppercase transition-colors duration-400" style={{ color: active ? '#F4F5F0' : 'rgba(216,213,205,0.45)' }}>
                   {label}
-                  <span className={`absolute -bottom-1.5 left-0 h-px transition-all duration-500 bg-[#2B1022] ${active ? 'w-full' : 'w-0 group-hover:w-full'}`} />
+                  <span className={`absolute -bottom-1.5 left-0 h-px transition-all duration-500 ${active ? 'w-full' : 'w-0 group-hover:w-full'}`} style={{ backgroundColor: '#351421' }} />
                 </Link>
               );
             })}
@@ -97,9 +86,7 @@ export default function Navbar() {
           {/* CENTRE — Logo */}
           <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
             <Link href={`/${locale}`} aria-label="MYRA Society">
-              <img src="/myra-logo.svg" alt="MYRA"
-                className="h-4 w-auto transition-all duration-500 hover:opacity-60"
-                style={{ filter: 'brightness(0) invert(1)' }} />
+              <Image src="/myra-logo.svg" alt="MYRA" width={80} height={16} style={{ filter: 'brightness(0) invert(1)', height: '16px', width: 'auto' }} className="transition-all duration-500 hover:opacity-60" />
             </Link>
           </div>
 
@@ -107,118 +94,103 @@ export default function Navbar() {
           <div className="flex items-center gap-4 md:gap-6">
 
             {/* Heure desktop */}
-            <div className="hidden md:flex items-center gap-4 font-sans text-[8px] tracking-[0.18em] uppercase text-white/30">
-              <span>Marlenheim, FR</span>
-              <div className="w-px h-3 bg-white/10" />
-              <span className="tabular-nums text-white/60">{time}</span>
+            <div className="hidden md:flex items-center gap-4 font-sans text-[8px] tracking-[0.18em] uppercase text-[rgba(216,213,205,0.25)]">
+              <span className="text-[rgba(216,213,205,0.45)]">Marlenheim, FR</span>
+              <div className="w-px h-3 bg-[rgba(216,213,205,0.10)]" />
+              <span className="tabular-nums">{time}</span>
             </div>
 
             {/* Langues desktop */}
-            <div className="hidden md:flex items-center gap-3 pl-4 border-l border-white/10">
+            <div className="hidden md:flex items-center gap-3 pl-4 border-l border-[rgba(216,213,205,0.08)]">
               {['fr', 'en', 'de'].map(l => (
-                <button key={l} onClick={() => switchLocale(l)}
+                <button key={l} type="button" onClick={() => switchLocale(l)}
+                  aria-label={`Switch to ${l.toUpperCase()}`}
+                  aria-current={locale === l ? 'true' : undefined}
                   className="font-sans text-[8px] uppercase tracking-[0.30em] transition-colors duration-300"
-                  style={{ color: locale === l ? '#FFFFFF' : 'rgba(255,255,255,0.25)' }}>
+                  style={{ color: locale === l ? '#F4F5F0' : 'rgba(216,213,205,0.22)' }}>
                   {l}
                 </button>
               ))}
             </div>
 
             {/* Socials desktop */}
-            <div className="hidden md:flex items-center gap-4 pl-4 border-l border-white/10">
-              <a href="https://instagram.com/myra.society" target="_blank" rel="noopener noreferrer"
-                className="text-white/30 hover:text-white/80 transition-colors duration-400">
+            <div className="hidden md:flex items-center gap-4 pl-4 border-l border-[rgba(216,213,205,0.08)]">
+              <a href="https://instagram.com/myra.society" target="_blank" rel="noopener noreferrer" className="text-[rgba(216,213,205,0.25)] hover:text-[rgba(216,213,205,0.75)] transition-colors duration-400">
                 <IconInstagram size={14} />
               </a>
-              <a href="https://www.linkedin.com/company/myra-society" target="_blank" rel="noopener noreferrer"
-                className="text-white/30 hover:text-white/80 transition-colors duration-400">
+              <a href="https://www.linkedin.com/company/myra-society" target="_blank" rel="noopener noreferrer" className="text-[rgba(216,213,205,0.25)] hover:text-[rgba(216,213,205,0.75)] transition-colors duration-400">
                 <IconLinkedin size={14} />
               </a>
             </div>
 
             {/* Burger mobile */}
-            <button onClick={() => setMenuOpen(o => !o)}
-              className="md:hidden flex flex-col gap-[5px] p-1 outline-none"
-              aria-label={menuOpen ? 'Fermer' : 'Menu'}>
+            <button type="button" onClick={() => setMenuOpen(o => !o)}
+              aria-label={menuOpen ? 'Fermer' : 'Menu'}
+              aria-expanded={menuOpen}
+              aria-controls="mobile-menu"
+              className="md:hidden flex flex-col gap-[5px] p-1 outline-none">
               {[0, 1, 2].map(i => (
-                <span key={i} className="block w-5 h-px bg-[#F3F2EF] transition-all duration-400"
-                  style={{
-                    transform: menuOpen
-                      ? (i === 0 ? 'rotate(45deg) translateY(6px)' : i === 2 ? 'rotate(-45deg) translateY(-6px)' : 'scaleX(0)')
-                      : 'none',
-                    opacity: menuOpen && i === 1 ? 0 : 1,
-                  }} />
+                <span key={i} className="block w-5 h-px bg-[#F4F5F0] transition-all duration-400" style={{ transform: menuOpen ? (i === 0 ? 'rotate(45deg) translateY(6px)' : i === 2 ? 'rotate(-45deg) translateY(-6px)' : 'scaleX(0)') : 'none', opacity: menuOpen && i === 1 ? 0 : 1 }} />
               ))}
             </button>
           </div>
         </div>
       </header>
 
-      {/* MENU MOBILE — plein écran amélioré */}
-      <div className={`fixed inset-0 z-[99] bg-[#0C0C0A] flex flex-col transition-all duration-700 ${menuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
+      {/* MENU MOBILE */}
+      <div id="mobile-menu" aria-hidden={!menuOpen}
+        className={`fixed inset-0 z-[99] bg-[#0C0C0A] flex flex-col transition-all duration-700 ${menuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
 
-        {/* Liens navigation — centrés verticalement */}
-        <div className="flex-1 flex flex-col items-center justify-center gap-0">
+        <nav aria-label="Menu mobile" className="flex-1 flex flex-col items-center justify-center gap-0">
           {NAV_LINKS.map(({ label, href }, i) => (
             <Link key={href} href={`/${locale}${href}`}
+              aria-current={isActive(href) ? 'page' : undefined}
               className="group relative py-5 font-serif text-[28px] font-light italic transition-colors duration-500"
-              style={{
-                color: isActive(href) ? '#FFFFFF' : 'rgba(255,255,255,0.45)',
-                transitionDelay: menuOpen ? `${i * 80}ms` : '0ms',
-              }}>
+              style={{ color: isActive(href) ? '#F4F5F0' : 'rgba(216,213,205,0.35)', transitionDelay: menuOpen ? `${i * 80}ms` : '0ms' }}>
               {label}
               {isActive(href) && (
-                <span className="absolute -bottom-0 left-0 h-px w-full" style={{ backgroundColor: '#2B1022', opacity: 0.6 }} />
+                <span className="absolute bottom-0 left-0 h-px w-full" style={{ backgroundColor: '#351421', opacity: 0.6 }} />
               )}
             </Link>
           ))}
-        </div>
+        </nav>
 
-        {/* Bas du menu — langues + socials + adresse */}
-        <div className="px-8 pb-14 space-y-8" style={{ borderTop: '1px solid rgba(255,255,255,0.05)' }}>
-
-          {/* Socials + Langues */}
+        <div className="px-8 pb-14 space-y-8" style={{ borderTop: '1px solid rgba(216,213,205,0.05)' }}>
           <div className="flex items-center justify-between pt-8">
             <div className="flex items-center gap-6">
-              <a href="https://instagram.com/myra.society" target="_blank" rel="noopener noreferrer"
-                className="text-white/30 hover:text-white/70 transition-colors duration-400">
+              <a href="https://instagram.com/myra.society" target="_blank" rel="noopener noreferrer" className="text-[rgba(216,213,205,0.25)] hover:text-[rgba(216,213,205,0.70)] transition-colors duration-400">
                 <IconInstagram size={18} />
               </a>
-              <a href="https://www.linkedin.com/company/myra-society" target="_blank" rel="noopener noreferrer"
-                className="text-white/30 hover:text-white/70 transition-colors duration-400">
+              <a href="https://www.linkedin.com/company/myra-society" target="_blank" rel="noopener noreferrer" className="text-[rgba(216,213,205,0.25)] hover:text-[rgba(216,213,205,0.70)] transition-colors duration-400">
                 <IconLinkedin size={18} />
               </a>
             </div>
             <div className="flex items-center gap-5">
               {['fr', 'en', 'de'].map(l => (
-                <button key={l} onClick={() => { switchLocale(l); setMenuOpen(false); }}
+                <button key={l} type="button" onClick={() => { switchLocale(l); setMenuOpen(false); }}
+                  aria-label={`Switch to ${l.toUpperCase()}`}
+                  aria-current={locale === l ? 'true' : undefined}
                   className="font-sans text-[9px] uppercase tracking-[0.40em] transition-colors duration-300"
-                  style={{ color: locale === l ? '#F3F2EF' : 'rgba(244,245,240,0.22)' }}>
+                  style={{ color: locale === l ? '#F4F5F0' : 'rgba(216,213,205,0.20)' }}>
                   {l}
                 </button>
               ))}
             </div>
           </div>
 
-          {/* Adresse + contact */}
           <div className="flex items-end justify-between">
             <div>
-              <p className="font-sans text-[8px] uppercase tracking-[0.45em] mb-2"
-                style={{ color: 'rgba(255,255,255,0.18)' }}>
+              <p className="font-sans text-[8px] uppercase tracking-[0.45em] mb-2" style={{ color: 'rgba(216,213,205,0.18)' }}>
                 Marlenheim, Alsace
               </p>
-              <a href="tel:+33637038677"
-                className="font-sans text-[9px] uppercase tracking-[0.25em]"
-                style={{ color: 'rgba(255,255,255,0.30)' }}>
+              <a href="tel:+33637038677" className="font-sans text-[9px] uppercase tracking-[0.25em]" style={{ color: 'rgba(216,213,205,0.30)' }}>
                 +33 (0)6 37 03 86 77
               </a>
             </div>
-            <span className="font-sans text-[8px] uppercase tracking-[0.35em] tabular-nums"
-              style={{ color: 'rgba(255,255,255,0.20)' }}>
+            <span className="font-sans text-[8px] uppercase tracking-[0.35em] tabular-nums" style={{ color: 'rgba(216,213,205,0.18)' }}>
               {time}
             </span>
           </div>
-
         </div>
       </div>
     </>
