@@ -1,14 +1,14 @@
 const META = {
   fr: {
-    title: 'Soutenir — MYRA Society',
+    title: 'Nous rejoindre — MYRA Society',
     description: 'Devenez membre fondateur du club. MYRA Society — Marlenheim, Alsace.',
   },
   en: {
-    title: 'Support — MYRA Society',
+    title: 'Join us — MYRA Society',
     description: 'Become a founding member of the club. MYRA Society — Marlenheim, Alsace.',
   },
   de: {
-    title: 'Unterstützen — MYRA Society',
+    title: 'Mitmachen — MYRA Society',
     description: 'Werden Sie Gründungsmitglied des Clubs. MYRA Society — Marlenheim, Elsass.',
   },
 };
@@ -25,7 +25,7 @@ export async function generateMetadata({ params }) {
       title: m.title,
       description: m.description,
       type: 'website',
-      url: `https://myrasociety.com/${locale}/soutenir`,
+      url: `https://myrasociety.com/${locale}/nous-rejoindre`,
       images: [{ url: OG_IMAGE, width: 1200, height: 800, alt: 'MYRA Society' }],
     },
     twitter: {
@@ -35,23 +35,23 @@ export async function generateMetadata({ params }) {
       images: [OG_IMAGE],
     },
     alternates: {
-      canonical: `https://myrasociety.com/${locale}/soutenir`,
+      canonical: `https://myrasociety.com/${locale}/nous-rejoindre`,
       languages: {
-        'fr-FR': 'https://myrasociety.com/fr/soutenir',
-        'en-US': 'https://myrasociety.com/en/soutenir',
-        'de-DE': 'https://myrasociety.com/de/soutenir',
+        'fr-FR': 'https://myrasociety.com/fr/nous-rejoindre',
+        'en-US': 'https://myrasociety.com/en/nous-rejoindre',
+        'de-DE': 'https://myrasociety.com/de/nous-rejoindre',
       },
     },
   };
 }
 
-export default async function SoutenirLayout({ children, params }) {
+export default async function NousRejoindreLayout({ children, params }) {
   const { locale } = await params;
   const m = META[locale] || META.fr;
   const webPageJsonLd = {
     '@context': 'https://schema.org',
     '@type': 'WebPage',
-    url: `https://myrasociety.com/${locale}/soutenir`,
+    url: `https://myrasociety.com/${locale}/nous-rejoindre`,
     name: m.title,
     description: m.description,
     about: { '@id': 'https://myrasociety.com/#lodging' },

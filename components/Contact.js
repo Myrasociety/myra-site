@@ -8,7 +8,7 @@ const EASE = [0.16, 1, 0.3, 1];
 
 export default function ContactSection() {
   const t = useTranslations('contact');
-  const [form, setForm] = useState({ name: '', email: '', message: '' });
+  const [form, setForm] = useState({ type: 'sejour', name: '', email: '', message: '' });
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
 
@@ -25,12 +25,21 @@ export default function ContactSection() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
       });
-      setForm({ name: '', email: '', message: '' });
+      setForm({ type: 'sejour', name: '', email: '', message: '' });
       setSent(true);
       setTimeout(() => setSent(false), 6000);
     } catch {}
     finally { setSending(false); }
   }
+
+  const typeOptions = [
+    { value: 'sejour',     label: t('type_sejour') },
+    { value: 'invest',     label: t('type_invest') },
+    { value: 'partner',    label: t('type_partner') },
+    { value: 'community',  label: t('type_community') },
+    { value: 'press',      label: t('type_press') },
+    { value: 'other',      label: t('type_other') },
+  ];
 
   const fields = [
     { key: 'name',    label: t('name'),    type: 'text',  placeholder: t('name_placeholder') },
@@ -96,6 +105,25 @@ export default function ContactSection() {
                 <motion.form key="form" onSubmit={submit}
                   initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                   transition={{ duration: 0.5 }} className="space-y-8 md:space-y-10">
+
+                  {/* Type de demande */}
+                  <div className="space-y-2 md:space-y-3">
+                    <label htmlFor="contact-type" className="block font-sans text-[10px] md:text-[11px] uppercase tracking-[0.50em] text-[rgba(12,12,10,0.30)]">{t('type_label')}</label>
+                    <div className="relative">
+                      <select id="contact-type" value={form.type} onChange={set('type')}
+                        className="w-full bg-transparent border-b pb-3 font-sans text-[13px] md:text-[14px] uppercase tracking-[0.10em] text-[#0C0C0A] focus:outline-none transition-colors duration-500 appearance-none cursor-pointer border-[rgba(12,12,10,0.10)] focus:border-[rgba(53,20,33,0.40)]"
+                        style={{ backgroundImage: 'none' }}>
+                        {typeOptions.map(o => (
+                          <option key={o.value} value={o.value}>{o.label}</option>
+                        ))}
+                      </select>
+                      <svg aria-hidden="true" width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.2"
+                        className="absolute right-1 bottom-3 pointer-events-none text-[rgba(12,12,10,0.40)]">
+                        <path d="M6 9l6 6 6-6" strokeLinecap="round" />
+                      </svg>
+                    </div>
+                  </div>
+
                   {fields.map(({ key, label, type, placeholder }) => (
                     <div key={key} className="space-y-2 md:space-y-3">
                       <label htmlFor={`contact-${key}`} className="block font-sans text-[10px] md:text-[11px] uppercase tracking-[0.50em] text-[rgba(12,12,10,0.30)]">{label}</label>

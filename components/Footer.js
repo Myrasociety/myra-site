@@ -31,9 +31,10 @@ export default function Footer() {
   }
 
   const navLinks = [
-    { label: t('nav_hebergements'), href: `/${locale}/hebergement` },
-    { label: t('nav_reserver'), href: `/${locale}/contact` },
-    { label: t('nav_club'), href: `/${locale}/soutenir` },
+    { label: t('nav_hebergements'),    href: `/${locale}/hebergement` },
+    { label: t('nav_nous_rejoindre'),  href: `/${locale}/nous-rejoindre` },
+    { label: t('nav_news'),            href: `/${locale}/news` },
+    { label: t('nav_contact'),         href: `/${locale}/contact` },
   ];
 
   const legalLinks = [
@@ -59,8 +60,12 @@ export default function Footer() {
 
           <Image src="/myra-logo.svg" alt="MYRA" width={96} height={24} style={{ filter: 'brightness(0) invert(1)', height: '24px', width: 'auto' }} className="mb-8 md:mb-12 opacity-50" />
 
-          <p className="font-sans text-[9px] uppercase tracking-[0.55em] text-[rgba(216,213,205,0.25)] mb-8 md:mb-10 text-center">
+          <p className="font-sans text-[9px] uppercase tracking-[0.55em] text-[rgba(216,213,205,0.25)] mb-3 text-center">
             {t('tagline')}
+          </p>
+          <p className="font-serif font-light italic mb-8 md:mb-10 text-center"
+            style={{ fontSize: 'clamp(14px, 1.3vw, 18px)', color: 'rgba(216,213,205,0.40)', letterSpacing: '-0.005em' }}>
+            {t('signature')}
           </p>
 
           <div className="grid grid-cols-4 gap-px w-full">

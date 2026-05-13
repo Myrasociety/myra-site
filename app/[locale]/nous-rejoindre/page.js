@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
+import Link from 'next/link';
 import { motion, useInView, useScroll, useTransform, AnimatePresence, useMotionValue, animate } from 'framer-motion';
 import { useTranslations, useLocale } from '@/lib/useTranslations';
 
@@ -197,19 +198,16 @@ function Genese() {
 // ════════════════════════════════════════════════════════════════════════════
 function Services() {
   const t = useTranslations('soutenir');
-  const [hov, setHov] = useState(null);
-
-  const SVCS = [
-    { id: 'menu',  num: '01', label: t('s1_label'), src: '/Restaurant/A.jpg', pdf: '/tarifs-restauration-myra.pdf', desc: t('s1_desc') },
-    { id: 'spa',   num: '02', label: t('s2_label'), src: '/Spa/A.jpg',        pdf: '/brochure-tarifs-spa.pdf',      desc: t('s2_desc') },
-    { id: 'sport', num: '03', label: t('s3_label'), src: '/Fitness/A.jpg',    pdf: '/offres-fitness-myra.pdf',      desc: t('s3_desc') },
+  const SERVICES = [
+    { id: 'spa',        image: '/Spa/A.jpg',        pdf: '/Pitch Deck.pdf', num: '01', label: t('s2_label'), desc: t('s2_desc') },
+    { id: 'fitness',    image: '/Fitness/A.jpg',    pdf: '/Pitch Deck.pdf', num: '02', label: t('s3_label'), desc: t('s3_desc') },
+    { id: 'restaurant', image: '/Restaurant/A.jpg', pdf: '/Pitch Deck.pdf', num: '03', label: t('s1_label'), desc: t('s1_desc') },
   ];
 
   return (
-    <section id="services" aria-labelledby="services-label" className="bg-[#F4F5F0] overflow-hidden">
-      <div className="max-w-container mx-auto py-14 md:py-20 px-6 md:px-0">
-        <div className="flex items-end justify-between mb-10 md:mb-14 pb-6 md:pb-8"
-          style={{ borderBottom: '1px solid rgba(12,12,10,0.06)' }}>
+    <section id="services" aria-labelledby="services-label" className="py-16 md:py-32 overflow-hidden">
+      <div className="max-w-container mx-auto px-6 md:px-0">
+        <div className="mb-12 md:mb-20">
           <R>
             <div className="flex items-center gap-4">
               <Trait />
@@ -219,48 +217,51 @@ function Services() {
             </div>
           </R>
           <R d={0.1}>
-            <p className="font-serif font-light italic"
-              style={{ fontSize: 'clamp(12px, 1.4vw, 20px)', color: 'rgba(12,12,10,0.30)' }}>
+            <h2 className="font-serif font-light italic mt-4 m-0 text-[rgba(12,12,10,0.32)]"
+              style={{ fontSize: 'clamp(26px, 3.6vw, 48px)', lineHeight: 1.1 }}>
               {t('services_subtitle')}
-            </p>
+            </h2>
           </R>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          {SVCS.map((s, i) => (
-            <R key={s.id} d={i * 0.08} y={24}>
-              <article>
-                <a href={s.pdf} download
-                  onMouseEnter={() => setHov(s.id)} onMouseLeave={() => setHov(null)}
-                  className="block cursor-pointer outline-none">
-                  <div className="relative overflow-hidden" style={{ aspectRatio: '2/3' }}>
-                    <motion.img src={s.src} alt={s.label} loading="lazy" decoding="async"
-                      className="w-full h-full object-cover"
-                      animate={{ scale: hov === s.id ? 1.05 : 1, filter: hov === s.id ? 'saturate(1) brightness(0.50) contrast(1.05)' : 'saturate(0.20) brightness(0.60) contrast(1.08)' }}
-                      transition={{ scale: { duration: hov === s.id ? 1.6 : 0.4, ease: EASE }, filter: { duration: hov === s.id ? 0.8 : 0.2 } }} />
-                    <div className="absolute inset-0 pointer-events-none"
-                      style={{ background: 'linear-gradient(to top, rgba(12,12,10,0.88) 0%, rgba(12,12,10,0.20) 55%, transparent 100%)' }} />
-                    <div className="absolute top-5 left-5">
-                      <span className="font-sans text-[9px] uppercase tracking-[0.45em]" style={{ color: 'rgba(244,242,239,0.35)' }}>{s.num}</span>
-                    </div>
-                    <div className="absolute inset-0 px-7 flex flex-col items-center justify-center text-center">
-                      <h3 className="font-serif font-light leading-none mb-4"
-                        style={{ fontSize: 'clamp(22px, 2.5vw, 36px)', color: '#FFFFFF' }}>{s.label}</h3>
-                      <p className="font-sans text-[11px] leading-[2.0] font-light max-w-[180px] text-center"
-                        style={{ color: 'rgba(244,242,239,0.50)' }}>{s.desc}</p>
-                      <motion.div className="flex items-center gap-3 mt-6"
-                        animate={{ opacity: hov === s.id ? 1 : 0.40, y: hov === s.id ? 0 : 4 }}
-                        transition={{ duration: hov === s.id ? 0.35 : 0.25, ease: EASE }}>
-                        <span className="font-sans text-[9px] uppercase tracking-[0.45em]" style={{ color: 'rgba(244,242,239,0.50)' }}>Tarifs</span>
-                        <div className="w-7 h-7 flex items-center justify-center" style={{ border: '1px solid rgba(244,242,239,0.25)' }}>
-                          <svg width="11" height="11" fill="none" stroke="#F4F5F0" strokeWidth="1.2" viewBox="0 0 12 12">
-                            <path d="M6 1V8M6 8L3 5M6 8L9 5M1 11H11" strokeLinecap="round" />
-                          </svg>
-                        </div>
-                      </motion.div>
-                    </div>
-                  </div>
-                </a>
-              </article>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-x-6 lg:gap-x-10 gap-y-14">
+          {SERVICES.map((s, i) => (
+            <R key={s.id} d={i * 0.08}>
+              <a href={s.pdf} target="_blank" rel="noopener noreferrer"
+                aria-label={`${s.label} — PDF`}
+                className="group block outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-4 focus-visible:outline-[#351421]">
+                <div className="relative overflow-hidden mb-7 md:mb-9" style={{ aspectRatio: '3/4' }}>
+                  <motion.img src={s.image} alt={s.label}
+                    loading="lazy" decoding="async"
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1400ms] group-hover:scale-[1.04]"
+                    style={{ filter: 'saturate(0.85) brightness(0.92) contrast(1.04)' }} />
+                </div>
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-3 h-px" style={{ backgroundColor: 'rgba(53,20,33,0.40)' }} />
+                  <span className="font-sans text-[10px] uppercase tracking-[0.55em] text-[rgba(12,12,10,0.40)]">
+                    {s.num}
+                  </span>
+                </div>
+                <h3 className="font-serif font-light italic text-[#0C0C0A] m-0 mb-4"
+                  style={{ fontSize: 'clamp(26px, 2.8vw, 38px)', lineHeight: 1.0, letterSpacing: '-0.01em' }}>
+                  {s.label}
+                </h3>
+                <p className="font-sans font-light max-w-xs m-0 mb-6"
+                  style={{ fontSize: '13px', lineHeight: 2.0, color: 'rgba(12,12,10,0.45)' }}>
+                  {s.desc}
+                </p>
+                <div className="inline-flex items-center gap-3 relative pb-1">
+                  <span className="font-sans text-[9px] uppercase tracking-[0.40em] text-[rgba(12,12,10,0.45)] group-hover:text-[#351421] transition-colors duration-400">
+                    {t('cercle_decouvrir')}
+                  </span>
+                  <svg width="14" height="10" viewBox="0 0 14 10" fill="none"
+                    className="transition-transform duration-400 group-hover:translate-x-1 text-[rgba(12,12,10,0.40)] group-hover:text-[#351421]">
+                    <path d="M1 5H13M13 5L9 1M13 5L9 9" stroke="currentColor" strokeWidth="1" />
+                  </svg>
+                  <span aria-hidden="true" className="absolute bottom-0 left-0 h-px w-0 group-hover:w-full transition-all duration-500"
+                    style={{ backgroundColor: '#351421' }} />
+                </div>
+              </a>
             </R>
           ))}
         </div>
@@ -662,50 +663,65 @@ function SectionCercles() {
 const MILESTONES = [
   { id: 1, amount: 400000,  title: 'Restaurant & Bar',  status: 'done',
     desc: "Ouverture de l'espace gastronomique et du bar lounge.",
-    items: ['Cuisine professionnelle', 'Cave à vin visitable', 'Terrasse panoramique'], img: '/Visuels/Restaurant.jpg' },
+    items: ['Cuisine professionnelle', 'Cave à vin visitable', 'Terrasse panoramique'],
+    img: '/Visuels/Restaurant.jpg' },
   { id: 2, amount: 650000,  title: 'Espace Recovery',   status: 'current',
-    desc: 'Installation du centre de bien-être : Saunas, zones de récupération.',
-    items: ['Sauna bois brûlé', 'Hammam pierre naturelle', 'Zone de repos sensorielle'], img: '/Visuels/Hammam.jpg' },
+    desc: 'Installation du centre de bien-être : saunas, hammam, zones de récupération.',
+    items: ['Sauna bois brûlé', 'Hammam pierre naturelle', 'Zone de repos sensorielle'],
+    img: '/Visuels/Hammam.jpg' },
   { id: 3, amount: 1700000, title: 'Extension Piscine',  status: 'horizon',
     desc: "Un bassin extérieur à débordement et une aile aquatique couverte.",
-    items: ['Bassin de nage 25m', 'Système de filtration bio', 'Plage immergée'], img: '/Visuels/Piscine.jpg' },
+    items: ['Bassin de nage 25m', 'Système de filtration bio', 'Plage immergée'],
+    img: '/Visuels/Piscine.jpg' },
 ];
-const CURRENT_FUNDED = 520000;
-const TOTAL_GOAL     = 1700000;
 
-function StatusDot({ status }) {
+function StatusDot({ status, light = false }) {
   const reducedMotion = useReducedMotionSafe();
+  const tint = light ? '#F4F5F0' : '#351421';
   if (status === 'done') return (
     <svg aria-hidden="true" width="10" height="10" viewBox="0 0 9 9" fill="none">
-      <path d="M1 4.5l2.5 2.5L8 2" stroke="#351421" strokeWidth="1.5" strokeLinecap="round" />
+      <path d="M1 4.5l2.5 2.5L8 2" stroke={tint} strokeWidth="1.5" strokeLinecap="round" />
     </svg>
   );
   if (status === 'current') return (
-    <motion.div aria-hidden="true" className="w-2 h-2 rounded-full bg-[#351421]"
+    <motion.div aria-hidden="true" className="w-2 h-2 rounded-full"
+      style={{ backgroundColor: tint }}
       animate={reducedMotion ? undefined : { scale: [1, 1.6, 1], opacity: [1, 0.4, 1] }}
       transition={reducedMotion ? undefined : { duration: 2, repeat: Infinity }} />
   );
-  return <div aria-hidden="true" className="w-2 h-2 rounded-full border border-[rgba(12,12,10,0.20)]" />;
+  return <div aria-hidden="true" className="w-2 h-2 rounded-full border"
+    style={{ borderColor: light ? 'rgba(244,245,240,0.30)' : 'rgba(12,12,10,0.20)' }} />;
 }
+
+const CURRENT_FUNDED = 520000;
+const TOTAL_GOAL     = 1700000;
 
 function FundingBar() {
   const t = useTranslations('soutenir');
   const reducedMotion = useReducedMotionSafe();
   const progress = (CURRENT_FUNDED / TOTAL_GOAL) * 100;
   return (
-    <div className="mb-16 md:mb-32 mt-8 md:mt-12">
-      <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-4 mb-6 md:mb-8">
+    <div className="mb-16 md:mb-28 mt-8 md:mt-14">
+      <div className="flex flex-col md:flex-row md:justify-between md:items-end gap-4 mb-7 md:mb-10">
         <div>
-          <div className="flex items-center gap-4 mb-3 md:mb-4"><Trait /><Cap accent>{t('funding_label')}</Cap></div>
-          <h2 className="font-serif leading-none text-[#0C0C0A]" style={{ fontSize: 'clamp(28px, 5vw, 64px)' }}>
+          <div className="flex items-center gap-4 mb-3 md:mb-5">
+            <Trait />
+            <Cap accent>{t('funding_label')}</Cap>
+          </div>
+          <h2 className="font-serif font-light leading-none text-[#0C0C0A] m-0"
+            style={{ fontSize: 'clamp(32px, 5vw, 72px)', letterSpacing: '-0.02em' }}>
             {CURRENT_FUNDED.toLocaleString('fr-FR')} €
-            <span className="font-serif ml-2 md:ml-4 font-light italic text-[rgba(12,12,10,0.25)]" style={{ fontSize: 'clamp(14px, 2vw, 28px)' }}>
+            <span className="font-serif ml-2 md:ml-4 font-light italic"
+              style={{ fontSize: 'clamp(14px, 2vw, 28px)', color: 'rgba(12,12,10,0.25)' }}>
               {t('funding_sur')} {TOTAL_GOAL.toLocaleString('fr-FR')} €
             </span>
           </h2>
         </div>
         <div className="md:text-right">
-          <p className="font-sans text-[15px] font-medium text-[#0C0C0A]">{Math.round(progress)}%</p>
+          <p className="font-serif font-light italic m-0"
+            style={{ fontSize: 'clamp(20px, 2vw, 28px)', color: '#0C0C0A' }}>
+            {Math.round(progress)}%
+          </p>
           <Cap className="opacity-40 mt-1">{t('funding_objectif')}</Cap>
         </div>
       </div>
@@ -713,11 +729,17 @@ function FundingBar() {
         aria-label={t('funding_label')}
         className="h-px w-full relative bg-[rgba(12,12,10,0.08)]">
         <motion.div aria-hidden="true" className="absolute top-0 left-0 h-full bg-[#351421]"
-          initial={{ width: reducedMotion ? `${progress}%` : 0 }} whileInView={{ width: `${progress}%` }} viewport={{ once: true }}
+          initial={{ width: reducedMotion ? `${progress}%` : 0 }}
+          whileInView={{ width: `${progress}%` }} viewport={{ once: true }}
           transition={{ duration: reducedMotion ? 0 : 2.5, ease: EXPO }} />
         {MILESTONES.map((m, i) => (
-          <div key={i} aria-hidden="true" className="absolute top-1/2 -translate-y-1/2 w-2 h-2 rounded-full border-2"
-            style={{ left: `${(m.amount / TOTAL_GOAL) * 100}%`, backgroundColor: CURRENT_FUNDED >= m.amount ? '#351421' : 'rgba(12,12,10,0.12)', borderColor: 'white' }} />
+          <div key={i} aria-hidden="true"
+            className="absolute top-1/2 -translate-y-1/2 w-2 h-2 rounded-full border-2"
+            style={{
+              left: `${(m.amount / TOTAL_GOAL) * 100}%`,
+              backgroundColor: CURRENT_FUNDED >= m.amount ? '#351421' : 'rgba(12,12,10,0.12)',
+              borderColor: '#F4F5F0',
+            }} />
         ))}
       </div>
     </div>
@@ -732,37 +754,53 @@ function MRow({ m, i }) {
   const [hov, setHov] = useState(false);
   const unlocked = CURRENT_FUNDED >= m.amount;
   return (
-    <motion.article ref={ref} onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
-      initial={{ opacity: 0, y: reducedMotion ? 0 : 30, filter: reducedMotion ? 'blur(0px)' : 'blur(4px)' }}
+    <motion.article ref={ref}
+      onMouseEnter={() => setHov(true)} onMouseLeave={() => setHov(false)}
+      initial={{ opacity: 0, y: reducedMotion ? 0 : 32, filter: reducedMotion ? 'blur(0px)' : 'blur(4px)' }}
       animate={isInView ? { opacity: 1, y: 0, filter: 'blur(0px)' } : {}}
-      transition={{ duration: 1, ease: EXPO, delay: i * 0.1 }}
-      className={`grid grid-cols-12 gap-4 md:gap-8 py-10 md:py-14 relative border-t border-[rgba(12,12,10,0.08)] transition-all duration-700 ${!unlocked ? 'opacity-50 grayscale' : ''}`}>
+      transition={{ duration: 1.1, ease: EXPO, delay: i * 0.1 }}
+      className={`grid grid-cols-12 gap-6 md:gap-10 py-12 md:py-16 relative border-t border-[rgba(12,12,10,0.08)] transition-all duration-700 ${!unlocked ? 'opacity-50 grayscale' : ''}`}>
       <div className="col-span-12 md:col-span-4">
-        <div className="flex items-center gap-4 mb-3 md:mb-5">
-          <span className="font-sans text-[10px] uppercase tracking-[0.40em] text-[rgba(12,12,10,0.40)]">
+        <div className="flex items-center gap-4 mb-4 md:mb-6">
+          <span className="font-sans text-[10px] uppercase tracking-[0.45em]"
+            style={{ color: 'rgba(12,12,10,0.45)' }}>
             {t('funding_palier')} {m.amount.toLocaleString('fr-FR')} €
           </span>
           <StatusDot status={unlocked ? 'done' : m.status} />
         </div>
-        <h3 className="font-serif leading-tight italic text-[#0C0C0A]" style={{ fontSize: 'clamp(22px, 3vw, 42px)' }}>{m.title}</h3>
+        <h3 className="font-serif font-light italic text-[#0C0C0A] m-0"
+          style={{ fontSize: 'clamp(26px, 3.2vw, 48px)', lineHeight: 1.05, letterSpacing: '-0.01em' }}>
+          {m.title}
+        </h3>
       </div>
-      <div className="col-span-12 md:col-span-5">
-        <p className="font-sans text-[13px] leading-[1.85] font-light mb-4 text-[rgba(12,12,10,0.45)]">{m.desc}</p>
-        <div className="space-y-2">
+      <div className="col-span-12 md:col-span-4">
+        <p className="font-sans font-light mb-6 m-0"
+          style={{ fontSize: '13px', lineHeight: 2.0, color: 'rgba(12,12,10,0.50)' }}>
+          {m.desc}
+        </p>
+        <div className="space-y-3">
           {m.items.map((it, idx) => (
-            <div key={idx} className="flex items-center gap-3">
-              <div className="w-3 h-px bg-[rgba(12,12,10,0.20)]" />
-              <span className="font-sans text-[11px] uppercase tracking-widest text-[rgba(12,12,10,0.40)]">{it}</span>
+            <div key={idx} className="flex items-center gap-4">
+              <div className="w-3 h-px" style={{ backgroundColor: 'rgba(12,12,10,0.25)' }} />
+              <span className="font-sans text-[10px] uppercase tracking-[0.40em]"
+                style={{ color: 'rgba(12,12,10,0.45)' }}>
+                {it}
+              </span>
             </div>
           ))}
         </div>
       </div>
-      <div className="hidden md:block col-span-3">
-        <div className="relative overflow-hidden aspect-[3/4]">
+      <div className="hidden md:block col-span-4">
+        <div className="relative overflow-hidden" style={{ aspectRatio: '4/5' }}>
           <motion.img src={m.img} alt={m.title} loading="lazy" decoding="async"
             className="w-full h-full object-cover"
-            animate={{ scale: hov ? 1.08 : 1 }} transition={{ duration: 1.2, ease: 'easeOut' }} />
-          {!unlocked && <div className="absolute inset-0 backdrop-blur-[1px] bg-[rgba(244,245,240,0.18)]" />}
+            style={{ filter: 'saturate(0.85) brightness(0.92) contrast(1.04)' }}
+            animate={{ scale: hov ? 1.06 : 1 }}
+            transition={{ duration: 1.2, ease: EXPO }} />
+          {!unlocked && (
+            <div aria-hidden="true" className="absolute inset-0 backdrop-blur-[1px]"
+              style={{ backgroundColor: 'rgba(244,245,240,0.18)' }} />
+          )}
         </div>
       </div>
     </motion.article>
@@ -781,10 +819,15 @@ function Timeline() {
               <span id="timeline-label">{t('timeline_label')}</span>
             </Cap>
           </div>
-          <p className="font-serif text-[18px] md:text-[26px] italic max-w-xl text-[rgba(12,12,10,0.35)]">{t('timeline_subtitle')}</p>
+          <p className="font-serif font-light italic m-0 max-w-xl"
+            style={{ fontSize: 'clamp(20px, 2.6vw, 30px)', lineHeight: 1.25, color: 'rgba(12,12,10,0.40)' }}>
+            {t('timeline_subtitle')}
+          </p>
         </div>
         <FundingBar />
-        <div className="mt-10 md:mt-24">{MILESTONES.map((m, i) => <MRow key={m.id} m={m} i={i} />)}</div>
+        <div className="mt-10 md:mt-20">
+          {MILESTONES.map((m, i) => <MRow key={m.id} m={m} i={i} />)}
+        </div>
       </div>
     </section>
   );
@@ -833,7 +876,7 @@ function Final() {
   );
 }
 
-export default function SoutenirPage() {
+export default function NousRejoindrePage() {
   return (
     <main>
       <Hero />

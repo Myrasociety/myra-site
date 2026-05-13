@@ -489,11 +489,11 @@ function EquinoxSections() {
       images: ['/Edwige/1.jpg', '/Edwige/2.jpg', '/Wingert/1.jpg', '/Julia/1.jpg'], reverse: false },
     { id: 'table', num: '02', label: t('s3_tags'), title: 'Table & Nutrition',
       description: 'Restaurant diététique, circuits courts, accords pensés pour votre métabolisme. Une table réelle, pas un catalogue. La cuisine comme acte de soin.',
-      href: `/${locale}/soutenir`, cta: 'En savoir plus',
+      href: `/${locale}/nous-rejoindre`, cta: 'En savoir plus',
       images: ['/Restaurant/B.jpg', '/Restaurant/1.jpg', '/Restaurant/A.jpg', '/Restaurant/B.jpg'], reverse: true },
     { id: 'recovery', num: '03', label: t('s2_tags'), title: 'Récupération & Spa',
       description: "200 m² dédiés à la récupération active. Sauna, hammam, balnéo, soins. Un espace pour revenir à soi, sans compromis sur l'intensité.",
-      href: `/${locale}/soutenir`, cta: 'Découvrir le spa',
+      href: `/${locale}/nous-rejoindre`, cta: 'Découvrir le spa',
       images: ['/Spa/A.jpg', '/Spa/1.jpg', '/Spa/3.jpg', '/Spa/A.jpg'], reverse: false },
   ];
 
@@ -999,7 +999,7 @@ function SupportPoster() {
             style={{ fontSize: '11px', lineHeight: '2.2', color: 'rgba(255,255,255,0.25)', maxWidth: 280 }}>
             {t('text')}
           </p>
-          <Btn href={`/${locale}/soutenir`} dark size="large">{t('cta')}</Btn>
+          <Btn href={`/${locale}/nous-rejoindre`} dark size="large">{t('cta')}</Btn>
         </div>
       </motion.div>
       <footer className="relative z-10 px-6 md:px-16 py-6 flex items-center justify-between"

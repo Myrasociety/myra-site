@@ -2,7 +2,11 @@
   "nav": {
     "hebergements": "Hébergements",
     "reserver": "Réserver",
-    "club": "Le club"
+    "club": "Le club",
+    "nous_rejoindre": "Nous rejoindre",
+    "news": "News",
+    "contact": "Contact",
+    "access_cta": "Demander un accès"
   },
   "hero": {
     "tagline_1": "Not a hotel.",
@@ -83,15 +87,31 @@
     "rights": "Tous droits réservés",
     "nav_hebergements": "Hébergements",
     "nav_reserver": "Réserver",
-"nav_club": "Le club",
-"send": "S'inscrire"
-    },
+    "nav_club": "Le club",
+    "nav_nous_rejoindre": "Nous rejoindre",
+    "nav_news": "News",
+    "nav_contact": "Contact",
+    "signature": "L'art de recevoir le corps.",
+    "send": "S'inscrire"
+  },
+
+  "news": {
+    "label": "Notes",
+    "tagline": "Journal d'une maison qui prend forme."
+  },
 
   "contact": {
     "label": "Contact",
     "title_line1": "On vous garde",
     "title_line2": "une place.",
     "desc": "Pour toute question, réservation privée ou demande de membership.",
+    "type_label": "Type de demande",
+    "type_sejour": "Séjour",
+    "type_invest": "Investissement",
+    "type_partner": "Partenariat",
+    "type_community": "Communauté",
+    "type_press": "Presse",
+    "type_other": "Autre",
     "name": "Nom",
     "name_placeholder": "Votre nom",
     "email": "Email",

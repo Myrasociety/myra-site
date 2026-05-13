@@ -16,7 +16,7 @@ export default function Navbar() {
   const locale = useLocale();
   const t = useTranslations('nav');
 
-  const HERO_PAGES = [`/${locale}`, `/${locale}/hebergement`, `/${locale}/soutenir`];
+  const HERO_PAGES = [`/${locale}`, `/${locale}/hebergement`, `/${locale}/nous-rejoindre`];
   const hasHero = HERO_PAGES.some(p => pathname === p) && !pathname.includes('/hebergement/');
 
   useEffect(() => {
@@ -43,9 +43,10 @@ export default function Navbar() {
   const bgStyle = isSolid ? 'bg-[#0C0C0A] border-b border-[rgba(216,213,205,0.05)] py-4' : 'bg-transparent py-6';
 
   const NAV_LINKS = [
-    { label: t('hebergements'), href: '/hebergement' },
-    { label: t('reserver'), href: '/contact' },
-    { label: t('club'), href: '/soutenir' },
+    { label: t('hebergements'),  href: '/hebergement' },
+    { label: t('nous_rejoindre'), href: '/nous-rejoindre' },
+    { label: t('news'),          href: '/news' },
+    { label: t('contact'),       href: '/contact' },
   ];
 
   const IconInstagram = ({ size = 14 }) => (
