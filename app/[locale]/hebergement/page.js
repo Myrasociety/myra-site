@@ -31,11 +31,12 @@ function R({ children, d = 0, y = 28, className = '' }) {
   const ref = useRef(null);
   const io  = useInView(ref, { once: true, margin: '-80px' });
   const reduced = useReducedMotionSafe();
+  if (reduced) return <div className={className}>{children}</div>;
   return (
     <motion.div ref={ref} className={className}
-      initial={{ opacity: 0, y: reduced ? 0 : y, filter: reduced ? 'blur(0px)' : 'blur(4px)' }}
-      animate={io ? { opacity: 1, y: 0, filter: 'blur(0px)' } : {}}
-      transition={{ duration: 1.4, ease: [0.16, 1, 0.3, 1], delay: d }}>
+      initial={{ opacity: 0 }}
+      animate={io ? { opacity: 1 } : {}}
+      transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: d }}>
       {children}
     </motion.div>
   );
@@ -456,8 +457,7 @@ function Hero({ checkIn, checkOut, guests, setGuests, onDateChange, panelOpen, s
           loading="eager" fetchPriority="high"
           className="w-full h-full object-cover"
           style={{ filter: 'saturate(0.85) brightness(0.58) contrast(1.06)' }}
-          initial={{ scale: 1.04 }} animate={{ scale: 1 }}
-          transition={{ duration: 3.5, ease: EASE }} />
+          />
       </div>
       <div className="absolute inset-0"
         style={{ background: 'linear-gradient(to bottom, rgba(12,12,10,0.20) 0%, transparent 35%, rgba(12,12,10,0.85) 100%)' }} />

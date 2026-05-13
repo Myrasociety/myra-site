@@ -28,11 +28,12 @@ function R({ children, d = 0, y = 28, className = '' }) {
   const ref = useRef(null);
   const io  = useInView(ref, { once: true, margin: '-80px' });
   const reduced = useReducedMotionSafe();
+  if (reduced) return <div className={className}>{children}</div>;
   return (
     <motion.div ref={ref} className={className}
-      initial={{ opacity: 0, y: reduced ? 0 : y, filter: reduced ? 'blur(0px)' : 'blur(4px)' }}
-      animate={io ? { opacity: 1, y: 0, filter: 'blur(0px)' } : {}}
-      transition={{ duration: 1.4, ease: EASE, delay: d }}>
+      initial={{ opacity: 0 }}
+      animate={io ? { opacity: 1 } : {}}
+      transition={{ duration: 0.5, ease: EASE, delay: d }}>
       {children}
     </motion.div>
   );
@@ -454,15 +455,14 @@ function Banner() {
   const reducedMotion = useReducedMotionSafe();
   const words = [t('banner_w1'), t('banner_w2'), t('banner_w3')];
   return (
-    <section className="bg-[#F4F5F0] overflow-hidden">
+    <section className="hidden md:block bg-[#F4F5F0] overflow-hidden">
       <div className="px-6 md:px-10 lg:px-14">
         <R y={30}>
           <div className="relative w-full overflow-hidden" style={{ height: '62vh', minHeight: 280 }}>
             <motion.img src="/DA/Nouveau.png" alt="MYRA" loading="lazy" decoding="async"
               className="w-full h-full object-cover"
               style={{ filter: 'saturate(0.72) brightness(0.75)' }}
-              initial={{ scale: 1.06 }} whileInView={{ scale: 1 }} viewport={{ once: true }}
-              transition={{ duration: 3.5, ease: EXPO }} />
+              />
             <div className="absolute inset-0 bg-[rgba(12,12,10,0.45)]" />
             <div className="absolute inset-0 flex items-center justify-center px-6">
               <ul role="list" className="flex items-center justify-center flex-wrap md:flex-nowrap m-0 p-0 list-none">
@@ -672,6 +672,7 @@ function CardCercle({ offre }) {
 function SectionCercles() {
   const t = useTranslations('soutenir');
   const scrollRef = useRef(null);
+  const [activeIdx, setActiveIdx] = useState(0);
 
   const scrollByCard = (dir) => {
     if (!scrollRef.current) return;
@@ -679,6 +680,21 @@ function SectionCercles() {
     const step = 384;
     scrollRef.current.scrollBy({ left: dir * step, behavior: 'smooth' });
   };
+
+  // Track which card is active for mobile dots
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const onScroll = () => {
+      const maxScroll = el.scrollWidth - el.clientWidth;
+      if (maxScroll <= 0) return;
+      const ratio = el.scrollLeft / maxScroll;
+      const idx = Math.round(ratio * (OFFRES.length - 1));
+      setActiveIdx(Math.max(0, Math.min(OFFRES.length - 1, idx)));
+    };
+    el.addEventListener('scroll', onScroll, { passive: true });
+    return () => el.removeEventListener('scroll', onScroll);
+  }, []);
 
   return (
     <section id="cercles" aria-labelledby="cercles-label" className="py-16 md:py-32 overflow-hidden">
@@ -728,6 +744,18 @@ function SectionCercles() {
             <div key={offre.id} className="snap-start shrink-0 w-[85vw] max-w-[380px] md:w-[360px]">
               <CardCercle offre={offre} />
             </div>
+          ))}
+        </div>
+
+        {/* Dots de pagination — mobile seulement, indique qu'on peut swipe */}
+        <div className="md:hidden flex gap-2 justify-center mt-8" role="group" aria-label="Indicateur de position">
+          {OFFRES.map((_, i) => (
+            <span key={i} aria-hidden="true" className="transition-all duration-400"
+              style={{
+                height: 2,
+                width: i === activeIdx ? 28 : 10,
+                backgroundColor: i === activeIdx ? INK : 'rgba(12,12,10,0.18)',
+              }} />
           ))}
         </div>
       </div>

@@ -50,11 +50,12 @@ function R({ children, d = 0, y = 32, className = '' }) {
   const ref = useRef(null);
   const io  = useInView(ref, { once: true, margin: '-80px' });
   const reduced = useReducedMotionSafe();
+  if (reduced) return <div className={className}>{children}</div>;
   return (
     <motion.div ref={ref} className={className}
-      initial={{ opacity: 0, y: reduced ? 0 : y, filter: reduced ? 'blur(0px)' : 'blur(4px)' }}
-      animate={io ? { opacity: 1, y: 0, filter: 'blur(0px)' } : {}}
-      transition={{ duration: 1.4, ease: EASE, delay: d }}>
+      initial={{ opacity: 0 }}
+      animate={io ? { opacity: 1 } : {}}
+      transition={{ duration: 0.5, ease: EASE, delay: d }}>
       {children}
     </motion.div>
   );
@@ -575,8 +576,7 @@ function Citation() {
         <motion.img src="/DA/Nouveau.png" alt="" loading="lazy" decoding="async"
           className="absolute inset-0 w-full h-full object-cover"
           style={{ filter: 'saturate(0.85) brightness(0.92) contrast(1.04)' }}
-          initial={{ scale: 1.08 }} whileInView={{ scale: 1 }} viewport={{ once: true }}
-          transition={{ duration: 3.5, ease: EASE }} />
+          />
         <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(12,12,10,0.35) 0%, rgba(12,12,10,0.70) 100%)' }} />
         {/* Grain analogique — sections Ink */}
         <div className="absolute inset-0 pointer-events-none z-[1]"
@@ -732,8 +732,7 @@ function CommunautePrivee() {
             loading="lazy" decoding="async"
             className="absolute inset-0 w-full h-full object-cover"
             style={{ filter: 'saturate(0.85) brightness(0.58) contrast(1.06)' }}
-            initial={{ scale: 1.06 }} whileInView={{ scale: 1 }} viewport={{ once: true }}
-            transition={{ duration: 4, ease: EASE }} />
+            />
 
           {/* Voile dégradé renforcé pour la lisibilité du texte overlay */}
           <div className="absolute inset-0 pointer-events-none"
@@ -1116,8 +1115,7 @@ function SupportPoster() {
       <motion.img src="/DA/Double visage.jpg" alt="" loading="lazy" decoding="async"
         className="absolute inset-0 w-full h-full object-cover"
         style={{ filter: 'grayscale(1) brightness(0.42) contrast(1.10)' }}
-        initial={{ scale: 1.06 }} whileInView={{ scale: 1 }} viewport={{ once: true }}
-        transition={{ duration: 3, ease: EASE }} />
+        />
       <div className="absolute inset-0"
         style={{ background: `linear-gradient(to bottom, ${INK}CC 0%, ${INK}55 50%, ${INK}DD 100%)` }} />
       {/* Grain analogique — section Ink */}

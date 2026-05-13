@@ -68,9 +68,9 @@ function R({ children, d = 0, y = 28, className = '' }) {
   const io  = useInView(ref, { once: true, margin: '-80px' });
   return (
     <motion.div ref={ref} className={className}
-      initial={{ opacity: 0, y, filter: 'blur(4px)' }}
-      animate={io ? { opacity: 1, y: 0, filter: 'blur(0px)' } : {}}
-      transition={{ duration: 1.6, ease: EXPO, delay: d }}>
+      initial={{ opacity: 0 }}
+      animate={io ? { opacity: 1 } : {}}
+      transition={{ duration: 0.5, ease: EXPO, delay: d }}>
       {children}
     </motion.div>
   );

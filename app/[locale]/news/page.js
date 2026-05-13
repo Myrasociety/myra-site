@@ -25,11 +25,12 @@ function R({ children, d = 0, y = 32, className = '' }) {
   const ref = useRef(null);
   const io  = useInView(ref, { once: true, margin: '-80px' });
   const reduced = useReducedMotionSafe();
+  if (reduced) return <div className={className}>{children}</div>;
   return (
     <motion.div ref={ref} className={className}
-      initial={{ opacity: 0, y: reduced ? 0 : y, filter: reduced ? 'blur(0px)' : 'blur(4px)' }}
-      animate={io ? { opacity: 1, y: 0, filter: 'blur(0px)' } : {}}
-      transition={{ duration: 1.4, ease: EXPO, delay: d }}>
+      initial={{ opacity: 0 }}
+      animate={io ? { opacity: 1 } : {}}
+      transition={{ duration: 0.5, ease: EXPO, delay: d }}>
       {children}
     </motion.div>
   );
