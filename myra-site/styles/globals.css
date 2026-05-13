@@ -39,7 +39,6 @@ html, body {
   max-width: 100vw;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  scroll-behavior: smooth;
 }
 
 body {
@@ -79,13 +78,10 @@ body {
   }
 }
 
-img {
-  transition: transform 1.8s cubic-bezier(0.16, 1, 0.3, 1),
-              filter    1.2s cubic-bezier(0.16, 1, 0.3, 1),
-              opacity   0.8s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
 .img-zoom { overflow: hidden; }
+.img-zoom img {
+  transition: transform 1.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
 .img-zoom img:hover { transform: scale(1.04); }
 
 a, button {
