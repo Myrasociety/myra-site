@@ -601,7 +601,7 @@ function Complexe() {
       <div className="editorial-grid">
 
         {/* LEFT — grid 3 lignes : top (label) / middle (titre+paragraphes centrés vertical) / bottom (vide) — aligné à gauche */}
-        <div className="col-span-12 md:col-span-6 md:col-start-1 order-2 md:order-1
+        <div className="col-span-12 md:col-span-6 md:col-start-1 order-1 md:order-1
           py-10 md:py-0
           md:min-h-[78vh]
           grid grid-rows-[auto_auto_auto] md:grid-rows-[auto_1fr_auto]
@@ -630,7 +630,7 @@ function Complexe() {
         </div>
 
         {/* RIGHT — image carrée, contenue dans la hauteur d'une page */}
-        <div className="col-span-12 md:col-span-6 md:col-start-7 order-1 md:order-2">
+        <div className="col-span-12 md:col-span-6 md:col-start-7 order-2 md:order-2">
           <R d={0.1}>
             <div className="relative overflow-hidden ml-auto"
               style={{ aspectRatio: '1/1', maxHeight: '78vh' }}>
@@ -737,7 +737,7 @@ function DoubleImage() {
       <div className="editorial-grid">
 
         {/* LEFT — 2 images portrait side by side, calées à la hauteur d'une page */}
-        <div className="col-span-12 md:col-span-7 md:col-start-1 order-1">
+        <div className="col-span-12 md:col-span-7 md:col-start-1 order-2 md:order-1">
           <R d={0.1}>
             <div className="grid grid-cols-2 gap-2 md:h-[78vh]">
               <div className="relative overflow-hidden aspect-[3/4] md:aspect-auto md:h-full">
@@ -759,7 +759,7 @@ function DoubleImage() {
         </div>
 
         {/* RIGHT — titre + sous-texte (performance/récupération) puis tags */}
-        <div className="col-span-12 md:col-span-3 md:col-start-9 order-2
+        <div className="col-span-12 md:col-span-3 md:col-start-9 order-1 md:order-2
           py-10 md:py-0
           md:min-h-[78vh]
           flex flex-col justify-start text-left gap-8 md:gap-12">
