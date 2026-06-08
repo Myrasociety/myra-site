@@ -254,11 +254,12 @@ function Concept() {
     <section aria-label={t('label')} className="bg-[#f6f6f3] pt-8 md:pt-12 pb-20 md:pb-32 overflow-hidden">
       <div className="max-w-[1600px] mx-auto md:px-12">
         {/* Mobile : flex scroll horizontal · Desktop : grid 4 cols */}
-        <div className="flex md:grid md:grid-cols-4 gap-3 md:gap-2 items-start
+        <div className="flex md:grid md:grid-cols-4 gap-4 md:gap-2 items-start
           overflow-x-auto md:overflow-visible snap-x md:snap-none snap-mandatory
-          px-6 md:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          px-8 md:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          style={{ scrollPaddingInline: '2rem' }}>
           {ITEMS.map((it, i) => (
-            <div key={i} className="snap-start shrink-0 w-[70vw] max-w-[300px] md:w-auto md:max-w-none">
+            <div key={i} className={`snap-start shrink-0 w-[68vw] max-w-[280px] md:w-auto md:max-w-none ${i === ITEMS.length - 1 ? 'mr-8 md:mr-0' : ''}`}>
               <R d={i * 0.1}>
                 <div className="relative overflow-hidden mb-5" style={{ aspectRatio: it.ratio }}>
                   <img src={it.img} alt={it.cat} loading="lazy" decoding="async"
