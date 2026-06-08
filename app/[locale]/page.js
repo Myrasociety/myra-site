@@ -252,22 +252,27 @@ function Concept() {
   ];
   return (
     <section aria-label={t('label')} className="bg-[#f6f6f3] pt-8 md:pt-12 pb-20 md:pb-32 overflow-hidden">
-      <div className="max-w-[1600px] mx-auto px-6 md:px-12">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 items-start">
+      <div className="max-w-[1600px] mx-auto md:px-12">
+        {/* Mobile : flex scroll horizontal · Desktop : grid 4 cols */}
+        <div className="flex md:grid md:grid-cols-4 gap-3 md:gap-2 items-start
+          overflow-x-auto md:overflow-visible snap-x md:snap-none snap-mandatory
+          px-6 md:px-0 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {ITEMS.map((it, i) => (
-            <R key={i} d={i * 0.1}>
-              <div className="relative overflow-hidden mb-5" style={{ aspectRatio: it.ratio }}>
-                <img src={it.img} alt={it.cat} loading="lazy" decoding="async"
-                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.4s] hover:scale-[1.03]"
-                  style={{ filter: 'saturate(0.92) contrast(1.02)' }} />
-              </div>
-              <p className="font-serif uppercase mb-2" style={{ fontSize: '10px', letterSpacing: '0.28em', color: 'rgba(12,12,10,0.40)' }}>
-                {it.cat}
-              </p>
-              <h3 className="font-serif font-light m-0" style={{ fontSize: 'clamp(15px, 1.3vw, 19px)', lineHeight: 1.25, letterSpacing: '-0.01em', color: '#0C0C0A', textWrap: 'pretty' }}>
-                {it.title}
-              </h3>
-            </R>
+            <div key={i} className="snap-start shrink-0 w-[70vw] max-w-[300px] md:w-auto md:max-w-none">
+              <R d={i * 0.1}>
+                <div className="relative overflow-hidden mb-5" style={{ aspectRatio: it.ratio }}>
+                  <img src={it.img} alt={it.cat} loading="lazy" decoding="async"
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.4s] hover:scale-[1.03]"
+                    style={{ filter: 'saturate(0.92) contrast(1.02)' }} />
+                </div>
+                <p className="font-serif uppercase mb-2" style={{ fontSize: '10px', letterSpacing: '0.28em', color: 'rgba(12,12,10,0.40)' }}>
+                  {it.cat}
+                </p>
+                <h3 className="font-serif font-light m-0" style={{ fontSize: 'clamp(15px, 1.3vw, 19px)', lineHeight: 1.25, letterSpacing: '-0.01em', color: '#0C0C0A', textWrap: 'pretty' }}>
+                  {it.title}
+                </h3>
+              </R>
+            </div>
           ))}
         </div>
       </div>
@@ -299,7 +304,7 @@ function Statement() {
         {/* Paragraphe serif — droite */}
         <div className="col-span-12 md:col-span-6 md:col-start-7 mt-6 md:mt-0">
           <R d={0.1}>
-            <p className="font-sans font-light text-[#0C0C0A] m-0 text-right"
+            <p className="font-sans font-light text-[#0C0C0A] m-0 text-left md:text-right"
               style={{ fontSize: 'clamp(16px, 1.9vw, 28px)', lineHeight: 1.4, letterSpacing: '-0.01em', textWrap: 'pretty' }}>
               {tagline}
             </p>
@@ -727,7 +732,7 @@ function DoubleImage() {
   ];
   return (
     <section id="hospitalite" aria-label={t('label')}
-      className="bg-[#f6f6f3] py-16 md:py-24 overflow-hidden">
+      className="bg-[#f6f6f3] pt-6 md:pt-10 pb-16 md:pb-24 overflow-hidden">
       <div className="editorial-grid">
 
         {/* LEFT — 2 images portrait side by side, calées à la hauteur d'une page */}
@@ -959,10 +964,11 @@ function Equipe() {
     <section id="equipe" aria-labelledby="equipe-label" className="bg-[#f6f6f3] overflow-hidden pt-16 md:pt-28 pb-8 md:pb-12">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(peopleJsonLd) }} />
       <div className="max-w-[1600px] mx-auto px-6 md:px-12">
-      <div className="grid grid-cols-1 md:grid-cols-2 items-stretch">
+      <div className="grid grid-cols-12 md:grid-cols-2 gap-4 md:gap-0 items-stretch">
 
-        {/* GAUCHE — portrait */}
-        <div className="relative overflow-hidden" style={{ minHeight: 'clamp(440px, 82vh, 800px)' }}>
+        {/* GAUCHE — portrait : compact mobile (col-span-5), pleine moitié desktop */}
+        <div className="col-span-5 md:col-span-1 relative overflow-hidden
+          min-h-[clamp(280px,50vh,800px)] md:min-h-[clamp(440px,82vh,800px)]">
           <AnimatePresence mode="wait">
             <motion.img key={m.src} src={m.src} alt={`${m.name} — ${m.role}`} loading="lazy" decoding="async"
               className="absolute inset-0 w-full h-full object-cover object-top"
@@ -972,8 +978,8 @@ function Equipe() {
           </AnimatePresence>
         </div>
 
-        {/* DROITE — citation + auteur + flèches */}
-        <div className="flex flex-col justify-center px-6 md:px-12 lg:px-20 py-14 md:py-0">
+        {/* DROITE — citation + auteur + flèches (col-span-7 mobile, col-span-1 desktop) */}
+        <div className="col-span-7 md:col-span-1 flex flex-col justify-center px-3 md:px-12 lg:px-20 py-4 md:py-0">
           <h2 id="equipe-label" className="sr-only">{t('label')}</h2>
           <AnimatePresence mode="wait">
             <motion.div key={active}
@@ -981,23 +987,24 @@ function Equipe() {
               transition={{ duration: 0.5, ease: EASE }}>
               <blockquote className="m-0 p-0">
                 <p className="font-serif font-light text-[#0C0C0A] m-0"
-                  style={{ fontSize: 'clamp(20px, 1.9vw, 32px)', lineHeight: 1.3, letterSpacing: '-0.01em', textWrap: 'pretty', maxWidth: '32ch' }}>
+                  style={{ fontSize: 'clamp(13px, 1.9vw, 32px)', lineHeight: 1.4, letterSpacing: '-0.01em', textWrap: 'pretty', maxWidth: '32ch' }}>
                   &ldquo;{m.quote}&rdquo;
                 </p>
               </blockquote>
-              <p className="font-serif uppercase mt-6 md:mt-8 m-0" style={{ fontSize: '11px', letterSpacing: '0.28em', color: 'rgba(12,12,10,0.45)' }}>
-                {m.name} — {m.role}
+              <p className="font-serif uppercase mt-4 md:mt-8 m-0" style={{ fontSize: '9px', letterSpacing: '0.25em', color: 'rgba(12,12,10,0.45)' }}>
+                <span className="md:hidden">{m.name}</span>
+                <span className="hidden md:inline">{m.name} — {m.role}</span>
               </p>
             </motion.div>
           </AnimatePresence>
 
-          {/* Flèches précédent / suivant */}
-          <div className="flex items-center gap-2 mt-10 md:mt-12">
+          {/* Flèches précédent / suivant — plus petites sur mobile */}
+          <div className="flex items-center gap-2 mt-6 md:mt-12">
             <button type="button" onClick={() => go(-1)} aria-label="Précédent"
-              className="w-11 h-11 flex items-center justify-center border transition-colors duration-300 hover:bg-[#0C0C0A] hover:text-white"
+              className="w-9 h-9 md:w-11 md:h-11 flex items-center justify-center border transition-colors duration-300 hover:bg-[#0C0C0A] hover:text-white"
               style={{ borderColor: 'rgba(12,12,10,0.20)', color: '#0C0C0A' }}>←</button>
             <button type="button" onClick={() => go(1)} aria-label="Suivant"
-              className="w-11 h-11 flex items-center justify-center border transition-colors duration-300 hover:bg-[#0C0C0A] hover:text-white"
+              className="w-9 h-9 md:w-11 md:h-11 flex items-center justify-center border transition-colors duration-300 hover:bg-[#0C0C0A] hover:text-white"
               style={{ borderColor: 'rgba(12,12,10,0.20)', color: '#0C0C0A' }}>→</button>
           </div>
         </div>
