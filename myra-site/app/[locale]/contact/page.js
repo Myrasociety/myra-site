@@ -42,7 +42,7 @@ export default async function ContactPage({ params }) {
     mainEntity: { '@id': 'https://myrasociety.com/#lodging' },
   };
   return (
-    <main className="bg-[#F4F5F0] min-h-screen">
+    <main className="bg-[#f6f6f3] min-h-screen">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(contactPageJsonLd) }} />
       <div className="pt-0">
         <ContactSection />

@@ -16,7 +16,7 @@ export default function Navbar() {
   const locale = useLocale();
   const t = useTranslations('nav');
 
-  const HERO_PAGES = [`/${locale}`, `/${locale}/hebergement`, `/${locale}/nous-rejoindre`];
+  const HERO_PAGES = [];
   const hasHero = HERO_PAGES.some(p => pathname === p) && !pathname.includes('/hebergement/');
 
   useEffect(() => {
@@ -40,11 +40,13 @@ export default function Navbar() {
   const isActive = (href) => pathname === `/${locale}${href}` || pathname === href;
 
   const isSolid = !hasHero || scrolled || menuOpen;
-  const bgStyle = isSolid ? 'bg-[#0C0C0A] border-b border-[rgba(216,213,205,0.05)] py-4' : 'bg-transparent py-6';
+  const bgStyle = isSolid ? 'bg-[#f6f6f3]/90 backdrop-blur-xl py-2.5' : 'bg-transparent py-3.5';
+  const navInk = isSolid ? '#0C0C0A' : '#FFFFFF';
+  const navMuted = isSolid ? 'rgba(12,12,10,0.62)' : 'rgba(255,255,255,0.92)';
+  const logoFilter = isSolid ? 'brightness(0)' : 'brightness(0) invert(1)';
 
   const NAV_LINKS = [
     { label: t('hebergements'),  href: '/hebergement' },
-    { label: t('nous_rejoindre'), href: '/nous-rejoindre' },
     { label: t('news'),          href: '/news' },
     { label: t('contact'),       href: '/contact' },
   ];
@@ -68,58 +70,42 @@ export default function Navbar() {
   return (
     <>
       <header className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 ${bgStyle}`}>
-        <div className="max-w-[1440px] mx-auto px-6 md:px-12 flex justify-between items-center">
+        <div className="max-w-[1600px] mx-auto px-6 md:px-12 flex justify-between items-center">
 
-          {/* GAUCHE — Nav desktop */}
-          <nav className="hidden md:flex gap-10">
-            {NAV_LINKS.map(({ label, href }) => {
-              const active = isActive(href);
-              return (
-                <Link key={href} href={`/${locale}${href}`} className="group relative font-sans text-[9px] tracking-[0.25em] uppercase transition-colors duration-400" style={{ color: active ? '#F4F5F0' : 'rgba(216,213,205,0.45)' }}>
-                  {label}
-                  <span className={`absolute -bottom-1.5 left-0 h-px transition-all duration-500 ${active ? 'w-full' : 'w-0 group-hover:w-full'}`} style={{ backgroundColor: '#351421' }} />
-                </Link>
-              );
-            })}
-          </nav>
+          {/* GAUCHE — Logo */}
+          <Link href={`/${locale}`} aria-label="MYRA Society">
+            <Image src="/myra-logo.svg" alt="MYRA" width={80} height={16} style={{ filter: logoFilter, height: '16px', width: 'auto' }} className="transition-all duration-500 hover:opacity-60" />
+          </Link>
 
-          {/* CENTRE — Logo */}
-          <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2">
-            <Link href={`/${locale}`} aria-label="MYRA Society">
-              <Image src="/myra-logo.svg" alt="MYRA" width={80} height={16} style={{ filter: 'brightness(0) invert(1)', height: '16px', width: 'auto' }} className="transition-all duration-500 hover:opacity-60" />
-            </Link>
-          </div>
+          {/* DROITE — pages + contact + socials */}
+          <div className="flex items-center gap-4 md:gap-8">
 
-          {/* DROITE */}
-          <div className="flex items-center gap-4 md:gap-6">
+            {/* Pages desktop */}
+            <nav className="hidden md:flex gap-8">
+              {NAV_LINKS.filter(({ href }) => href !== '/contact').map(({ label, href }) => {
+                const active = isActive(href);
+                return (
+                  <Link key={href} href={`/${locale}${href}`} className="group relative font-serif text-[10px] font-normal tracking-[0.2em] uppercase transition-colors duration-400" style={{ color: active ? navInk : navMuted }}>
+                    {label}
+                    <span className={`absolute -bottom-1.5 left-0 h-px transition-all duration-500 ${active ? 'w-full' : 'w-0 group-hover:w-full'}`} style={{ backgroundColor: '#351421' }} />
+                  </Link>
+                );
+              })}
+            </nav>
 
-            {/* Heure desktop */}
-            <div className="hidden md:flex items-center gap-4 font-sans text-[8px] tracking-[0.18em] uppercase text-[rgba(216,213,205,0.25)]">
-              <span className="text-[rgba(216,213,205,0.45)]">Marlenheim, FR</span>
-              <div className="w-px h-3 bg-[rgba(216,213,205,0.10)]" />
-              <span className="tabular-nums">{time}</span>
-            </div>
-
-            {/* Langues desktop */}
-            <div className="hidden md:flex items-center gap-3 pl-4 border-l border-[rgba(216,213,205,0.08)]">
-              {['fr', 'en', 'de'].map(l => (
-                <button key={l} type="button" onClick={() => switchLocale(l)}
-                  aria-label={`Switch to ${l.toUpperCase()}`}
-                  aria-current={locale === l ? 'true' : undefined}
-                  className="font-sans text-[8px] uppercase tracking-[0.30em] transition-colors duration-300"
-                  style={{ color: locale === l ? '#F4F5F0' : 'rgba(216,213,205,0.22)' }}>
-                  {l}
-                </button>
-              ))}
-            </div>
-
-            {/* Socials desktop */}
-            <div className="hidden md:flex items-center gap-4 pl-4 border-l border-[rgba(216,213,205,0.08)]">
-              <a href="https://instagram.com/myra.society" target="_blank" rel="noopener noreferrer" className="text-[rgba(216,213,205,0.25)] hover:text-[rgba(216,213,205,0.75)] transition-colors duration-400">
-                <IconInstagram size={14} />
+            {/* Contact + socials desktop */}
+            <div className="hidden md:flex items-center gap-6">
+              <Link href={`/${locale}/contact`} aria-current={isActive('/contact') ? 'page' : undefined}
+                className="group relative font-serif text-[10px] font-normal tracking-[0.2em] uppercase transition-colors duration-400"
+                style={{ color: isActive('/contact') ? navInk : navMuted }}>
+                {t('contact')}
+                <span className={`absolute -bottom-1.5 left-0 h-px transition-all duration-500 ${isActive('/contact') ? 'w-full' : 'w-0 group-hover:w-full'}`} style={{ backgroundColor: '#351421' }} />
+              </Link>
+              <a href="https://instagram.com/myra.society" target="_blank" rel="noopener noreferrer" className="transition-opacity duration-400 hover:opacity-60" style={{ color: navMuted }}>
+                <IconInstagram size={15} />
               </a>
-              <a href="https://www.linkedin.com/company/myra-society" target="_blank" rel="noopener noreferrer" className="text-[rgba(216,213,205,0.25)] hover:text-[rgba(216,213,205,0.75)] transition-colors duration-400">
-                <IconLinkedin size={14} />
+              <a href="https://www.linkedin.com/company/myra-society" target="_blank" rel="noopener noreferrer" className="transition-opacity duration-400 hover:opacity-60" style={{ color: navMuted }}>
+                <IconLinkedin size={15} />
               </a>
             </div>
 
@@ -130,7 +116,7 @@ export default function Navbar() {
               aria-controls="mobile-menu"
               className="md:hidden flex flex-col gap-[5px] p-1 outline-none">
               {[0, 1, 2].map(i => (
-                <span key={i} className="block w-5 h-px bg-[#F4F5F0] transition-all duration-400" style={{ transform: menuOpen ? (i === 0 ? 'rotate(45deg) translateY(6px)' : i === 2 ? 'rotate(-45deg) translateY(-6px)' : 'scaleX(0)') : 'none', opacity: menuOpen && i === 1 ? 0 : 1 }} />
+                <span key={i} className="block w-5 h-px transition-all duration-400" style={{ backgroundColor: menuOpen ? '#f6f6f3' : navInk, transform: menuOpen ? (i === 0 ? 'rotate(45deg) translateY(6px)' : i === 2 ? 'rotate(-45deg) translateY(-6px)' : 'scaleX(0)') : 'none', opacity: menuOpen && i === 1 ? 0 : 1 }} />
               ))}
             </button>
           </div>
@@ -145,8 +131,8 @@ export default function Navbar() {
           {NAV_LINKS.map(({ label, href }, i) => (
             <Link key={href} href={`/${locale}${href}`}
               aria-current={isActive(href) ? 'page' : undefined}
-              className="group relative py-5 font-serif text-[28px] font-light italic transition-colors duration-500"
-              style={{ color: isActive(href) ? '#F4F5F0' : 'rgba(216,213,205,0.35)', transitionDelay: menuOpen ? `${i * 80}ms` : '0ms' }}>
+              className="group relative py-5 font-serif text-[28px] font-light transition-colors duration-500"
+              style={{ color: isActive(href) ? '#f6f6f3' : 'rgba(216,213,205,0.35)', transitionDelay: menuOpen ? `${i * 80}ms` : '0ms' }}>
               {label}
               {isActive(href) && (
                 <span className="absolute bottom-0 left-0 h-px w-full" style={{ backgroundColor: '#351421', opacity: 0.6 }} />
@@ -170,8 +156,8 @@ export default function Navbar() {
                 <button key={l} type="button" onClick={() => { switchLocale(l); setMenuOpen(false); }}
                   aria-label={`Switch to ${l.toUpperCase()}`}
                   aria-current={locale === l ? 'true' : undefined}
-                  className="font-sans text-[9px] uppercase tracking-[0.40em] transition-colors duration-300"
-                  style={{ color: locale === l ? '#F4F5F0' : 'rgba(216,213,205,0.20)' }}>
+                  className="font-serif text-[9px] uppercase tracking-[0.40em] transition-colors duration-300"
+                  style={{ color: locale === l ? '#f6f6f3' : 'rgba(216,213,205,0.20)' }}>
                   {l}
                 </button>
               ))}
@@ -180,14 +166,14 @@ export default function Navbar() {
 
           <div className="flex items-end justify-between">
             <div>
-              <p className="font-sans text-[8px] uppercase tracking-[0.45em] mb-2" style={{ color: 'rgba(216,213,205,0.18)' }}>
+              <p className="font-serif text-[8px] uppercase tracking-[0.45em] mb-2" style={{ color: 'rgba(216,213,205,0.18)' }}>
                 Marlenheim, Alsace
               </p>
-              <a href="tel:+33637038677" className="font-sans text-[9px] uppercase tracking-[0.25em]" style={{ color: 'rgba(216,213,205,0.30)' }}>
+              <a href="tel:+33637038677" className="font-serif text-[9px] uppercase tracking-[0.25em]" style={{ color: 'rgba(216,213,205,0.30)' }}>
                 +33 (0)6 37 03 86 77
               </a>
             </div>
-            <span className="font-sans text-[8px] uppercase tracking-[0.35em] tabular-nums" style={{ color: 'rgba(216,213,205,0.18)' }}>
+            <span className="font-serif text-[8px] uppercase tracking-[0.35em] tabular-nums" style={{ color: 'rgba(216,213,205,0.18)' }}>
               {time}
             </span>
           </div>

@@ -63,7 +63,7 @@ function R({ children, d = 0, y = 32, className = '' }) {
 
 function Cap({ children, accent = false, light = false, className = '' }) {
   return (
-    <span className={`font-sans text-[11px] tracking-[0.55em] uppercase ${className}`}
+    <span className={`font-serif text-[14px] tracking-[0.28em] uppercase ${className}`}
       style={{ color: accent ? WINE : light ? 'rgba(255,255,255,0.35)' : 'rgba(12,12,10,0.38)' }}>
       {children}
     </span>
@@ -83,11 +83,11 @@ function Btn({ children, dark = false, href, onClick, size = 'default', classNam
     <Tag href={href} onClick={onClick}
       onMouseEnter={() => setHov(true)}
       onMouseLeave={() => setHov(false)}
-      className={`relative overflow-hidden inline-flex items-center font-sans text-[9px] md:text-[11px] tracking-[0.45em] md:tracking-[0.55em] uppercase cursor-pointer select-none ${className}`}
+      className={`relative overflow-hidden inline-flex items-center font-serif text-[9px] md:text-[11px] tracking-[0.45em] md:tracking-[0.55em] uppercase cursor-pointer select-none ${className}`}
       style={{
         padding,
         border: `1px solid ${hov ? WINE : dark ? 'rgba(255,255,255,0.18)' : BONE}`,
-        color: hov ? '#F4F5F0' : dark ? 'rgba(255,255,255,0.65)' : INK,
+        color: hov ? '#f6f6f3' : dark ? 'rgba(255,255,255,0.65)' : INK,
         transition: 'border-color 0.5s, color 0.5s',
       }}>
       <motion.span className="absolute inset-0" style={{ backgroundColor: WINE }}
@@ -113,10 +113,6 @@ function Hero() {
   const ref      = useRef(null);
   const reducedMotion = useReducedMotionSafe();
 
-  const { scrollYProgress } = useScroll({ target: ref, offset: ['start start', 'end start'] });
-  const opacity = useTransform(scrollYProgress, [0, 0.6], [1, 0]);
-  const y       = useTransform(scrollYProgress, [0, 1], ['0%', '12%']);
-
   function toggleSound() {
     const next = !muted;
     setMuted(next);
@@ -138,12 +134,9 @@ function Hero() {
   }
 
   return (
-    <section
-      ref={ref}
-      className="relative w-full overflow-hidden bg-[#0C0C0A]"
-      style={{ height: '100dvh', minHeight: 680 }}
-    >
-      <motion.div className="absolute inset-0" style={reducedMotion ? undefined : { y }}>
+    <section ref={ref} className="bg-[#f6f6f3] pt-11 md:pt-12">
+      {/* Image pleine largeur avec signature + formulaire en overlay */}
+      <div className="relative w-full overflow-hidden" style={{ height: 'clamp(460px, 78vh, 860px)' }}>
         <video
           ref={videoRef}
           autoPlay muted loop playsInline
@@ -151,154 +144,133 @@ function Hero() {
           poster="/Complexe/1.jpg"
           aria-label="Vidéo d'ambiance — Domaine MYRA en Alsace"
           className="w-full h-full object-cover"
-          style={{ filter: 'saturate(0.85) brightness(0.62) contrast(1.06)', opacity: 0.85 }}
+          style={{ filter: 'saturate(0.85) brightness(0.66) contrast(1.06)' }}
         >
           <source src="https://52nwkkdv96g3ruub.public.blob.vercel-storage.com/Alsace.mp4" type="video/mp4" />
         </video>
-      </motion.div>
 
-      <div className="absolute inset-0 bg-gradient-to-b from-[#0C0C0A]/55 via-transparent to-[#0C0C0A]/95" />
-      <div className="absolute inset-0 bg-gradient-to-r from-[#0C0C0A]/30 via-transparent to-transparent" />
+        {/* Voile pour lisibilité du texte en bas */}
+        <div className="absolute inset-0 bg-gradient-to-b from-[#0C0C0A]/20 via-transparent to-[#0C0C0A]/85" />
 
-      {/* Grain analogique */}
-      <div className="absolute inset-0 pointer-events-none z-[1]"
-        style={{
-          opacity: 0.035,
-          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
-          backgroundSize: '128px',
-        }}
-      />
+        {/* Grain analogique */}
+        <div className="absolute inset-0 pointer-events-none z-[1]"
+          style={{
+            opacity: 0.04,
+            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+            backgroundSize: '128px',
+          }}
+        />
 
-      {/* Bouton son — mobile */}
-      <div className="absolute top-20 right-6 z-30 md:hidden">
-        <button onClick={toggleSound} className="outline-none" aria-label={muted ? t('sound_on') : t('sound_off')} aria-pressed={!muted}>
-          <div
-            className="w-8 h-8 flex items-center justify-center border transition-all duration-500"
-            style={{ borderColor: !muted ? WINE : 'rgba(216,213,205,0.15)' }}
-          >
-            {!muted ? (
-              <div className="flex items-end gap-[1.5px] h-2.5">
-                {[1, 0.5, 0.85, 0.35, 0.92].map((h, i) => (
-                  <motion.div key={i} className="w-[1px] rounded-full" style={{ backgroundColor: WINE }}
-                    animate={{ height: ['2px', `${h * 8}px`, '2px'] }}
-                    transition={{ duration: 0.85, repeat: Infinity, delay: i * 0.1, ease: 'easeInOut' }} />
-                ))}
-              </div>
-            ) : (
-              <div className="w-1 h-1 rounded-full bg-[rgba(216,213,205,0.20)]" />
-            )}
-          </div>
-        </button>
-      </div>
-
-      <motion.div
-        className="absolute inset-0 flex flex-col justify-end px-6 md:px-16 pb-12 z-20"
-        style={{ opacity }}
-      >
-        {/* Proposition de valeur — Brand Book : "Not a hotel. A way of living." */}
-        <motion.div
-          className="flex flex-col items-start mb-10 md:mb-16"
-          initial={{ opacity: 0, x: reducedMotion ? 0 : -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ duration: 2.0, ease: EASE, delay: 0.3 }}
-        >
-          <h1
-            className="font-serif font-light text-white uppercase"
-            style={{ fontSize: 'clamp(36px, 5vw, 80px)', letterSpacing: '-0.01em', lineHeight: 0.88 }}
-          >
-            <span className="block">{t('tagline_1')}</span>
-            <span className="font-serif font-light italic block mt-3" style={{ color: 'rgba(216,213,205,0.55)', fontSize: 'clamp(28px, 4vw, 60px)', letterSpacing: '-0.02em', lineHeight: 1.05, textTransform: 'none' }}>
-              {t('tagline_2')}
-            </span>
-          </h1>
-
-          {/* H2 sémantique pour SEO — visuellement caché, présent dans le DOM/AX */}
-          <h2 className="sr-only">
-            Hébergement premium et recovery club en Alsace — suites privatives à Marlenheim
-          </h2>
-        </motion.div>
-
-        <motion.div
-          className="flex flex-col md:flex-row items-end justify-between gap-6 md:gap-10"
-          initial={{ opacity: 0, y: reducedMotion ? 0 : 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.8, ease: EASE, delay: 0.8 }}
-        >
-          {/* Formulaire membership */}
-          <div className="w-full md:w-[420px]">
-            {sent ? (
-              <p className="font-sans text-[10px] tracking-[0.30em] uppercase text-[rgba(216,213,205,0.40)]">
-                {t('welcome')}
-              </p>
-            ) : (
-              <form onSubmit={handleSubmit} className="w-full">
-                <label htmlFor="hero-email" className="block font-sans text-[9px] tracking-[0.45em] uppercase mb-4 text-[rgba(216,213,205,0.22)]">
-                  {t('membership')}
-                </label>
-                <div
-                  className="flex items-center gap-3 pb-2 border-b transition-all duration-700"
-                  style={{ borderColor: focused ? WINE : 'rgba(216,213,205,0.12)' }}
-                >
-                  <input
-                    id="hero-email"
-                    type="email"
-                    value={email}
-                    onChange={e => setEmail(e.target.value)}
-                    onFocus={() => setFocused(true)}
-                    onBlur={() => setFocused(false)}
-                    placeholder={t('placeholder')}
-                    className="flex-1 bg-transparent font-sans text-[10px] tracking-[0.20em] uppercase text-white placeholder:text-[rgba(216,213,205,0.14)] outline-none"
-                  />
-                  <button
-                    type="submit"
-                    aria-label="Transmettre"
-                    className="w-7 h-7 flex items-center justify-center border border-[rgba(216,213,205,0.12)] hover:border-[#351421] transition-all duration-500 flex-shrink-0"
-                  >
-                    <svg width="10" height="10" fill="none" stroke="currentColor" strokeWidth="1.2"
-                      className="text-[rgba(216,213,205,0.35)]" viewBox="0 0 24 24">
-                      <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" />
-                    </svg>
-                  </button>
+        {/* Bouton son */}
+        <div className="absolute top-4 right-4 z-30">
+          <button onClick={toggleSound} className="outline-none" aria-label={muted ? t('sound_on') : t('sound_off')} aria-pressed={!muted}>
+            <div className="w-8 h-8 flex items-center justify-center border transition-all duration-500"
+              style={{ borderColor: !muted ? WINE : 'rgba(244,245,240,0.30)' }}>
+              {!muted ? (
+                <div className="flex items-end gap-[1.5px] h-2.5">
+                  {[1, 0.5, 0.85, 0.35, 0.92].map((h, i) => (
+                    <motion.div key={i} className="w-[1px] rounded-full" style={{ backgroundColor: '#FFFFFF' }}
+                      animate={{ height: ['2px', `${h * 8}px`, '2px'] }}
+                      transition={{ duration: 0.85, repeat: Infinity, delay: i * 0.1, ease: 'easeInOut' }} />
+                  ))}
                 </div>
-              </form>
-            )}
-          </div>
+              ) : (
+                <div className="w-1 h-1 rounded-full bg-[rgba(255,255,255,0.45)]" />
+              )}
+            </div>
+          </button>
+        </div>
 
-          {/* Socials + son — desktop */}
-          <div className="hidden md:flex items-center gap-8 mb-1">
-            {[
-              { label: 'Instagram', href: 'https://instagram.com/myra.society' },
-              { label: 'TikTok',    href: 'https://tiktok.com/@myra.society' },
-            ].map(s => (
-              <a key={s.label} href={s.href} target="_blank" rel="noopener noreferrer"
-                className="group relative pb-1 font-sans text-[9px] tracking-[0.35em] uppercase text-[rgba(216,213,205,0.22)] hover:text-[rgba(216,213,205,0.75)] transition-colors duration-500">
-                {s.label}
-                <span className="absolute bottom-0 left-0 h-px w-0 group-hover:w-full transition-all duration-500"
-                  style={{ backgroundColor: WINE }} />
-              </a>
-            ))}
+        {/* Signature + formulaire — en overlay, bas */}
+        <div className="absolute inset-x-0 bottom-0 z-20 px-6 md:px-12 pb-6 md:pb-8">
+          <motion.div
+            className="mx-auto max-w-[1600px] flex flex-col md:flex-row items-start md:items-end justify-end gap-6 md:gap-10"
+            initial={{ opacity: 0, y: reducedMotion ? 0 : 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1.6, ease: EASE, delay: 0.4 }}
+          >
+            <h1 className="sr-only">
+              Hébergement premium et recovery club en Alsace — suites privatives à Marlenheim
+            </h1>
 
-            <button onClick={toggleSound} className="group flex items-center gap-3 outline-none" aria-label={muted ? t('sound_on') : t('sound_off')} aria-pressed={!muted}>
-              <div
-                className="w-7 h-7 flex items-center justify-center border transition-all duration-500"
-                style={{ borderColor: !muted ? WINE : 'rgba(216,213,205,0.10)' }}
-              >
-                {!muted ? (
-                  <div className="flex items-end gap-[1.5px] h-2.5">
-                    {[1, 0.5, 0.85, 0.35, 0.92].map((h, i) => (
-                      <motion.div key={i} className="w-[1px] rounded-full" style={{ backgroundColor: WINE }}
-                        animate={{ height: ['2px', `${h * 8}px`, '2px'] }}
-                        transition={{ duration: 0.85, repeat: Infinity, delay: i * 0.1, ease: 'easeInOut' }} />
-                    ))}
+            {/* Formulaire membership — à droite */}
+            <div className="w-full md:w-[420px]">
+              {sent ? (
+                <p className="font-serif text-[10px] tracking-[0.30em] uppercase text-[rgba(255,255,255,0.85)]">
+                  {t('welcome')}
+                </p>
+              ) : (
+                <form onSubmit={handleSubmit} className="w-full">
+                  <label htmlFor="hero-email" className="block font-serif text-[9px] tracking-[0.45em] uppercase mb-2 text-[rgba(255,255,255,0.85)]">
+                    {t('membership')}
+                  </label>
+                  <div
+                    className="flex items-center gap-3 pb-2 border-b transition-all duration-700"
+                    style={{ borderColor: focused ? WINE : 'rgba(255,255,255,0.45)' }}
+                  >
+                    <input
+                      id="hero-email"
+                      type="email"
+                      value={email}
+                      onChange={e => setEmail(e.target.value)}
+                      onFocus={() => setFocused(true)}
+                      onBlur={() => setFocused(false)}
+                      placeholder={t('placeholder')}
+                      className="flex-1 bg-transparent font-serif text-[10px] tracking-[0.20em] uppercase text-white placeholder:text-[rgba(255,255,255,0.55)] outline-none"
+                    />
+                    <button
+                      type="submit"
+                      aria-label="Transmettre"
+                      className="w-7 h-7 flex items-center justify-center border border-[rgba(255,255,255,0.45)] hover:border-[#351421] transition-all duration-500 flex-shrink-0"
+                    >
+                      <svg width="10" height="10" fill="none" stroke="currentColor" strokeWidth="1.2"
+                        className="text-[rgba(255,255,255,0.80)]" viewBox="0 0 24 24">
+                        <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" />
+                      </svg>
+                    </button>
                   </div>
-                ) : (
-                  <div className="w-1 h-1 rounded-full bg-[rgba(216,213,205,0.20)]" />
-                )}
+                </form>
+              )}
+            </div>
+          </motion.div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+// ════════════════════════════════════════════════════════════════════════════
+// 01b — CONCEPT (mots-clés)
+// ════════════════════════════════════════════════════════════════════════════
+function Concept() {
+  const t = useTranslations('concept');
+  const ITEMS = [
+    { cat: t('w1'), title: t('d1'), img: '/Visuels/Coaching.jpg',    ratio: '1 / 1' },
+    { cat: t('w2'), title: t('d2'), img: '/Visuels/Hammam.jpg',      ratio: '2 / 3' },
+    { cat: t('w3'), title: t('d3'), img: '/Edwige/1.jpg',            ratio: '5 / 4' },
+    { cat: t('w4'), title: t('d4'), img: '/Visuels/Communauté.jpg',  ratio: '3 / 4' },
+  ];
+  return (
+    <section aria-label={t('label')} className="bg-[#f6f6f3] pt-8 md:pt-12 pb-20 md:pb-32 overflow-hidden">
+      <div className="max-w-[1600px] mx-auto px-6 md:px-12">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 items-start">
+          {ITEMS.map((it, i) => (
+            <R key={i} d={i * 0.1}>
+              <div className="relative overflow-hidden mb-5" style={{ aspectRatio: it.ratio }}>
+                <img src={it.img} alt={it.cat} loading="lazy" decoding="async"
+                  className="absolute inset-0 w-full h-full object-cover transition-transform duration-[1.4s] hover:scale-[1.03]"
+                  style={{ filter: 'saturate(0.92) contrast(1.02)' }} />
               </div>
-            </button>
-          </div>
-        </motion.div>
-      </motion.div>
+              <p className="font-serif uppercase mb-2" style={{ fontSize: '10px', letterSpacing: '0.28em', color: 'rgba(12,12,10,0.40)' }}>
+                {it.cat}
+              </p>
+              <h3 className="font-serif font-light m-0" style={{ fontSize: 'clamp(15px, 1.3vw, 19px)', lineHeight: 1.25, letterSpacing: '-0.01em', color: '#0C0C0A', textWrap: 'pretty' }}>
+                {it.title}
+              </h3>
+            </R>
+          ))}
+        </div>
+      </div>
     </section>
   );
 }
@@ -309,44 +281,29 @@ function Hero() {
 function Statement() {
   const t = useTranslations('statement');
 
-  // Split la tagline en heading (2 premières phrases) + subhead (le reste)
   const tagline = t('tagline');
-  const parts = tagline.split(/\.\s+/).filter(Boolean).map(s => s.endsWith('.') ? s : s + '.');
-  const heading = parts.slice(0, 2).join(' ');
-  const subhead = parts.slice(2).join(' ');
 
   return (
-    <section aria-labelledby="statement-label" className="bg-[#F4F5F0] overflow-hidden py-14 md:py-24">
-      <div className="editorial-grid">
+    <section aria-labelledby="statement-label" className="bg-[#f6f6f3] overflow-hidden pt-10 md:pt-14 pb-16 md:pb-24">
+      <div className="editorial-grid items-start">
 
-        {/* Eyebrow */}
+        {/* Eyebrow — gauche */}
         <div className="col-span-12 md:col-span-3">
           <R>
-            <div className="flex items-center gap-3">
-              <div className="w-4 h-px" style={{ backgroundColor: WINE, opacity: 0.4 }} />
-              <Cap accent>
-                <span id="statement-label">{t('label')}</span>
-              </Cap>
-            </div>
+            <span id="statement-label" className="font-serif uppercase block" style={{ fontSize: 'clamp(15px, 1.4vw, 21px)', letterSpacing: '0.18em', lineHeight: 1.1, color: '#0C0C0A' }}>
+              {t('label')}
+            </span>
           </R>
         </div>
 
-        {/* Manifesto — gros titre + sous-phrase d'action */}
-        <div className="col-span-12 md:col-span-9 mt-6 md:mt-0">
+        {/* Paragraphe serif — droite */}
+        <div className="col-span-12 md:col-span-6 md:col-start-7 mt-6 md:mt-0">
           <R d={0.1}>
-            <h2 className="font-serif font-light italic text-[#0C0C0A] m-0"
-              style={{ fontSize: 'clamp(40px, 6vw, 96px)', lineHeight: 0.95, letterSpacing: '-0.02em' }}>
-              {heading}
-            </h2>
+            <p className="font-sans font-light text-[#0C0C0A] m-0 text-right"
+              style={{ fontSize: 'clamp(16px, 1.9vw, 28px)', lineHeight: 1.4, letterSpacing: '-0.01em', textWrap: 'pretty' }}>
+              {tagline}
+            </p>
           </R>
-          {subhead && (
-            <R d={0.2}>
-              <p className="font-serif font-light italic mt-7 md:mt-12 m-0"
-                style={{ fontSize: 'clamp(20px, 2.5vw, 36px)', lineHeight: 1.3, color: 'rgba(12,12,10,0.42)' }}>
-                {subhead}
-              </p>
-            </R>
-          )}
         </div>
 
       </div>
@@ -434,7 +391,7 @@ function SectionContent({ num, label, title, description, href, cta, headingId, 
         {num}
       </div>
       <R>
-        <div className="flex items-center gap-3 md:gap-4 mb-3 md:mb-8">
+        <div className="flex items-center gap-3 md:gap-4 mb-3 md:mb-5">
           <div className="w-4 h-px" style={{ backgroundColor: WINE, opacity: 0.4 }} />
           <Cap accent>{label}</Cap>
         </div>
@@ -464,22 +421,26 @@ function ServicesIntro() {
   const t = useTranslations('services');
   return (
     <section id="services-intro" aria-labelledby="services-intro-label"
-      className="bg-[#F4F5F0] overflow-hidden py-10 md:py-16">
+      className="bg-[#f6f6f3] overflow-hidden pt-10 md:pt-16 pb-4 md:pb-6">
       <div className="editorial-grid">
         <div className="col-span-12">
           <R>
             <div className="flex items-center gap-3 mb-6 md:mb-8">
               <div className="w-4 h-px" style={{ backgroundColor: WINE, opacity: 0.4 }} />
-              <h2 id="services-intro-label" className="font-sans text-[11px] tracking-[0.55em] uppercase m-0"
-                style={{ color: WINE }}>
+              <h2 id="services-intro-label" className="font-serif tracking-[0.28em] uppercase m-0"
+                style={{ color: WINE, fontSize: '14px' }}>
                 {t('label')}
               </h2>
             </div>
           </R>
           <R d={0.1}>
-            <p className="font-serif font-light italic text-[#0C0C0A] m-0 whitespace-nowrap md:whitespace-normal"
-              style={{ fontSize: 'clamp(26px, 3.8vw, 60px)', lineHeight: 1.1, letterSpacing: '-0.02em' }}>
-              {t('intro')}
+            <p className="font-serif font-light text-[#0C0C0A] m-0 whitespace-nowrap md:whitespace-normal"
+              style={{ fontSize: 'clamp(22px, 2.6vw, 38px)', lineHeight: 1.1, letterSpacing: '-0.02em' }}>
+              {(() => {
+                const s = t('intro');
+                const i = s.indexOf(',');
+                return i === -1 ? s : <>{s.slice(0, i + 1)}<span className="italic">{s.slice(i + 1)}</span></>;
+              })()}
             </p>
           </R>
         </div>
@@ -490,48 +451,84 @@ function ServicesIntro() {
 
 function EquinoxSections() {
   const locale = useLocale();
-  const t = useTranslations('services');
+  const [active, setActive] = useState(0);
 
-  const SECTIONS = [
-    { id: 'suites', num: '01', label: t('s4_tags'), title: 'Chambres & Suites',
-      description: 'Suites privatives en Alsace. Chaque espace a été pensé pour la récupération et le ressourcement. Luxe discret, matières nobles, silence des vignes.',
-      href: `/${locale}/hebergement`, cta: 'Découvrir les suites',
-      images: ['/Edwige/1.jpg', '/Edwige/2.jpg', '/Wingert/1.jpg', '/Julia/1.jpg'], reverse: false },
-    { id: 'table', num: '02', label: t('s3_tags'), title: 'Table & Nutrition',
-      description: 'Restaurant diététique, circuits courts, accords pensés pour votre métabolisme. Une table réelle, pas un catalogue. La cuisine comme acte de soin.',
-      href: `/${locale}/nous-rejoindre`, cta: 'En savoir plus',
-      images: ['/Visuels/Restaurant.jpg', '/Restaurant/B.jpg', '/Restaurant/A.jpg'], reverse: true },
-    { id: 'recovery', num: '03', label: t('s2_tags'), title: 'Spa, Fitness & Récupération',
-      description: "200 m² dédiés au corps en mouvement et au repos. Plateau performance, sauna, hammam, balnéo, soins. Un espace pour revenir à soi, sans compromis sur l'intensité.",
-      href: `/${locale}/nous-rejoindre`, cta: "Découvrir l'espace",
-      images: ['/Visuels/Coaching.jpg', '/Visuels/Hammam.jpg', '/Fitness/A.jpg', '/Visuels/Massage.jpg'], reverse: false },
+  const DISCIPLINES = [
+    { id: 'suites', num: '01', title: 'Chambres & Suites', image: '/Edwige/1.jpg',
+      desc: 'Suites privatives en Alsace, pensées pour la récupération et le ressourcement.',
+      points: ['Suites privatives', 'Matières nobles, luxe discret', 'Le silence des vignes', 'Pensé pour le repos'],
+      href: `/${locale}/hebergement`, cta: 'Découvrir les suites' },
+    { id: 'table', num: '02', title: 'Table & Nutrition', image: '/Visuels/Restaurant.jpg',
+      desc: 'Une table réelle, pas un catalogue. La cuisine comme acte de soin.',
+      points: ['Restaurant diététique', 'Circuits courts', 'Accords pensés pour ton métabolisme', 'Le goût sans compromis'],
+      href: `/${locale}/contact`, cta: 'En savoir plus' },
+    { id: 'recovery', num: '03', title: 'Spa, Fitness & Récupération', image: '/Visuels/Coaching.jpg',
+      desc: '200 m² dédiés au corps en mouvement et au repos, sans compromis sur l’intensité.',
+      points: ['Plateau performance', 'Sauna · Hammam · Balnéo', 'Soins & massages', 'Revenir à soi'],
+      href: `/${locale}/contact`, cta: "Découvrir l'espace" },
   ];
 
+  const d = DISCIPLINES[active];
+
   return (
-    <div className="block">
-      {SECTIONS.map((s) => {
-        const headingId = `${s.id}-title`;
-        const isSignature = s.num === '01';
-        return (
-          <section key={s.num} id={s.id} aria-labelledby={headingId}
-            className="w-full bg-[#F4F5F0] overflow-hidden">
-            <div className={`max-w-container mx-auto relative ${isSignature ? 'py-12 md:py-20' : 'py-10 md:py-16'}`}>
-              <div className="grid grid-cols-1 md:grid-cols-12 gap-0 items-stretch" style={{ direction: s.reverse ? 'rtl' : 'ltr' }}>
-                {/* Galerie — col-span-7 desktop (image dominante) */}
-                <div style={{ direction: 'ltr' }} className="md:col-span-7 order-2 md:order-none">
-                  <VerticalGallery images={s.images} title={s.title} />
-                </div>
-                {/* Contenu — col-span-5 desktop, order-1 sur mobile (texte au-dessus) */}
-                <div style={{ direction: 'ltr' }} className="md:col-span-5 order-1 md:order-none px-6 md:px-0 pb-6 md:pb-0 md:flex md:items-center md:py-0">
-                  <SectionContent num={s.num} label={s.label} title={s.title} description={s.description}
-                    href={s.href} cta={s.cta} headingId={headingId} reverse={s.reverse} isSignature={isSignature} />
-                </div>
-              </div>
+    <section id="disciplines" aria-label="Trois disciplines" className="bg-[#f6f6f3] overflow-hidden pt-4 md:pt-6 pb-10 md:pb-14">
+      <div className="editorial-grid">
+        <div className="col-span-12 grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-14 items-center">
+
+          {/* GAUCHE — grande image de la discipline active */}
+          <R d={0.1}>
+            <div className="relative overflow-hidden" style={{ aspectRatio: '4/5', maxHeight: '78vh' }}>
+              <AnimatePresence mode="wait">
+                <motion.img key={d.image} src={d.image} alt={d.title} loading="lazy" decoding="async"
+                  className="absolute inset-0 w-full h-full object-cover"
+                  style={{ filter: 'saturate(0.85) brightness(0.92) contrast(1.04)' }}
+                  initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+                  transition={{ duration: 0.6, ease: EASE }} />
+              </AnimatePresence>
             </div>
-          </section>
-        );
-      })}
-    </div>
+          </R>
+
+          {/* DROITE — sélecteur + description + points */}
+          <div>
+            {/* Sélecteur des 3 disciplines */}
+            <ul className="m-0 p-0 list-none border-t" style={{ borderColor: 'rgba(12,12,10,0.12)' }}>
+              {DISCIPLINES.map((x, i) => (
+                <li key={x.id} className="border-b" style={{ borderColor: 'rgba(12,12,10,0.12)' }}>
+                  <button onClick={() => setActive(i)} aria-pressed={i === active}
+                    className="w-full flex items-baseline gap-4 py-3.5 text-left outline-none group">
+                    <span className="font-serif tabular-nums" style={{ fontSize: '12px', color: i === active ? WINE : 'rgba(12,12,10,0.30)' }}>{x.num}</span>
+                    <span className="font-serif uppercase tracking-[0.03em] transition-colors duration-300"
+                      style={{ fontSize: 'clamp(18px, 2vw, 26px)', color: i === active ? INK : 'rgba(12,12,10,0.32)' }}>
+                      {x.title}
+                    </span>
+                  </button>
+                </li>
+              ))}
+            </ul>
+
+            {/* Contenu de la discipline active */}
+            <AnimatePresence mode="wait">
+              <motion.div key={active}
+                initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -6 }}
+                transition={{ duration: 0.45, ease: EASE }} className="mt-8 md:mt-10">
+                <p className="font-sans font-light m-0" style={{ fontSize: '14px', lineHeight: 1.8, color: 'rgba(12,12,10,0.58)', textWrap: 'pretty' }}>
+                  {d.desc}
+                </p>
+                <ul className="m-0 mt-6 p-0 list-none space-y-3">
+                  {d.points.map((p, i) => (
+                    <li key={i} className="flex items-baseline gap-3">
+                      <span aria-hidden className="block w-1 h-1 rounded-full flex-shrink-0 translate-y-[-1px]" style={{ backgroundColor: WINE }} />
+                      <span className="font-serif uppercase" style={{ fontSize: '11px', letterSpacing: '0.16em', color: 'rgba(12,12,10,0.65)' }}>{p}</span>
+                    </li>
+                  ))}
+                </ul>
+                <Btn href={d.href} className="mt-9">{d.cta}</Btn>
+              </motion.div>
+            </AnimatePresence>
+          </div>
+        </div>
+      </div>
+    </section>
   );
 }
 
@@ -541,96 +538,48 @@ function EquinoxSections() {
 function Citation() {
   const t = useTranslations('citation');
 
-  // Structure prête à recevoir N témoignages. Pour ajouter une voix : ajouter une entrée ici
-  // (et étendre les keys i18n correspondantes dans messages/*.json).
-  const QUOTES = [
-    { text: t('text'), author: t('author'), role: t('role') },
-  ];
-
-  const [idx, setIdx] = useState(0);
-  const current = QUOTES[idx];
-  const hasMultiple = QUOTES.length > 1;
-
-  const reviewJsonLd = hasMultiple
-    ? {
-        '@context': 'https://schema.org',
-        '@graph': QUOTES.map((q) => ({
-          '@type': 'Review',
-          itemReviewed: { '@type': 'LodgingBusiness', '@id': 'https://myrasociety.com/#lodging', name: 'MYRA Society' },
-          reviewBody: q.text,
-          author: { '@type': 'Person', name: q.author },
-        })),
-      }
-    : {
-        '@context': 'https://schema.org',
-        '@type': 'Review',
-        itemReviewed: { '@type': 'LodgingBusiness', '@id': 'https://myrasociety.com/#lodging', name: 'MYRA Society' },
-        reviewBody: current.text,
-        author: { '@type': 'Person', name: current.author },
-      };
+  const reviewJsonLd = {
+    '@context': 'https://schema.org',
+    '@type': 'Review',
+    itemReviewed: { '@type': 'LodgingBusiness', '@id': 'https://myrasociety.com/#lodging', name: 'MYRA Society' },
+    reviewBody: t('text'),
+    author: { '@type': 'Person', name: t('author') },
+  };
 
   return (
-    <section className="overflow-hidden">
+    <section className="relative bg-[#0C0C0A] py-24 md:py-40 overflow-hidden">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(reviewJsonLd) }} />
-      <figure className="relative w-full overflow-hidden m-0" style={{ height: '70vh', minHeight: 380 }}>
-        <motion.img src="/DA/Nouveau.png" alt="" loading="lazy" decoding="async"
-          className="absolute inset-0 w-full h-full object-cover"
-          style={{ filter: 'saturate(0.85) brightness(0.92) contrast(1.04)' }}
-          />
-        <div className="absolute inset-0" style={{ background: 'linear-gradient(to bottom, rgba(12,12,10,0.35) 0%, rgba(12,12,10,0.70) 100%)' }} />
-        {/* Grain analogique — sections Ink */}
-        <div className="absolute inset-0 pointer-events-none z-[1]"
-          style={{
-            opacity: 0.035,
-            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
-            backgroundSize: '128px',
-          }}
-        />
-        <div className="absolute inset-0 flex items-center justify-center px-8 md:px-32 z-[2]">
-          <div className="max-w-2xl text-center">
-            <motion.div className="mb-8 flex justify-center"
-              initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
-              transition={{ duration: 0.6, ease: EASE, delay: 0.1 }}>
-              <div className="w-8 h-px" style={{ backgroundColor: WINE, opacity: 0.6 }} />
-            </motion.div>
 
-            <AnimatePresence mode="wait">
-              <motion.div key={idx}
-                initial={{ opacity: 0, y: 20, filter: 'blur(4px)' }}
-                animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                exit={{ opacity: 0, filter: 'blur(4px)' }}
-                transition={{ duration: 1.4, ease: EASE }}>
-                <blockquote className="m-0 p-0">
-                  <p className="font-serif font-light leading-[1.4] text-white m-0"
-                    style={{ fontSize: 'clamp(20px, 3vw, 38px)', letterSpacing: '-0.01em' }}>
-                    {current.text}
-                  </p>
-                </blockquote>
-                <figcaption className="mt-10 md:mt-12 flex flex-col items-center gap-1">
-                  <cite className="font-serif font-light italic" style={{ fontSize: 'clamp(16px, 1.4vw, 20px)', color: 'rgba(255,255,255,0.65)' }}>
-                    — {current.author}
-                  </cite>
-                  <span className="font-sans uppercase mt-1" style={{ fontSize: '10px', letterSpacing: '0.40em', color: 'rgba(255,255,255,0.30)' }}>
-                    {current.role}
-                  </span>
-                </figcaption>
-              </motion.div>
-            </AnimatePresence>
+      {/* Grain analogique — signature sections Ink */}
+      <div aria-hidden="true" className="absolute inset-0 pointer-events-none z-[1]"
+        style={{
+          opacity: 0.035,
+          backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+          backgroundSize: '128px',
+        }} />
 
-            {hasMultiple && (
-              <div className="mt-10 flex justify-center gap-2" role="group" aria-label="Témoignages">
-                {QUOTES.map((_, i) => (
-                  <button key={i} type="button" onClick={() => setIdx(i)}
-                    aria-label={`Témoignage ${i + 1} sur ${QUOTES.length}`}
-                    aria-current={i === idx ? 'true' : undefined}
-                    className="h-px p-0 transition-all duration-500 outline-none cursor-pointer"
-                    style={{ width: i === idx ? 24 : 10, backgroundColor: i === idx ? 'rgba(255,255,255,0.85)' : 'rgba(255,255,255,0.25)', border: 'none' }} />
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
-      </figure>
+      <div className="relative z-[2] max-w-[1100px] mx-auto px-6 md:px-12 text-center">
+        {/* Citation */}
+        <R d={0.1}>
+          <blockquote className="m-0 p-0 mt-4 md:mt-6">
+            <p className="font-sans font-light italic m-0"
+              style={{ fontSize: 'clamp(22px, 3vw, 44px)', lineHeight: 1.35, letterSpacing: '-0.01em', textWrap: 'balance', color: 'rgba(244,245,240,0.94)' }}>
+              {t('text')}
+            </p>
+            <footer className="mt-12 md:mt-16 flex flex-col items-center">
+              <div className="w-10 h-px mb-6" style={{ backgroundColor: WINE, opacity: 0.5 }} />
+              <cite className="font-sans uppercase not-italic m-0"
+                style={{ fontSize: '11px', letterSpacing: '0.45em', color: 'rgba(244,245,240,0.85)' }}>
+                {t('author')}
+              </cite>
+              <span className="font-sans uppercase mt-1.5"
+                style={{ fontSize: '9px', letterSpacing: '0.40em', color: 'rgba(244,245,240,0.42)' }}>
+                {t('role')}
+              </span>
+            </footer>
+          </blockquote>
+        </R>
+      </div>
     </section>
   );
 }
@@ -641,50 +590,31 @@ function Citation() {
 function Complexe() {
   const t = useTranslations('complexe');
   return (
-    <section id="complexe" aria-labelledby="complexe-label"
-      className="bg-[#F4F5F0] section-lg overflow-hidden">
+    <section id="complexe" aria-label={t('title')}
+      className="bg-[#f6f6f3] py-16 md:py-24 overflow-hidden">
       <div className="editorial-grid">
 
         {/* LEFT — grid 3 lignes : top (label) / middle (titre+paragraphes centrés vertical) / bottom (vide) — aligné à gauche */}
         <div className="col-span-12 md:col-span-6 md:col-start-1 order-2 md:order-1
-          py-10 md:py-0 px-4 md:px-8 lg:px-14
+          py-10 md:py-0
           md:min-h-[78vh]
           grid grid-rows-[auto_auto_auto] md:grid-rows-[auto_1fr_auto]
           text-left gap-y-10 md:gap-y-0">
 
-          {/* TOP — label seul, aligné gauche */}
+          {/* TITRE + paragraphes — remontés en haut */}
           <div className="flex items-center justify-start w-full">
-            <R>
-              <div className="flex items-center gap-3">
-                <div className="w-4 h-px" style={{ backgroundColor: WINE, opacity: 0.4 }} />
-                <h3 id="complexe-label" className="font-sans text-[11px] tracking-[0.55em] uppercase m-0"
-                  style={{ color: WINE }}>
-                  {t('label')}
-                </h3>
-              </div>
-            </R>
-          </div>
-
-          {/* MIDDLE — titre + paragraphes ensemble, centrés verticalement mais aligné gauche */}
-          <div className="flex items-center justify-start w-full">
-            <div className="space-y-7 md:space-y-10 max-w-md">
+            <div className="space-y-7 md:space-y-10 w-full max-w-[56ch]">
               <R d={0.15}>
-                <h2 className="font-serif font-light italic text-[#0C0C0A] m-0"
-                  style={{ fontSize: 'clamp(28px, 3.8vw, 52px)', lineHeight: 1.05, letterSpacing: '-0.02em' }}>
+                <h2 className="font-serif font-light text-[#0C0C0A] m-0"
+                  style={{ fontSize: 'clamp(20px, 2.6vw, 36px)', lineHeight: 1.12, letterSpacing: '-0.02em', textWrap: 'balance' }}>
                   {t('title')}
                 </h2>
               </R>
               <R d={0.25}>
-                <div className="space-y-7 md:space-y-9">
-                  <p className="font-sans font-light text-[rgba(12,12,10,0.55)] m-0"
-                    style={{ fontSize: '13px', lineHeight: 1.9 }}>
-                    {t('text')}
-                  </p>
-                  <p className="font-sans font-light text-[rgba(12,12,10,0.55)] m-0"
-                    style={{ fontSize: '13px', lineHeight: 1.9 }}>
-                    {t('text_2')}
-                  </p>
-                </div>
+                <p className="font-sans font-light text-[rgba(12,12,10,0.55)] m-0"
+                  style={{ fontSize: 'clamp(13px, 1vw, 15px)', lineHeight: 1.7, textWrap: 'pretty' }}>
+                  {t('text')} {t('text_2')}
+                </p>
               </R>
             </div>
           </div>
@@ -696,7 +626,7 @@ function Complexe() {
         {/* RIGHT — image carrée, contenue dans la hauteur d'une page */}
         <div className="col-span-12 md:col-span-6 md:col-start-7 order-1 md:order-2">
           <R d={0.1}>
-            <div className="relative overflow-hidden mx-auto"
+            <div className="relative overflow-hidden ml-auto"
               style={{ aspectRatio: '1/1', maxHeight: '78vh' }}>
               <motion.img src="/Visuels/Exterieur 71.jpg" alt={`MYRA — ${t('label')}`}
                 loading="lazy" decoding="async"
@@ -717,14 +647,30 @@ function Complexe() {
 // ════════════════════════════════════════════════════════════════════════════
 function CommunautePrivee() {
   const t = useTranslations('communaute');
+  const tp = useTranslations('poster');
   const locale = useLocale();
   return (
     <section id="communaute" aria-labelledby="communaute-label"
-      className="bg-[#F4F5F0] section-lg overflow-hidden">
-      <div className="editorial-grid">
+      className="bg-[#f6f6f3] pt-16 md:pt-24 overflow-hidden">
 
-        {/* Banner image avec titre + texte + CTA superposés en overlay */}
-        <div className="col-span-12 relative overflow-hidden"
+        {/* Header hors bannière : Bienvenue (gauche) + texte (haut droite) */}
+        <div className="max-w-[1600px] mx-auto px-6 md:px-12 mb-12 md:mb-16 flex flex-col md:flex-row md:items-start md:justify-between gap-6 md:gap-10">
+          <R>
+            <h2 id="communaute-label" className="font-serif font-light text-[#0C0C0A] m-0"
+              style={{ fontSize: 'clamp(40px, 6vw, 88px)', lineHeight: 0.95, letterSpacing: '-0.02em' }}>
+              {t('welcome')}
+            </h2>
+          </R>
+          <R d={0.12} className="w-full md:max-w-[620px] md:ml-auto md:text-right">
+            <p className="font-sans font-light m-0"
+              style={{ fontSize: 'clamp(13px, 1vw, 15px)', lineHeight: 1.7, color: 'rgba(12,12,10,0.55)', textWrap: 'balance' }}>
+              {t('description')}
+            </p>
+          </R>
+        </div>
+
+        {/* Banner image plein largeur */}
+        <div className="relative overflow-hidden"
           style={{ height: 'clamp(540px, 78vh, 820px)' }}>
 
           {/* Image cinématique */}
@@ -746,35 +692,26 @@ function CommunautePrivee() {
               backgroundSize: '128px',
             }} />
 
-          {/* Overlay : titre + texte + CTA stack centré */}
-          <div className="relative z-[2] h-full flex flex-col items-center justify-center text-center px-6 md:px-16 gap-8 md:gap-12">
+          {/* Overlay : eyebrow + titre une ligne + CTA */}
+          <div className="relative z-[2] h-full flex flex-col items-center justify-center text-center px-6">
             <R>
-              <h3 className="font-serif font-light italic m-0"
-                style={{ fontSize: 'clamp(44px, 6.5vw, 96px)', lineHeight: 0.95, letterSpacing: '-0.02em', color: '#F4F5F0' }}>
-                {t('welcome')}
-              </h3>
+              <span className="block font-sans uppercase mb-5 md:mb-7"
+                style={{ fontSize: '11px', letterSpacing: '0.45em', color: 'rgba(244,245,240,0.70)' }}>
+                Join the circle
+              </span>
             </R>
-            <R d={0.12}>
-              <p className="font-sans font-light m-0 max-w-xl mx-auto"
-                style={{ fontSize: 'clamp(13px, 1.05vw, 15px)', lineHeight: 1.9, color: 'rgba(244,245,240,0.72)' }}>
-                {t('description')}
-              </p>
+            <R d={0.1}>
+              <h2 className="font-serif font-light m-0 mb-8 md:mb-12 whitespace-nowrap"
+                style={{ fontSize: 'clamp(18px, 2.4vw, 40px)', lineHeight: 1.0, letterSpacing: '-0.01em', color: '#F4F5F0' }}>
+                Marlenheim is just day one.
+              </h2>
             </R>
-            <R d={0.24}>
-              <Link href={`/${locale}/nous-rejoindre`} aria-label={t('cta')}
-                className="inline-flex items-center px-8 md:px-12 py-4 md:py-5
-                  border border-[rgba(244,245,240,0.30)] hover:border-[#F4F5F0]
-                  backdrop-blur-md bg-[rgba(244,245,240,0.06)] hover:bg-[rgba(244,245,240,0.14)]
-                  transition-all duration-500">
-                <span className="font-sans uppercase text-[#F4F5F0]"
-                  style={{ fontSize: '10px', letterSpacing: '0.45em' }}>
-                  {t('cta')}
-                </span>
-              </Link>
+            <R d={0.22}>
+              <Btn href={`/${locale}/contact`} dark size="large">Reach out</Btn>
             </R>
           </div>
+
         </div>
-      </div>
     </section>
   );
 }
@@ -784,16 +721,19 @@ function CommunautePrivee() {
 // ════════════════════════════════════════════════════════════════════════════
 function DoubleImage() {
   const t = useTranslations('double');
-  const spaces = [t('space_1'), t('space_2'), t('space_3'), t('space_4'), t('space_5')];
+  const AXES = [
+    { title: t('axis_1_title'), desc: t('axis_1_desc') },
+    { title: t('axis_2_title'), desc: t('axis_2_desc') },
+  ];
   return (
-    <section id="hospitalite" aria-labelledby="double-label"
-      className="bg-[#F4F5F0] section-lg overflow-hidden">
+    <section id="hospitalite" aria-label={t('label')}
+      className="bg-[#f6f6f3] py-16 md:py-24 overflow-hidden">
       <div className="editorial-grid">
 
         {/* LEFT — 2 images portrait side by side, calées à la hauteur d'une page */}
         <div className="col-span-12 md:col-span-7 md:col-start-1 order-1">
           <R d={0.1}>
-            <div className="grid grid-cols-2 gap-2 md:gap-3 md:h-[78vh]">
+            <div className="grid grid-cols-2 gap-2 md:h-[78vh]">
               <div className="relative overflow-hidden aspect-[3/4] md:aspect-auto md:h-full">
                 <motion.img src="/Complexe/C.jpg" alt="MYRA — Complexe"
                   loading="lazy" decoding="async"
@@ -812,49 +752,40 @@ function DoubleImage() {
           </R>
         </div>
 
-        {/* RIGHT — grid 3 lignes : top (label) / middle (paragraphe centré vertical) / bottom (liste) */}
-        <div className="col-span-12 md:col-span-4 md:col-start-9 order-2
-          py-10 md:py-0 px-4 md:px-8 lg:px-14
+        {/* RIGHT — titre + sous-texte (performance/récupération) puis tags */}
+        <div className="col-span-12 md:col-span-3 md:col-start-9 order-2
+          py-10 md:py-0
           md:min-h-[78vh]
-          grid grid-rows-[auto_auto_auto] md:grid-rows-[auto_1fr_auto]
-          text-center gap-y-10 md:gap-y-0">
+          flex flex-col justify-start text-left gap-8 md:gap-12">
 
-          {/* TOP — label */}
-          <div className="flex items-center justify-center w-full">
-            <R>
-              <div className="flex items-center gap-3">
-                <div className="w-4 h-px" style={{ backgroundColor: WINE, opacity: 0.4 }} />
-                <h3 id="double-label" className="font-sans text-[11px] tracking-[0.55em] uppercase m-0"
-                  style={{ color: WINE }}>
-                  {t('label')}
-                </h3>
-                <div className="w-4 h-px" style={{ backgroundColor: WINE, opacity: 0.4 }} />
-              </div>
-            </R>
-          </div>
+          {/* Titre + sous-texte */}
+          <R>
+            <div>
+              <h2 className="font-serif font-light text-[#0C0C0A] m-0"
+                style={{ fontSize: 'clamp(22px, 2.6vw, 38px)', lineHeight: 1.1, letterSpacing: '-0.02em', textWrap: 'balance' }}>
+                {t('label')}
+              </h2>
+            </div>
+          </R>
 
-          {/* MIDDLE — paragraphe centré vertical */}
-          <div className="flex items-center justify-center w-full">
-            <R d={0.15} className="w-full">
-              <p className="font-sans font-light text-[rgba(12,12,10,0.55)] m-0 max-w-md mx-auto"
-                style={{ fontSize: '13px', lineHeight: 1.9 }}>
-                {t('text')}
-              </p>
-            </R>
-          </div>
-
-          {/* BOTTOM — liste horizontale */}
-          <R d={0.35}>
-            <ul role="list" className="m-0 p-0 list-none flex flex-wrap items-center justify-center gap-x-3 gap-y-2 max-w-sm mx-auto">
-              {spaces.map((s, i) => (
-                <li key={i} className="flex items-center gap-3">
-                  <span className="font-sans uppercase whitespace-nowrap"
-                    style={{ fontSize: '10px', letterSpacing: '0.28em', color: 'rgba(12,12,10,0.45)' }}>
-                    {s}
-                  </span>
-                  {i < spaces.length - 1 && (
-                    <span aria-hidden="true" style={{ color: 'rgba(12,12,10,0.20)', fontSize: '5px' }}>●</span>
-                  )}
+          {/* Axes de différenciation — numérotés, titre + description */}
+          <R d={0.2}>
+            <ul role="list" className="m-0 p-0 list-none w-full border-t" style={{ borderColor: 'rgba(12,12,10,0.14)' }}>
+              {AXES.map((a, i) => (
+                <li key={i} className="border-b" style={{ borderColor: 'rgba(12,12,10,0.14)' }}>
+                  <div className="py-5 md:py-6">
+                    <div className="flex items-baseline gap-3">
+                      <span className="font-serif tabular-nums" style={{ fontSize: '11px', color: WINE }}>0{i + 1}</span>
+                      <h3 className="font-serif uppercase m-0" style={{ fontSize: 'clamp(15px, 1.5vw, 20px)', letterSpacing: '0.04em', color: '#0C0C0A' }}>
+                        {a.title}
+                      </h3>
+                    </div>
+                    <p className="font-sans font-light m-0 mt-2.5" style={{ fontSize: 'clamp(13px, 1vw, 15px)', lineHeight: 1.7, color: 'rgba(12,12,10,0.55)', textWrap: 'pretty' }}>
+                      {a.desc.split('\n').map((line, j) => (
+                        <span key={j} className="block">{line}</span>
+                      ))}
+                    </p>
+                  </div>
                 </li>
               ))}
             </ul>
@@ -983,7 +914,7 @@ function Gallery() {
               style={{ backgroundColor: 'rgba(255,255,255,0.12)', height: 2 }}>
               {i === cur && (
                 <motion.div className="absolute top-0 left-0 h-full"
-                  style={{ backgroundColor: '#F4F5F0', width: `${progress * 100}%` }} />
+                  style={{ backgroundColor: '#f6f6f3', width: `${progress * 100}%` }} />
               )}
               {i < cur && (
                 <div className="absolute inset-0" style={{ backgroundColor: 'rgba(255,255,255,0.55)' }} />
@@ -1002,102 +933,75 @@ function Gallery() {
 // ════════════════════════════════════════════════════════════════════════════
 function Equipe() {
   const t = useTranslations('team');
-  const [act, setAct] = useState(0);
+  const [active, setActive] = useState(0);
 
   const EQUIPE = [
-    { src: '/Tina.jpg',   name: 'Tina F.',   role: 'Head Coach',       quote: t('tina_quote'),   instagram: 'https://instagram.com/myra.society', linkedin: 'https://www.linkedin.com/in/tina-fourrier-44636a188/' },
+    { src: '/Tina.jpg',   name: 'Tina F.',   role: 'Head Coach',        quote: t('tina_quote'),   instagram: 'https://instagram.com/myra.society', linkedin: 'https://www.linkedin.com/in/tina-fourrier-44636a188/' },
     { src: '/Jérémy.jpg', name: 'Jérémy P.', role: 'Directeur Général', quote: t('jeremy_quote'), instagram: 'https://instagram.com/myra.society', linkedin: 'https://www.linkedin.com/in/jeremy-paulen/' },
   ];
 
+  const m = EQUIPE[active];
+  const go = (dir) => setActive((i) => (i + dir + EQUIPE.length) % EQUIPE.length);
+
   const peopleJsonLd = {
     '@context': 'https://schema.org',
-    '@graph': EQUIPE.map((m) => ({
+    '@graph': EQUIPE.map((p) => ({
       '@type': 'Person',
-      name: m.name,
-      jobTitle: m.role,
-      image: `https://myrasociety.com${m.src}`,
+      name: p.name,
+      jobTitle: p.role,
+      image: `https://myrasociety.com${p.src}`,
       worksFor: { '@id': 'https://myrasociety.com/#lodging' },
-      sameAs: [m.instagram, m.linkedin],
+      sameAs: [p.instagram, p.linkedin],
     })),
   };
 
   return (
-    <section id="equipe" aria-labelledby="equipe-label" className="bg-[#F4F5F0] overflow-hidden py-12 md:py-20">
+    <section id="equipe" aria-labelledby="equipe-label" className="bg-[#f6f6f3] overflow-hidden pt-16 md:pt-28 pb-8 md:pb-12">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(peopleJsonLd) }} />
-      <div className="max-w-container mx-auto px-6 md:px-0">
-        <div className="flex items-center gap-4 mb-12 md:mb-16">
-          <Trait />
-          <h2 id="equipe-label" className="font-sans text-[11px] tracking-[0.55em] uppercase m-0" style={{ color: WINE }}>
-            {t('label')}
-          </h2>
+      <div className="max-w-[1600px] mx-auto px-6 md:px-12">
+      <div className="grid grid-cols-1 md:grid-cols-2 items-stretch">
+
+        {/* GAUCHE — portrait */}
+        <div className="relative overflow-hidden" style={{ minHeight: 'clamp(440px, 82vh, 800px)' }}>
+          <AnimatePresence mode="wait">
+            <motion.img key={m.src} src={m.src} alt={`${m.name} — ${m.role}`} loading="lazy" decoding="async"
+              className="absolute inset-0 w-full h-full object-cover object-top"
+              style={{ filter: 'saturate(0.85) brightness(0.92) contrast(1.04)' }}
+              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+              transition={{ duration: 0.6, ease: EASE }} />
+          </AnimatePresence>
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-0" style={{ borderTop: '1px solid rgba(12,12,10,0.06)' }}>
-          <div className="lg:col-span-8 relative overflow-hidden" style={{ aspectRatio: '4/5', minHeight: 460 }}>
-            <AnimatePresence mode="wait">
-              <motion.img key={EQUIPE[act].src} src={EQUIPE[act].src} alt={EQUIPE[act].name} loading="lazy" decoding="async"
-                className="absolute inset-0 w-full h-full object-cover object-top"
-                style={{ filter: 'saturate(0.85) brightness(0.92) contrast(1.04)' }}
-                initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
-                transition={{ duration: 0.6, ease: EASE }} />
-            </AnimatePresence>
-          </div>
-          <div className="lg:col-span-4 flex flex-col justify-between px-0 lg:px-10 py-10 lg:py-0"
-            style={{ borderLeft: '1px solid rgba(12,12,10,0.06)' }}>
-            <div className="md:pt-2">
-              <AnimatePresence mode="wait">
-                <motion.div key={act}
-                  initial={{ opacity: 0, y: 12, filter: 'blur(4px)' }}
-                  animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
-                  exit={{ opacity: 0, y: -8 }}
-                  transition={{ duration: 0.6, ease: EASE }}>
-                  <p className="font-sans text-[10px] uppercase tracking-[0.45em] mb-1" style={{ color: WINE }}>
-                    <cite className="not-italic">{EQUIPE[act].name}</cite>
-                  </p>
-                  <p className="font-sans text-[9px] uppercase tracking-[0.35em] mb-8" style={{ color: 'rgba(12,12,10,0.28)' }}>{EQUIPE[act].role}</p>
-                  <blockquote className="m-0 p-0">
-                    <p className="font-serif font-light italic leading-[1.6] m-0"
-                      style={{ fontSize: 'clamp(18px, 2vw, 26px)', color: 'rgba(12,12,10,0.68)' }}>
-                      {EQUIPE[act].quote}
-                    </p>
-                  </blockquote>
-                </motion.div>
-              </AnimatePresence>
-            </div>
-            <div>
-              {/* Sélecteur — au dessus des liens sur mobile */}
-              <ul role="list" className="flex items-center gap-6 mb-6 m-0 p-0 list-none">
-                {EQUIPE.map((m, i) => (
-                  <li key={i}>
-                    <button onClick={() => setAct(i)} aria-label={`${m.name} — ${m.role}`} aria-pressed={i === act} className="flex items-center gap-4 outline-none">
-                      <motion.div className="relative overflow-hidden flex-shrink-0" style={{ width: 52, height: 64 }}
-                        animate={{ opacity: i === act ? 1 : 0.25, filter: i === act ? 'saturate(0.85) brightness(0.92) contrast(1.04)' : 'saturate(0.30) brightness(0.55)' }}
-                        transition={{ duration: 0.4 }}>
-                        <img src={m.src} alt={m.name} loading="lazy" decoding="async" className="w-full h-full object-cover object-top" />
-                        {i === act && <div className="absolute bottom-0 left-0 right-0 h-[2px]" style={{ backgroundColor: WINE }} />}
-                      </motion.div>
-                      <div className="text-left">
-                        <p className="font-sans text-[10px] uppercase tracking-[0.30em]" style={{ color: i === act ? INK : 'rgba(12,12,10,0.25)' }}>{m.name}</p>
-                        <p className="font-sans text-[9px] uppercase tracking-[0.25em] mt-0.5" style={{ color: 'rgba(12,12,10,0.20)' }}>{m.role}</p>
-                      </div>
-                    </button>
-                  </li>
-                ))}
-              </ul>
-              <div className="flex items-center gap-6 pt-6" style={{ borderTop: '1px solid rgba(12,12,10,0.06)' }}>
-                {['instagram', 'linkedin'].map(r => (
-                  <a key={r} href={EQUIPE[act][r]} target="_blank" rel="noopener noreferrer"
-                    className="group/link relative pb-1 font-sans text-[9px] tracking-[0.40em] uppercase transition-colors duration-400"
-                    style={{ color: 'rgba(12,12,10,0.25)' }}
-                    onMouseEnter={e => e.currentTarget.style.color = INK}
-                    onMouseLeave={e => e.currentTarget.style.color = 'rgba(12,12,10,0.25)'}>
-                    {r.charAt(0).toUpperCase() + r.slice(1)}
-                    <span className="absolute bottom-0 left-0 h-px w-0 group-hover/link:w-full transition-all duration-400" style={{ backgroundColor: WINE }} />
-                  </a>
-                ))}
-              </div>
-            </div>
+
+        {/* DROITE — citation + auteur + flèches */}
+        <div className="flex flex-col justify-center px-6 md:px-12 lg:px-20 py-14 md:py-0">
+          <h2 id="equipe-label" className="sr-only">{t('label')}</h2>
+          <AnimatePresence mode="wait">
+            <motion.div key={active}
+              initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}
+              transition={{ duration: 0.5, ease: EASE }}>
+              <blockquote className="m-0 p-0">
+                <p className="font-serif font-light text-[#0C0C0A] m-0"
+                  style={{ fontSize: 'clamp(20px, 1.9vw, 32px)', lineHeight: 1.3, letterSpacing: '-0.01em', textWrap: 'pretty', maxWidth: '32ch' }}>
+                  &ldquo;{m.quote}&rdquo;
+                </p>
+              </blockquote>
+              <p className="font-serif uppercase mt-6 md:mt-8 m-0" style={{ fontSize: '11px', letterSpacing: '0.28em', color: 'rgba(12,12,10,0.45)' }}>
+                {m.name} — {m.role}
+              </p>
+            </motion.div>
+          </AnimatePresence>
+
+          {/* Flèches précédent / suivant */}
+          <div className="flex items-center gap-2 mt-10 md:mt-12">
+            <button type="button" onClick={() => go(-1)} aria-label="Précédent"
+              className="w-11 h-11 flex items-center justify-center border transition-colors duration-300 hover:bg-[#0C0C0A] hover:text-white"
+              style={{ borderColor: 'rgba(12,12,10,0.20)', color: '#0C0C0A' }}>←</button>
+            <button type="button" onClick={() => go(1)} aria-label="Suivant"
+              className="w-11 h-11 flex items-center justify-center border transition-colors duration-300 hover:bg-[#0C0C0A] hover:text-white"
+              style={{ borderColor: 'rgba(12,12,10,0.20)', color: '#0C0C0A' }}>→</button>
           </div>
         </div>
+      </div>
       </div>
     </section>
   );
@@ -1111,7 +1015,8 @@ function SupportPoster() {
   const locale = useLocale();
   const reducedMotion = useReducedMotionSafe();
   return (
-    <section id="soutenir-cta" aria-labelledby="poster-title" className="relative overflow-hidden" style={{ backgroundColor: INK, minHeight: 380 }}>
+    <section id="soutenir-cta" aria-labelledby="poster-title" className="bg-[#f6f6f3] py-8 md:py-12">
+      <div className="relative overflow-hidden" style={{ backgroundColor: INK, minHeight: 380 }}>
       <motion.img src="/DA/Double visage.jpg" alt="" loading="lazy" decoding="async"
         className="absolute inset-0 w-full h-full object-cover"
         style={{ filter: 'grayscale(1) brightness(0.42) contrast(1.10)' }}
@@ -1127,40 +1032,27 @@ function SupportPoster() {
         }}
       />
       <motion.div className="relative z-10 flex flex-col items-center justify-center text-center px-6 md:px-8 py-12 md:py-20"
-        style={{ minHeight: 380 }}
+        style={{ height: 'clamp(540px, 78vh, 820px)' }}
         initial={{ opacity: 0, y: reducedMotion ? 0 : 28 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}
         transition={{ duration: 1.4, ease: EASE }}>
         <div className="max-w-[560px] w-full">
-          <div className="flex items-center justify-center gap-6 mb-10">
-            <div className="h-px w-8 opacity-40" style={{ backgroundColor: WINE }} />
-            <Cap light style={{ opacity: 0.40 }}>{t('label')}</Cap>
-            <div className="h-px w-8 opacity-40" style={{ backgroundColor: WINE }} />
-          </div>
-          <h2 id="poster-title" className="font-serif font-light text-white leading-[1.02] mb-6"
-            style={{ fontSize: 'clamp(30px, 4vw, 62px)', color: '#FFFFFF' }}>
+          <h2 id="poster-title" className="font-serif font-light text-white mb-6"
+            style={{ fontSize: 'clamp(26px, 3.4vw, 50px)', lineHeight: 1.0, letterSpacing: '-0.02em', color: '#FFFFFF' }}>
             {t('title').split('\n').map((line, i) => (
               <span key={i} className={i === 1 ? 'italic block' : 'block'}>{line}</span>
             ))}
           </h2>
-          <p className="font-sans font-light tracking-[0.18em] uppercase mb-10 mx-auto"
-            style={{ fontSize: '11px', lineHeight: '2.2', color: 'rgba(255,255,255,0.25)', maxWidth: 280 }}>
-            {t('text')}
-          </p>
-          <Btn href={`/${locale}/nous-rejoindre`} dark size="large">{t('cta')}</Btn>
+          <Btn href={`/${locale}/contact`} dark size="large">{t('cta')}</Btn>
         </div>
       </motion.div>
-      <footer className="relative z-10 px-6 md:px-16 py-6 flex items-center justify-between"
-        style={{ borderTop: '1px solid rgba(255,255,255,0.04)' }}>
-        <span className="font-sans text-[8px] tracking-[0.30em] uppercase" style={{ color: 'rgba(244,245,240,0.18)' }}>{t('copyright')}</span>
-        <span className="font-sans text-[8px] tracking-[0.30em] uppercase" style={{ color: 'rgba(244,245,240,0.18)' }}>{t('location')}</span>
-      </footer>
+      </div>
     </section>
   );
 }
 
 export default function Page() {
   return (
-    <main className="bg-[#F4F5F0]">
+    <main className="bg-[#f6f6f3]">
       {/* 1 — Hero manifeste */}
       <Hero />
       {/* 2 — Bloc manifeste */}
@@ -1169,15 +1061,14 @@ export default function Page() {
       <Complexe />
       {/* 4 — Bloc recovery / body ritual */}
       <DoubleImage />
-      {/* 5 — Bloc équipe / experts */}
+      {/* 5 — Commentaire / témoignage */}
+      <Citation />
+      {/* 6 — Bloc équipe / experts */}
       <Equipe />
-      {/* 6 — Bloc communauté privée */}
+      {/* 7 — Concept en mots-clés */}
+      <Concept />
+      {/* 7 — Bloc communauté privée */}
       <CommunautePrivee />
-      {/* 7 — Collection d'expériences (intro + carrousels) */}
-      <ServicesIntro />
-      <EquinoxSections />
-      {/* 8 — Bloc expansion */}
-      <SupportPoster />
     </main>
   );
 }

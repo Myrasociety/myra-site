@@ -9,17 +9,28 @@
     "access_cta": "Request access"
   },
   "hero": {
-    "tagline_1": "Not a hotel.",
+    "tagline_1": "For those ready to transform the way they train, recover, and live.",
+    "tagline_l1": "For those ready to transform",
+    "tagline_l2": "the way they train,",
+    "tagline_l3": "recover, and live.",
+    "signature": "The art of hosting the body.",
     "tagline_2": "A way of living.",
     "location": "Marlenheim · Alsace · Since 2024",
-    "membership": "Membership by request",
+    "membership": "Newsletter access",
     "placeholder": "Your email address",
     "welcome": "Welcome home.",
     "sound_off": "Audio Off",
     "sound_on": "Audio On"
   },
+  "concept": {
+    "label": "The concept",
+    "w1": "Training", "d1": "Performance floor & elite coaching.",
+    "w2": "Recovery", "d2": "Spa, sauna, treatments — rest as a discipline.",
+    "w3": "Hospitality", "d3": "Independent lodgings, hotel-grade services.",
+    "w4": "Community", "d4": "A private circle, human in scale."
+  },
   "statement": {
-    "label": "About",
+    "label": "Opening 2027",
     "tagline": "Not a hotel. A way of living. Work hard. Recover hard. Back to life.",
     "stat_1_label": "Dedicated space",
     "stat_2_label": "Certified coaches",
@@ -44,8 +55,12 @@
     "description": "Joining MYRA means entering a private circle where body, rest and encounter are cultivated. A house more than a place — a setting chosen by those who demand more of their daily life, and share the desire to inhabit care with rigour and presence."
   },
   "double": {
-    "label": "Hospitality & Excellence",
-    "text": "MYRA brings together private suites, performance space, spa, healthy table and gathering places within a reinterpreted former farmhouse. Each space extends the same intention: restore energy, cultivate the body, create connection.",
+    "label": "Performance & Recovery",
+    "text": "Before talking about what we offer, here's our conviction: we never separate effort from rest.",
+    "axis_1_title": "Dual approach",
+    "axis_1_desc": "Performance and recovery matter in equal measure —\nneither intensity nor rest takes a back seat.",
+    "axis_2_title": "Smaller, more guidance",
+    "axis_2_desc": "A human-scale structure: fewer members,\ntruly personal support.",
     "space_1": "Private suites",
     "space_2": "Performance space",
     "space_3": "Spa",
@@ -120,8 +135,8 @@
   },
   "contact": {
     "label": "Contact",
-    "title_line1": "We'll keep",
-    "title_line2": "a place for you.",
+    "title_line1": "Get in",
+    "title_line2": "touch.",
     "desc": "For any question, private booking or membership request.",
     "type_label": "Request type",
     "type_sejour": "Stay",
@@ -225,6 +240,7 @@
     "person": "Person",
     "persons": "Persons",
     "collection_label": "The Collection",
+    "collection_intro": "Independent lodgings where you truly feel at home — with all the services of a hotel, on top.",
     "available": "available",
     "availables": "available",
     "suite": "suite",
@@ -238,6 +254,9 @@
   },
   "suite": {
     "breadcrumb": "Accommodations",
+    "other_suites": "Other suites",
+    "see": "View",
+    "per_night": "/ night",
     "accordion_features": "Amenities",
     "accordion_plan": "Floor plan",
     "accordion_address": "Address",

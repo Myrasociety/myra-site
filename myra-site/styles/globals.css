@@ -1,10 +1,10 @@
 @import "tailwindcss";
 
 @theme {
-  --font-family-sans: var(--font-sans), system-ui, sans-serif;
-  --font-family-serif: var(--font-serif), Georgia, serif;
+  --font-family-sans: var(--font-sans), Georgia, "Times New Roman", serif;
+  --font-family-serif: var(--font-serif), "Helvetica Neue", Arial, sans-serif;
 
-  --color-porcelain: #F4F5F0;
+  --color-porcelain: #f6f6f3;
   --color-stone: #D8D5CD;
   --color-ink: #0C0C0A;
   --color-denim: #465364;
@@ -12,7 +12,7 @@
 }
 
 :root {
-  --bg-porcelain: #F4F5F0;
+  --bg-porcelain: #f6f6f3;
   --ink: #0C0C0A;
   --ink-80: rgba(12, 12, 10, 0.80);
   --ink-60: rgba(12, 12, 10, 0.60);
@@ -42,13 +42,13 @@ html, body {
 }
 
 body {
-  background-color: #F4F5F0;
+  background-color: #f6f6f3;
   color: #0C0C0A;
 }
 
 ::selection {
   background-color: #351421;
-  color: #F4F5F0;
+  color: #f6f6f3;
 }
 
 ::-webkit-scrollbar { width: 3px; }
@@ -142,7 +142,7 @@ h1, h2, h3 { color: #0C0C0A; }
 .bg-\[\#0C0C0A\] h2,
 .bg-black h1,
 .bg-black h2 {
-  color: #F4F5F0;
+  color: #f6f6f3;
 }
 
 /* ════════════════════════════════════════════════════════════════════════════
@@ -158,7 +158,13 @@ h1, h2, h3 { color: #0C0C0A; }
   display: grid;
   grid-template-columns: repeat(12, minmax(0, 1fr));
   column-gap: clamp(12px, 1.6vw, 24px);
-  padding-inline: clamp(20px, 4vw, 72px);
+  max-width: 1600px;
+  margin-inline: auto;
+  padding-inline: 24px;
+}
+
+@media (min-width: 768px) {
+  .editorial-grid { padding-inline: 48px; }
 }
 
 /* Espacements verticaux par section */

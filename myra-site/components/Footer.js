@@ -32,7 +32,6 @@ export default function Footer() {
 
   const navLinks = [
     { label: t('nav_hebergements'),    href: `/${locale}/hebergement` },
-    { label: t('nav_nous_rejoindre'),  href: `/${locale}/nous-rejoindre` },
     { label: t('nav_news'),            href: `/${locale}/news` },
     { label: t('nav_contact'),         href: `/${locale}/contact` },
   ];
@@ -55,20 +54,16 @@ export default function Footer() {
       />
 
       {/* ── GRILLE INSTAGRAM ── */}
-      <div className="relative z-[2] max-w-container mx-auto px-6 md:px-14 lg:px-20 pt-16 md:pt-24 pb-12 md:pb-20">
+      <div className="relative z-[2] max-w-container mx-auto px-6 md:px-14 lg:px-20 pt-8 md:pt-10 pb-12 md:pb-20">
         <div className="flex flex-col items-center">
 
-          <Image src="/myra-logo.svg" alt="MYRA" width={96} height={24} style={{ filter: 'brightness(0) invert(1)', height: '24px', width: 'auto' }} className="mb-8 md:mb-12 opacity-50" />
+          <Image src="/myra-logo.svg" alt="MYRA" width={96} height={24} style={{ filter: 'brightness(0) invert(1)', height: '24px', width: 'auto' }} className="mb-3 md:mb-4 opacity-50" />
 
-          <p className="font-sans text-[9px] uppercase tracking-[0.55em] text-[rgba(216,213,205,0.25)] mb-3 text-center">
+          <p className="font-serif text-[9px] uppercase tracking-[0.55em] text-[rgba(216,213,205,0.25)] mb-8 md:mb-12 text-center">
             {t('tagline')}
           </p>
-          <p className="font-serif font-light italic mb-8 md:mb-10 text-center"
-            style={{ fontSize: 'clamp(14px, 1.3vw, 18px)', color: 'rgba(216,213,205,0.40)', letterSpacing: '-0.005em' }}>
-            {t('signature')}
-          </p>
 
-          <div className="grid grid-cols-4 gap-px w-full">
+          <div className="grid grid-cols-4 gap-2 w-full">
             {instagramImages.map((src, i) => (
               <a key={i} href="https://instagram.com/myra.society" target="_blank" rel="noopener noreferrer" className="group relative aspect-square overflow-hidden bg-[rgba(216,213,205,0.03)]">
                 <img src={src} alt={`MYRA Society — Instagram ${i + 1}`} loading="lazy" decoding="async"
@@ -81,7 +76,7 @@ export default function Footer() {
           </div>
 
           <a href="https://instagram.com/myra.society" target="_blank" rel="noopener noreferrer" className="group relative mt-6 inline-block pb-1">
-            <span className="font-sans text-[8.5px] uppercase tracking-[0.5em] text-[rgba(216,213,205,0.22)] group-hover:text-[rgba(216,213,205,0.65)] transition-colors duration-500">
+            <span className="font-serif text-[8.5px] uppercase tracking-[0.5em] text-[rgba(216,213,205,0.22)] group-hover:text-[rgba(216,213,205,0.65)] transition-colors duration-500">
               @myra.society
             </span>
             <span className="absolute bottom-0 left-0 h-px w-0 bg-[#351421] transition-all duration-700 group-hover:w-full" />
@@ -101,12 +96,12 @@ export default function Footer() {
           {/* Navigation + Adresse mobile */}
           <div className="md:col-span-4 grid grid-cols-2 md:grid-cols-1 gap-8 md:gap-0">
             <div>
-              <h2 className="font-sans text-[9px] uppercase tracking-[0.55em] text-[rgba(70,83,100,0.7)] mb-5 md:mb-8 m-0">
+              <h2 className="font-serif text-[9px] uppercase tracking-[0.55em] text-[rgba(70,83,100,0.7)] mb-5 md:mb-8 m-0">
                 {t('nav_label')}
               </h2>
               <nav aria-label={t('nav_label')} className="space-y-2 md:space-y-3">
                 {navLinks.map(link => (
-                  <Link key={link.href} href={link.href} className="block py-1 w-fit font-sans text-[11px] md:text-[12px] tracking-[0.10em] font-light uppercase text-[rgba(216,213,205,0.30)] hover:text-[rgba(216,213,205,0.80)] transition-colors duration-500">
+                  <Link key={link.href} href={link.href} className="block py-1 w-fit font-serif text-[11px] md:text-[12px] tracking-[0.10em] font-light uppercase text-[rgba(216,213,205,0.30)] hover:text-[rgba(216,213,205,0.80)] transition-colors duration-500">
                     {link.label}
                   </Link>
                 ))}
@@ -115,19 +110,19 @@ export default function Footer() {
 
             {/* Adresse mobile */}
             <div className="md:hidden">
-              <h2 className="font-sans text-[9px] uppercase tracking-[0.55em] text-[rgba(70,83,100,0.7)] mb-5 m-0">
+              <h2 className="font-serif text-[9px] uppercase tracking-[0.55em] text-[rgba(70,83,100,0.7)] mb-5 m-0">
                 {t('address_label')}
               </h2>
-              <address className="not-italic font-sans text-[11px] leading-[2] tracking-[0.04em] text-[rgba(216,213,205,0.30)] uppercase">
+              <address className="not-italic font-serif text-[11px] leading-[2] tracking-[0.04em] text-[rgba(216,213,205,0.30)] uppercase">
                 MYRA Marlenheim<br />
                 67520 Marlenheim<br />
                 Alsace, France
               </address>
               <div className="mt-4 space-y-1.5">
-                <a href="tel:+33637038677" className="block font-sans text-[11px] tracking-[0.04em] uppercase text-[rgba(216,213,205,0.30)] hover:text-[rgba(216,213,205,0.70)] transition-colors duration-400">
+                <a href="tel:+33637038677" className="block font-serif text-[11px] tracking-[0.04em] uppercase text-[rgba(216,213,205,0.30)] hover:text-[rgba(216,213,205,0.70)] transition-colors duration-400">
                   +33 (0)6 37 03 86 77
                 </a>
-                <a href="mailto:contact@myrasociety.com" className="block font-sans text-[10px] tracking-[0.02em] uppercase text-[rgba(216,213,205,0.30)] hover:text-[rgba(216,213,205,0.70)] transition-colors duration-400">
+                <a href="mailto:contact@myrasociety.com" className="block font-serif text-[10px] tracking-[0.02em] uppercase text-[rgba(216,213,205,0.30)] hover:text-[rgba(216,213,205,0.70)] transition-colors duration-400">
                   contact@myrasociety.com
                 </a>
               </div>
@@ -136,20 +131,20 @@ export default function Footer() {
 
           {/* Adresse desktop */}
           <div className="hidden md:block md:col-span-3">
-            <h2 className="font-sans text-[9px] uppercase tracking-[0.55em] text-[rgba(70,83,100,0.7)] mb-8 m-0">
+            <h2 className="font-serif text-[9px] uppercase tracking-[0.55em] text-[rgba(70,83,100,0.7)] mb-8 m-0">
               {t('address_label')}
             </h2>
-            <address className="not-italic font-sans text-[12px] leading-[2] tracking-[0.06em] text-[rgba(216,213,205,0.30)] uppercase">
+            <address className="not-italic font-serif text-[12px] leading-[2] tracking-[0.06em] text-[rgba(216,213,205,0.30)] uppercase">
               MYRA Marlenheim<br />
               71 rue du Général de Gaulle<br />
               67520 Marlenheim<br />
               Alsace, France
             </address>
             <div className="mt-6 space-y-2">
-              <a href="tel:+33637038677" className="block font-sans text-[12px] tracking-[0.06em] uppercase text-[rgba(216,213,205,0.30)] hover:text-[rgba(216,213,205,0.70)] transition-colors duration-400">
+              <a href="tel:+33637038677" className="block font-serif text-[12px] tracking-[0.06em] uppercase text-[rgba(216,213,205,0.30)] hover:text-[rgba(216,213,205,0.70)] transition-colors duration-400">
                 +33 (0)6 37 03 86 77
               </a>
-              <a href="mailto:contact@myrasociety.com" className="block font-sans text-[11px] tracking-[0.04em] uppercase text-[rgba(216,213,205,0.30)] hover:text-[rgba(216,213,205,0.70)] transition-colors duration-400">
+              <a href="mailto:contact@myrasociety.com" className="block font-serif text-[11px] tracking-[0.04em] uppercase text-[rgba(216,213,205,0.30)] hover:text-[rgba(216,213,205,0.70)] transition-colors duration-400">
                 contact@myrasociety.com
               </a>
             </div>
@@ -157,7 +152,7 @@ export default function Footer() {
 
           {/* Newsletter */}
           <div className="md:col-span-5 md:pl-12 md:border-l border-[rgba(216,213,205,0.06)]">
-            <h2 id="footer-newsletter-label" className="font-sans text-[9px] uppercase tracking-[0.55em] text-[rgba(70,83,100,0.7)] mb-5 md:mb-8 m-0">
+            <h2 id="footer-newsletter-label" className="font-serif text-[9px] uppercase tracking-[0.55em] text-[rgba(70,83,100,0.7)] mb-5 md:mb-8 m-0">
               {t('newsletter_label')}
             </h2>
             <p className="font-serif italic font-light text-[14px] leading-[1.75] text-[rgba(216,213,205,0.30)] mb-6 md:mb-8 max-w-[280px]">
@@ -165,13 +160,13 @@ export default function Footer() {
             </p>
 
             {sent ? (
-              <p className="font-sans text-[10px] uppercase tracking-[0.3em] text-[rgba(53,20,33,0.80)]" role="status">
+              <p className="font-serif text-[10px] uppercase tracking-[0.3em] text-[rgba(53,20,33,0.80)]" role="status">
                 {t('newsletter_welcome')}
               </p>
             ) : (
               <form onSubmit={subscribe} aria-labelledby="footer-newsletter-label">
                 <div className="flex items-center gap-4 pb-3 md:pb-4 border-b border-[rgba(216,213,205,0.10)] focus-within:border-[rgba(53,20,33,0.55)] transition-colors duration-700">
-                  <input id="footer-newsletter-email" aria-labelledby="footer-newsletter-label" type="email" required value={email} onChange={e => setEmail(e.target.value)} placeholder={t('newsletter_placeholder')} className="flex-1 bg-transparent font-sans text-[11px] tracking-[0.15em] uppercase placeholder:text-[rgba(216,213,205,0.15)] text-[rgba(216,213,205,0.60)] focus:outline-none" />
+                  <input id="footer-newsletter-email" aria-labelledby="footer-newsletter-label" type="email" required value={email} onChange={e => setEmail(e.target.value)} placeholder={t('newsletter_placeholder')} className="flex-1 bg-transparent font-serif text-[11px] tracking-[0.15em] uppercase placeholder:text-[rgba(216,213,205,0.15)] text-[rgba(216,213,205,0.60)] focus:outline-none" />
                   <button type="submit" disabled={sending} aria-label={t('send')} className="flex-shrink-0 text-[rgba(216,213,205,0.20)] hover:text-[#351421] disabled:opacity-20 transition-all duration-500">
                     {sending ? (
                       <span className="inline-block w-4 h-4 border border-current border-t-transparent rounded-full animate-spin" />
@@ -197,12 +192,12 @@ export default function Footer() {
       <div className="relative z-[2] max-w-container mx-auto px-6 md:px-14 lg:px-20 py-5 md:py-6 flex flex-col md:flex-row items-center justify-between gap-3 md:gap-4">
         <nav aria-label="Mentions" className="flex items-center gap-6 md:gap-8">
           {legalLinks.map(link => (
-            <Link key={link.href} href={link.href} className="font-sans text-[8px] uppercase tracking-[0.40em] text-[rgba(216,213,205,0.18)] hover:text-[rgba(216,213,205,0.55)] transition-colors duration-400">
+            <Link key={link.href} href={link.href} className="font-serif text-[8px] uppercase tracking-[0.40em] text-[rgba(216,213,205,0.18)] hover:text-[rgba(216,213,205,0.55)] transition-colors duration-400">
               {link.label}
             </Link>
           ))}
         </nav>
-        <span className="font-sans text-[8px] uppercase tracking-[0.35em] text-[rgba(216,213,205,0.15)]">
+        <span className="font-serif text-[8px] uppercase tracking-[0.35em] text-[rgba(216,213,205,0.15)]">
           © {new Date().getFullYear()} MYRA Society — {t('rights')}
         </span>
       </div>

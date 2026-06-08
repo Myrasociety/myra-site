@@ -9,17 +9,28 @@
     "access_cta": "Zugang anfragen"
   },
   "hero": {
-    "tagline_1": "Kein Hotel.",
+    "tagline_1": "Für alle, die bereit sind, ihr Training, ihre Erholung und ihr Leben zu verändern.",
+    "tagline_l1": "Für alle, die bereit sind,",
+    "tagline_l2": "ihr Training, ihre Erholung",
+    "tagline_l3": "und ihr Leben zu verändern.",
+    "signature": "Die Kunst, den Körper zu empfangen.",
     "tagline_2": "Eine Lebensweise.",
     "location": "Marlenheim · Elsass · Seit 2024",
-    "membership": "Mitgliedschaft auf Anfrage",
+    "membership": "Newsletter-Zugang",
     "placeholder": "Ihre E-Mail-Adresse",
     "welcome": "Willkommen zuhause.",
     "sound_off": "Audio Aus",
     "sound_on": "Audio An"
   },
+  "concept": {
+    "label": "Das Konzept",
+    "w1": "Training", "d1": "Performance-Fläche & Elite-Coaching.",
+    "w2": "Regeneration", "d2": "Spa, Sauna, Anwendungen — Ruhe als Disziplin.",
+    "w3": "Gastlichkeit", "d3": "Eigenständige Unterkünfte, Hotel-Leistungen.",
+    "w4": "Gemeinschaft", "d4": "Ein privater Kreis, menschlich im Maß."
+  },
   "statement": {
-    "label": "Über uns",
+    "label": "Eröffnung 2027",
     "tagline": "Kein Hotel. Eine Lebensweise. Hart arbeiten. Hart erholen. Zurück ins Leben.",
     "stat_1_label": "Gewidmete Fläche",
     "stat_2_label": "Zertifizierte Coaches",
@@ -44,8 +55,12 @@
     "description": "MYRA beitreten heißt, in einen privaten Kreis einzutreten, in dem Körper, Ruhe und Begegnung kultiviert werden. Ein Haus, mehr als ein Ort — ein Rahmen, den jene wählen, die mehr von ihrem Alltag verlangen und das Verlangen teilen, die Pflege mit Anspruch und Präsenz zu bewohnen."
   },
   "double": {
-    "label": "Gastfreundschaft & Exzellenz",
-    "text": "MYRA vereint private Suiten, Performance-Raum, Spa, gesunde Tafel und Begegnungsorte in einem neu interpretierten ehemaligen Bauernhof. Jeder Raum verlängert dieselbe Absicht: Energie wiederherstellen, den Körper kultivieren, Verbindung schaffen.",
+    "label": "Leistung & Regeneration",
+    "text": "Bevor wir über unser Angebot sprechen, hier unsere Überzeugung: Wir trennen nie die Anstrengung von der Erholung.",
+    "axis_1_title": "Doppelter Ansatz",
+    "axis_1_desc": "Leistung und Erholung zählen zu gleichen Teilen —\nweder Intensität noch Ruhe tritt in den Hintergrund.",
+    "axis_2_title": "Kleiner, mehr Betreuung",
+    "axis_2_desc": "Eine Struktur auf menschlichem Maß: weniger Mitglieder,\nwirklich persönliche Begleitung.",
     "space_1": "Private Suiten",
     "space_2": "Performance-Raum",
     "space_3": "Spa",
@@ -120,8 +135,8 @@
   },
   "contact": {
     "label": "Kontakt",
-    "title_line1": "Wir halten",
-    "title_line2": "einen Platz für Sie.",
+    "title_line1": "Nehmen Sie",
+    "title_line2": "Kontakt auf.",
     "desc": "Für Fragen, private Buchungen oder Mitgliedschaftsanfragen.",
     "type_label": "Anfrageart",
     "type_sejour": "Aufenthalt",
@@ -225,6 +240,7 @@
     "person": "Person",
     "persons": "Personen",
     "collection_label": "Die Kollektion",
+    "collection_intro": "Eigenständige Unterkünfte, in denen man sich wirklich zu Hause fühlt — mit allen Leistungen eines Hotels obendrein.",
     "available": "verfügbar",
     "availables": "verfügbar",
     "suite": "Suite",
@@ -238,6 +254,9 @@
   },
   "suite": {
     "breadcrumb": "Unterkünfte",
+    "other_suites": "Weitere Suiten",
+    "see": "Ansehen",
+    "per_night": "/ Nacht",
     "accordion_features": "Ausstattung",
     "accordion_plan": "Grundriss",
     "accordion_address": "Adresse",

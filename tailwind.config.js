@@ -8,8 +8,8 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        sans:  ['var(--font-sans)',  'system-ui', 'sans-serif'],
-        serif: ['var(--font-serif)', 'Georgia',   'serif'],
+        sans:  ['var(--font-sans)',  'Georgia', 'serif'],
+        serif: ['var(--font-serif)', 'Helvetica Neue', 'Arial', 'sans-serif'],
       },
       colors: {
         porcelain: '#F4F5F0',

@@ -90,11 +90,11 @@ function Hero() {
         <motion.div className="flex flex-col items-start mb-8 md:mb-16"
           initial={{ opacity: 0, x: reducedMotion ? 0 : -20 }} animate={{ opacity: 1, x: 0 }}
           transition={{ duration: 1.4, ease: EASE, delay: 0.2 }}>
-          <h1 id="soutenir-hero-title" className="font-serif font-light italic text-[#F4F5F0] leading-[1.1] tracking-[-0.02em] text-left"
+          <h1 id="soutenir-hero-title" className="font-serif font-light italic text-[#f6f6f3] leading-[1.1] tracking-[-0.02em] text-left"
             style={{ fontSize: 'clamp(28px, 4vw, 56px)' }}>
             {t('hero_title').split('\n')[0]}
           </h1>
-          <h2 className="font-serif font-light text-[#F4F5F0] leading-[1.1] tracking-[-0.01em] text-left mt-2 uppercase"
+          <h2 className="font-serif font-light text-[#f6f6f3] leading-[1.1] tracking-[-0.01em] text-left mt-2 uppercase"
             style={{ fontSize: 'clamp(32px, 4.5vw, 64px)' }}>
             {t('hero_title').split('\n')[1]}
           </h2>
@@ -107,9 +107,9 @@ function Hero() {
           {/* Bouton téléchargement */}
           <motion.a href="/Pitch Deck.pdf" download whileHover={{ scale: 1.02 }}
             className="font-sans inline-flex items-center gap-4 px-6 py-4 border border-[rgba(244,245,240,0.15)] hover:border-[#351421] backdrop-blur-md bg-[rgba(244,245,240,0.04)] hover:bg-[rgba(53,20,33,0.20)] transition-all duration-500">
-            <span className="text-[#F4F5F0] text-[9px] md:text-[10px] tracking-[0.30em] uppercase">{t('hero_download')}</span>
+            <span className="text-[#f6f6f3] text-[9px] md:text-[10px] tracking-[0.30em] uppercase">{t('hero_download')}</span>
             <svg width="10" height="10" viewBox="0 0 12 12" fill="none">
-              <path d="M6 1V8M6 8L3 5M6 8L9 5M1 11H11" stroke="#F4F5F0" strokeWidth="1.2" />
+              <path d="M6 1V8M6 8L3 5M6 8L9 5M1 11H11" stroke="#f6f6f3" strokeWidth="1.2" />
             </svg>
           </motion.a>
 
@@ -306,7 +306,7 @@ function Services() {
           <R key={s.id} d={i * 0.08}>
             <a href={s.pdf} target="_blank" rel="noopener noreferrer"
               aria-label={`${s.label} — PDF`}
-              className="group block outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-[-1px] focus-visible:outline-[#F4F5F0]">
+              className="group block outline-none focus-visible:outline focus-visible:outline-1 focus-visible:outline-offset-[-1px] focus-visible:outline-[#f6f6f3]">
 
               {/* Image grande portrait avec num overlay */}
               <div className="relative overflow-hidden" style={{ aspectRatio: '9/14' }}>
@@ -325,7 +325,7 @@ function Services() {
                 {/* Titre + desc + CTA overlay bottom-left */}
                 <div className="absolute bottom-5 md:bottom-8 left-5 md:left-8 right-5 md:right-8 z-10">
                   <h3 className="font-serif font-light italic m-0 mb-3 md:mb-4"
-                    style={{ fontSize: 'clamp(26px, 2.8vw, 40px)', lineHeight: 1.0, letterSpacing: '-0.01em', color: '#F4F5F0' }}>
+                    style={{ fontSize: 'clamp(26px, 2.8vw, 40px)', lineHeight: 1.0, letterSpacing: '-0.01em', color: '#f6f6f3' }}>
                     {s.label}
                   </h3>
                   <p className="font-sans font-light m-0 mb-5 md:mb-6 max-w-xs"
@@ -384,7 +384,7 @@ function Equipe() {
   );
 
   return (
-    <section id="equipe" aria-labelledby="equipe-label" className="bg-[#F4F5F0] overflow-hidden">
+    <section id="equipe" aria-labelledby="equipe-label" className="bg-[#f6f6f3] overflow-hidden">
       <div className="max-w-container mx-auto py-14 md:py-20 px-6 md:px-0">
         <div className="flex items-center gap-4 mb-12 md:mb-16">
           <Trait />
@@ -455,7 +455,7 @@ function Banner() {
   const reducedMotion = useReducedMotionSafe();
   const words = [t('banner_w1'), t('banner_w2'), t('banner_w3')];
   return (
-    <section className="hidden md:block bg-[#F4F5F0] overflow-hidden">
+    <section className="hidden md:block bg-[#f6f6f3] overflow-hidden">
       <div className="px-6 md:px-10 lg:px-14">
         <R y={30}>
           <div className="relative w-full overflow-hidden" style={{ height: '62vh', minHeight: 280 }}>
@@ -468,12 +468,12 @@ function Banner() {
               <ul role="list" className="flex items-center justify-center flex-wrap md:flex-nowrap m-0 p-0 list-none">
                 {words.map((w, i) => (
                   <li key={w} className="flex items-center">
-                    <motion.span className="font-sans text-[#F4F5F0] uppercase opacity-85 text-[10px] md:text-[13px] tracking-[0.55em] md:tracking-[0.60em] mx-3 md:mx-10"
+                    <motion.span className="font-sans text-[#f6f6f3] uppercase opacity-85 text-[10px] md:text-[13px] tracking-[0.55em] md:tracking-[0.60em] mx-3 md:mx-10"
                       initial={{ opacity: 0, y: reducedMotion ? 0 : 14 }} whileInView={{ opacity: 0.85, y: 0 }} viewport={{ once: true }}
                       transition={{ duration: 1.1, ease: EXPO, delay: 0.2 + i * 0.14 }}>
                       {w}
                     </motion.span>
-                    {i < 2 && <span aria-hidden="true" className="text-[#F4F5F0] opacity-30" style={{ fontSize: '6px' }}>●</span>}
+                    {i < 2 && <span aria-hidden="true" className="text-[#f6f6f3] opacity-30" style={{ fontSize: '6px' }}>●</span>}
                   </li>
                 ))}
               </ul>
@@ -604,7 +604,7 @@ function ModalDetails({ offre, close }) {
 
           <div className="pt-6 border-t border-[rgba(12,12,10,0.06)]">
             <Link href={`/${locale}/contact`}
-              className="font-sans w-full h-14 md:h-16 border text-[9px] md:text-[11px] uppercase tracking-[0.50em] font-medium transition-all duration-500 border-[#351421] text-[#351421] hover:bg-[#351421] hover:text-[#F4F5F0] flex items-center justify-center">
+              className="font-sans w-full h-14 md:h-16 border text-[9px] md:text-[11px] uppercase tracking-[0.50em] font-medium transition-all duration-500 border-[#351421] text-[#351421] hover:bg-[#351421] hover:text-[#f6f6f3] flex items-center justify-center">
               {offre.cta}
             </Link>
           </div>
@@ -658,7 +658,7 @@ function CardCercle({ offre }) {
             className="flex items-center justify-center h-12 md:h-14 w-full border transition-all duration-500 px-3"
             style={{ borderColor: '#351421', backgroundColor: hov ? '#351421' : 'transparent' }}>
             <span className="font-sans text-[9px] uppercase tracking-[0.40em] font-medium transition-colors duration-500 text-center"
-              style={{ color: hov ? '#F4F5F0' : '#351421' }}>
+              style={{ color: hov ? '#f6f6f3' : '#351421' }}>
               {offre.cta}
             </span>
           </Link>
@@ -783,7 +783,7 @@ const MILESTONES = [
 
 function StatusDot({ status, light = false }) {
   const reducedMotion = useReducedMotionSafe();
-  const tint = light ? '#F4F5F0' : '#351421';
+  const tint = light ? '#f6f6f3' : '#351421';
   if (status === 'done') return (
     <svg aria-hidden="true" width="10" height="10" viewBox="0 0 9 9" fill="none">
       <path d="M1 4.5l2.5 2.5L8 2" stroke={tint} strokeWidth="1.5" strokeLinecap="round" />
@@ -844,7 +844,7 @@ function FundingBar() {
             style={{
               left: `${(m.amount / TOTAL_GOAL) * 100}%`,
               backgroundColor: CURRENT_FUNDED >= m.amount ? '#351421' : 'rgba(12,12,10,0.12)',
-              borderColor: '#F4F5F0',
+              borderColor: '#f6f6f3',
             }} />
         ))}
       </div>

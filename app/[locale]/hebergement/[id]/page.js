@@ -10,7 +10,7 @@ import ContactSection from '../../../../components/Contact';
 
 const INK    = '#0C0C0A';
 const WINE   = '#351421';
-const GROUND = '#F4F5F0';
+const GROUND = '#f6f6f3';
 const BONE   = 'rgba(12,12,10,0.06)';
 const EXPO   = [0.16, 1, 0.3, 1];
 
@@ -141,7 +141,7 @@ function EquinoxGallery({ images, name }) {
         )}
       </div>
       {/* Tirets */}
-      <div className="max-w-container mx-auto px-6 md:px-20 mt-5 md:mt-10">
+      <div className="max-w-[1600px] mx-auto px-6 md:px-12 mt-5 md:mt-10">
         <div className="flex items-center gap-2 w-full opacity-50">
           {images.map((_, i) => (
             <button key={i} type="button" onClick={() => snapTo(i)}
@@ -189,7 +189,7 @@ function Lightbox({ images, index, name = '', onClose, onPrev, onNext }) {
         </motion.div>
       </AnimatePresence>
       <div className="absolute bottom-6">
-        <span className="font-sans text-[9px] uppercase tracking-[0.55em]" style={{ color: 'rgba(255,255,255,0.25)' }}>
+        <span className="font-serif text-[9px] uppercase tracking-[0.55em]" style={{ color: 'rgba(255,255,255,0.25)' }}>
           {String(index + 1).padStart(2, '0')} / {String(images.length).padStart(2, '0')}
         </span>
       </div>
@@ -212,7 +212,7 @@ function Accordion({ items }) {
               <button type="button" id={btnId} aria-expanded={isOpen} aria-controls={panelId}
                 onClick={() => setOpen(isOpen ? null : i)}
                 className="w-full flex items-center justify-between py-5 text-left outline-none">
-                <span className="font-sans text-[10px] uppercase tracking-[0.45em] transition-colors duration-500" style={{ color: isOpen ? INK : 'rgba(12,12,10,0.38)' }}>{item.label}</span>
+                <span className="font-serif text-[11px] uppercase tracking-[0.35em] transition-colors duration-500" style={{ color: isOpen ? INK : 'rgba(12,12,10,0.38)' }}>{item.label}</span>
                 <div className="relative w-4 h-4 flex-shrink-0 ml-6">
                   <span className="absolute top-1/2 left-0 w-full h-px -translate-y-1/2" style={{ backgroundColor: 'rgba(12,12,10,0.2)' }} />
                   <motion.span className="absolute top-0 left-1/2 w-px h-full -translate-x-1/2" style={{ backgroundColor: 'rgba(12,12,10,0.2)' }} animate={{ opacity: isOpen ? 0 : 1 }} transition={{ duration: 0.25 }} />
@@ -248,7 +248,7 @@ function MonthPicker({ current, onSelect, onClose }) {
             style={{ backgroundColor: isActive ? INK : 'transparent' }}
             onMouseEnter={e => { if (!isActive) e.currentTarget.style.backgroundColor = 'rgba(12,12,10,0.04)'; }}
             onMouseLeave={e => { if (!isActive) e.currentTarget.style.backgroundColor = 'transparent'; }}>
-            <span className="font-sans text-[10px] uppercase tracking-[0.35em]" style={{ color: isActive ? '#F4F5F0' : 'rgba(12,12,10,0.65)' }}>
+            <span className="font-sans text-[10px] uppercase tracking-[0.35em]" style={{ color: isActive ? '#f6f6f3' : 'rgba(12,12,10,0.65)' }}>
               {MONTHS_SHORT[d.getMonth()]}
             </span>
             <span className="font-sans text-[9px]" style={{ color: isActive ? 'rgba(244,245,240,0.55)' : 'rgba(12,12,10,0.30)' }}>
@@ -363,12 +363,12 @@ function ReservationPanel({ suite }) {
           backgroundSize: '128px',
         }}
       />
-      <div className="relative z-[2] max-w-container mx-auto px-6 md:px-14 lg:px-20 py-16 md:py-28">
+      <div className="relative z-[2] max-w-[1600px] mx-auto px-6 md:px-12 py-16 md:py-28">
 
         {/* Label */}
         <div className="flex items-center gap-5 mb-10 md:mb-14">
           <div className="h-px w-4" style={{ backgroundColor: WINE, opacity: 0.4 }} />
-          <h2 id="reservation-label" className="font-sans text-[11px] uppercase tracking-[0.55em] text-white/40 m-0">{t('reservation_label')}</h2>
+          <h2 id="reservation-label" className="font-serif text-[11px] uppercase tracking-[0.55em] text-white/40 m-0">{t('reservation_label')}</h2>
         </div>
 
         {/* Carte blanche */}
@@ -379,10 +379,10 @@ function ReservationPanel({ suite }) {
 
             {/* Nom + infos — h2 retiré (déjà h1 en haut de page) */}
             <div className="mb-8 pb-6" style={{ borderBottom: `1px solid ${BONE}` }}>
-              <p className="font-serif font-light italic leading-none mb-1" style={{ fontSize: 'clamp(26px, 6vw, 40px)', color: INK }}>
+              <p className="font-sans font-light italic leading-none mb-1" style={{ fontSize: 'clamp(26px, 6vw, 40px)', letterSpacing: '-0.01em', color: INK }}>
                 {suite.name}
               </p>
-              <p className="font-sans text-[9px] uppercase tracking-[0.40em] text-black/30">
+              <p className="font-serif text-[10px] uppercase tracking-[0.30em] text-black/30">
                 {suite.surface} · {suite.capacity}
               </p>
             </div>
@@ -454,12 +454,12 @@ function ReservationPanel({ suite }) {
             {/* Récapitulatif dates */}
             <div className="grid grid-cols-2 mb-6" style={{ border: '1px solid rgba(12,12,10,0.08)' }}>
               <div className="p-4" style={{ borderRight: '1px solid rgba(12,12,10,0.06)' }}>
-                <p className="font-sans text-[8px] uppercase tracking-[0.45em] text-black/30 mb-1.5">{t('arrival')}</p>
-                <p className="font-serif italic text-[15px]" style={{ color: checkIn ? INK : 'rgba(12,12,10,0.20)' }}>{fmtDay(checkIn)}</p>
+                <p className="font-serif text-[9px] uppercase tracking-[0.40em] text-black/30 mb-1.5">{t('arrival')}</p>
+                <p className="font-sans italic text-[15px]" style={{ color: checkIn ? INK : 'rgba(12,12,10,0.20)' }}>{fmtDay(checkIn)}</p>
               </div>
               <div className="p-4">
-                <p className="font-sans text-[8px] uppercase tracking-[0.45em] text-black/30 mb-1.5">{t('departure')}</p>
-                <p className="font-serif italic text-[15px]" style={{ color: checkOut ? INK : 'rgba(12,12,10,0.20)' }}>{fmtDay(checkOut)}</p>
+                <p className="font-serif text-[9px] uppercase tracking-[0.40em] text-black/30 mb-1.5">{t('departure')}</p>
+                <p className="font-sans italic text-[15px]" style={{ color: checkOut ? INK : 'rgba(12,12,10,0.20)' }}>{fmtDay(checkOut)}</p>
               </div>
             </div>
 
@@ -475,21 +475,21 @@ function ReservationPanel({ suite }) {
                 <motion.div key="price" initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} className="space-y-5">
                   <div className="flex items-end justify-between pb-5" style={{ borderBottom: `1px solid ${BONE}` }}>
                     <div>
-                      <p className="font-sans text-[8px] uppercase tracking-widest text-black/30 mb-1">{t('total_stay')}</p>
+                      <p className="font-serif text-[9px] uppercase tracking-[0.30em] text-black/30 mb-1">{t('total_stay')}</p>
                       <p className="font-serif leading-none tabular-nums" style={{ fontSize: 'clamp(32px, 8vw, 48px)', color: INK }}>
                         {priceInfo.total.toLocaleString()}€
                       </p>
                     </div>
                     <div className="text-right pb-1">
-                      <p className="font-serif italic text-black/35" style={{ fontSize: '16px' }}>
+                      <p className="font-sans italic text-black/35" style={{ fontSize: '16px' }}>
                         {Math.round(priceInfo.total / nights)}€
-                        <span className="font-sans text-[8px] not-italic uppercase tracking-tight ml-1">/ nuit</span>
+                        <span className="font-serif text-[8px] not-italic uppercase tracking-[0.10em] ml-1">{t('per_night')}</span>
                       </p>
                     </div>
                   </div>
                   <button type="button" onClick={handleBooking}
-                    className="w-full py-5 font-sans text-[10px] uppercase tracking-[0.55em] relative overflow-hidden transition-colors duration-700 bg-[#0C0C0A] hover:bg-[#351421]"
-                    style={{ color: '#F4F5F0' }}>
+                    className="w-full py-5 font-serif text-[11px] uppercase tracking-[0.55em] relative overflow-hidden transition-colors duration-700 bg-[#0C0C0A] hover:bg-[#351421]"
+                    style={{ color: '#f6f6f3' }}>
                     {t('confirm')}
                   </button>
                 </motion.div>
@@ -497,13 +497,13 @@ function ReservationPanel({ suite }) {
               {!loadingAvail && checkIn && checkOut && !isAvailable && (
                 <motion.div key="unavail" initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                   className="p-4 text-center" style={{ border: '1px dashed rgba(53,20,33,0.20)' }}>
-                  <p className="font-serif italic text-[rgba(53,20,33,0.55)]" style={{ fontSize: '14px' }}>{t('unavailable')}</p>
+                  <p className="font-sans italic text-[rgba(53,20,33,0.55)]" style={{ fontSize: '14px' }}>{t('unavailable')}</p>
                 </motion.div>
               )}
               {!loadingAvail && (!checkIn || !checkOut) && (
                 <motion.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                   className="py-6 text-center" style={{ border: '1px dashed rgba(12,12,10,0.10)' }}>
-                  <p className="font-serif italic text-black/25" style={{ fontSize: '14px' }}>{t('select_dates')}</p>
+                  <p className="font-sans italic text-black/25" style={{ fontSize: '14px' }}>{t('select_dates')}</p>
                 </motion.div>
               )}
             </AnimatePresence>
@@ -514,10 +514,10 @@ function ReservationPanel({ suite }) {
             {/* Gauche — infos + prix */}
             <div className="p-12 xl:p-16 flex flex-col gap-8" style={{ borderRight: `1px solid ${BONE}` }}>
               <div>
-                <p className="font-serif font-light italic leading-none mb-2" style={{ fontSize: 'clamp(28px, 3vw, 44px)', color: INK }}>
+                <p className="font-sans font-light italic leading-none mb-2" style={{ fontSize: 'clamp(28px, 3vw, 44px)', letterSpacing: '-0.01em', color: INK }}>
                   {suite.name}
                 </p>
-                <p className="font-sans text-[9px] uppercase tracking-[0.40em] text-black/30">
+                <p className="font-serif text-[10px] uppercase tracking-[0.30em] text-black/30">
                   {suite.surface} · {suite.capacity}
                 </p>
               </div>
@@ -526,12 +526,12 @@ function ReservationPanel({ suite }) {
               <div style={{ border: '1px solid rgba(12,12,10,0.08)' }}>
                 <div className="grid grid-cols-2 divide-x divide-black/5">
                   <div className="p-5">
-                    <p className="font-sans text-[8px] uppercase tracking-[0.45em] text-black/30 mb-2">{t('arrival')}</p>
-                    <p className="font-serif italic text-[16px]" style={{ color: checkIn ? INK : 'rgba(12,12,10,0.20)' }}>{fmtDay(checkIn)}</p>
+                    <p className="font-serif text-[9px] uppercase tracking-[0.40em] text-black/30 mb-2">{t('arrival')}</p>
+                    <p className="font-sans italic text-[16px]" style={{ color: checkIn ? INK : 'rgba(12,12,10,0.20)' }}>{fmtDay(checkIn)}</p>
                   </div>
                   <div className="p-5">
-                    <p className="font-sans text-[8px] uppercase tracking-[0.45em] text-black/30 mb-2">{t('departure')}</p>
-                    <p className="font-serif italic text-[16px]" style={{ color: checkOut ? INK : 'rgba(12,12,10,0.20)' }}>{fmtDay(checkOut)}</p>
+                    <p className="font-serif text-[9px] uppercase tracking-[0.40em] text-black/30 mb-2">{t('departure')}</p>
+                    <p className="font-sans italic text-[16px]" style={{ color: checkOut ? INK : 'rgba(12,12,10,0.20)' }}>{fmtDay(checkOut)}</p>
                   </div>
                 </div>
               </div>
@@ -547,37 +547,37 @@ function ReservationPanel({ suite }) {
                   <motion.div key="price" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-6">
                     <div className="flex items-end justify-between pb-6" style={{ borderBottom: `1px solid ${BONE}` }}>
                       <div>
-                        <p className="font-sans text-[9px] uppercase tracking-widest text-black/30 mb-2">{t('total_stay')}</p>
+                        <p className="font-serif text-[9px] uppercase tracking-[0.30em] text-black/30 mb-2">{t('total_stay')}</p>
                         <p className="font-serif text-5xl leading-none tabular-nums" style={{ color: INK }}>
                           {priceInfo.total.toLocaleString()}€
                         </p>
                       </div>
                       <div className="text-right">
-                        <p className="font-serif italic text-xl text-black/35">
+                        <p className="font-sans italic text-xl text-black/35">
                           {Math.round(priceInfo.total / nights)}€
-                          <span className="font-sans text-[9px] not-italic uppercase tracking-tighter ml-1">/ nuit</span>
+                          <span className="font-serif text-[9px] not-italic uppercase tracking-[0.10em] ml-1">{t('per_night')}</span>
                         </p>
                       </div>
                     </div>
                     <button onClick={handleBooking}
-                      className="w-full py-5 font-sans text-[10px] uppercase tracking-[0.55em] relative overflow-hidden transition-colors duration-700"
-                      style={{ backgroundColor: INK, color: '#F4F5F0' }}
+                      className="w-full py-5 font-serif text-[11px] uppercase tracking-[0.55em] relative overflow-hidden transition-colors duration-700"
+                      style={{ backgroundColor: INK, color: '#f6f6f3' }}
                       onMouseEnter={e => e.currentTarget.style.backgroundColor = WINE}
                       onMouseLeave={e => e.currentTarget.style.backgroundColor = INK}>
                       {t('confirm')}
                     </button>
-                    <p className="font-sans text-[9px] text-center tracking-[0.25em] text-black/25">{t('secure')}</p>
+                    <p className="font-serif text-[9px] text-center uppercase tracking-[0.25em] text-black/25">{t('secure')}</p>
                   </motion.div>
                 )}
                 {!loadingAvail && checkIn && checkOut && !isAvailable && (
                   <motion.div key="unavail" initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                     className="p-5" style={{ border: '1px solid rgba(53,20,33,0.15)' }}>
-                    <p className="font-serif italic text-[rgba(53,20,33,0.60)]" style={{ fontSize: '15px' }}>{t('unavailable')}</p>
+                    <p className="font-sans italic text-[rgba(53,20,33,0.60)]" style={{ fontSize: '15px' }}>{t('unavailable')}</p>
                   </motion.div>
                 )}
                 {!loadingAvail && (!checkIn || !checkOut) && (
                   <motion.div key="empty" initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
-                    <p className="font-serif italic text-black/28" style={{ fontSize: '15px' }}>{t('select_dates')}</p>
+                    <p className="font-sans italic text-black/28" style={{ fontSize: '15px' }}>{t('select_dates')}</p>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -672,7 +672,7 @@ function SuiteContent({ suite }) {
           {suite.features.map((f, i) => (
             <li key={i} className="flex items-start gap-4">
               <span className="mt-[9px] w-1 h-1 rounded-full flex-shrink-0" style={{ backgroundColor: 'rgba(53,20,33,0.40)' }} />
-              <span className="font-serif text-[14px] leading-[1.75] italic" style={{ color: 'rgba(12,12,10,0.55)' }}>{f}</span>
+              <span className="font-sans font-light text-[14px] leading-[1.7]" style={{ color: 'rgba(12,12,10,0.55)' }}>{f}</span>
             </li>
           ))}
         </ul>
@@ -680,11 +680,11 @@ function SuiteContent({ suite }) {
     },
     {
       label: t('accordion_plan'),
-      content: <p className="font-serif text-[14px] leading-[1.9] italic" style={{ color: 'rgba(12,12,10,0.5)' }}>{suite.floorplan}</p>,
+      content: <p className="font-sans font-light text-[14px] leading-[1.8]" style={{ color: 'rgba(12,12,10,0.5)' }}>{suite.floorplan}</p>,
     },
     {
       label: t('accordion_address'),
-      content: <p className="font-serif text-[14px] leading-[2] italic whitespace-pre-line" style={{ color: 'rgba(12,12,10,0.5)' }}>{suite.address}</p>,
+      content: <p className="font-sans font-light text-[14px] leading-[1.9] whitespace-pre-line" style={{ color: 'rgba(12,12,10,0.5)' }}>{suite.address}</p>,
     },
   ];
 
@@ -697,14 +697,14 @@ function SuiteContent({ suite }) {
       </AnimatePresence>
 
       {/* ── ENTÊTE ── */}
-      <section aria-labelledby="suite-name" className="max-w-container mx-auto px-6 md:px-14 lg:px-20 pt-24 md:pt-36 pb-10 md:pb-14">
+      <section aria-labelledby="suite-name" className="max-w-[1600px] mx-auto px-6 md:px-12 pt-24 md:pt-36 pb-10 md:pb-14">
         <motion.div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-14 items-end"
           initial={{ opacity: 0, y: reducedMotion ? 0 : 24, filter: 'blur(4px)' }}
           animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
           transition={{ duration: 1.4, ease: EXPO }}>
           <div>
             <Link href={`/${locale}/hebergement`}
-              className="group inline-flex items-center gap-3 mb-8 font-sans text-[8px] uppercase tracking-[0.5em] transition-colors duration-400 hover:text-[#0C0C0A]"
+              className="group inline-flex items-center gap-3 mb-8 font-serif text-[9px] uppercase tracking-[0.5em] transition-colors duration-400 hover:text-[#0C0C0A]"
               style={{ color: 'rgba(12,12,10,0.45)' }}>
               <svg width="10" height="10" fill="none" stroke="currentColor" strokeWidth="1.2" viewBox="0 0 24 24"
                 className="transition-transform duration-500 group-hover:-translate-x-1">
@@ -717,15 +717,15 @@ function SuiteContent({ suite }) {
               {suite.name}
             </h1>
             <div className="flex flex-wrap items-center gap-4" style={{ color: 'rgba(12,12,10,0.30)' }}>
-              <span className="font-sans text-[9px] uppercase tracking-[0.45em]">{suite.surface}</span>
+              <span className="font-serif text-[10px] uppercase tracking-[0.30em]">{suite.surface}</span>
               <span className="w-px h-3" style={{ backgroundColor: 'rgba(12,12,10,0.12)' }} />
-              <span className="font-sans text-[9px] uppercase tracking-[0.45em]">{suite.capacity}</span>
+              <span className="font-serif text-[10px] uppercase tracking-[0.30em]">{suite.capacity}</span>
               <span className="w-px h-3" style={{ backgroundColor: 'rgba(12,12,10,0.12)' }} />
-              <span className="font-sans text-[9px] uppercase tracking-[0.45em]">{suite.rooms}</span>
+              <span className="font-serif text-[10px] uppercase tracking-[0.30em]">{suite.rooms}</span>
             </div>
           </div>
           <div>
-            <p className="font-serif text-[16px] md:text-[18px] leading-[1.78] italic" style={{ color: 'rgba(12,12,10,0.55)' }}>
+            <p className="font-sans font-light" style={{ fontSize: 'clamp(15px, 1.4vw, 19px)', lineHeight: 1.6, letterSpacing: '-0.01em', color: 'rgba(12,12,10,0.55)' }}>
               {suite.description}
             </p>
           </div>
@@ -733,49 +733,19 @@ function SuiteContent({ suite }) {
       </section>
 
       {/* ── GALERIE ── */}
-      <section className="pb-8 md:pb-14">
+      <section className="pb-4 md:pb-6">
         <EquinoxGallery images={suite.images} name={suite.name} />
         <div className="flex justify-center mt-5 md:mt-6">
           <button type="button" onClick={() => setLightboxOpen(true)}
-            className="font-sans text-[9px] uppercase tracking-[0.5em] py-2 px-5 transition-colors duration-400 text-[rgba(12,12,10,0.35)] hover:text-[#0C0C0A]"
+            className="font-serif text-[10px] uppercase tracking-[0.4em] py-2 px-5 transition-colors duration-400 text-[rgba(12,12,10,0.35)] hover:text-[#0C0C0A]"
             style={{ borderBottom: '1px solid rgba(12,12,10,0.12)' }}>
             {t('gallery_browse')}
           </button>
         </div>
       </section>
 
-      {/* ── TÉMOIGNAGE ── */}
-      {suite.testimonial && (
-        <section aria-label="Témoignage" className="py-16 md:py-24 text-center"
-          style={{ backgroundColor: '#FFFFFF', borderTop: `1px solid ${BONE}`, borderBottom: `1px solid ${BONE}` }}>
-          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
-            '@context': 'https://schema.org',
-            '@type': 'Review',
-            itemReviewed: { '@id': `https://myrasociety.com/${locale}/hebergement/${suite.name}#suite` },
-            reviewBody: suite.testimonial.text,
-            author: { '@type': 'Person', name: suite.testimonial.author },
-          }) }} />
-          <div className="max-w-container mx-auto px-6 md:px-14 lg:px-20">
-            <motion.figure className="max-w-[680px] mx-auto m-0"
-              initial={{ opacity: 0, y: reducedMotion ? 0 : 20, filter: 'blur(4px)' }}
-              whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }} viewport={{ once: true }}
-              transition={{ duration: 1.4, ease: EXPO }}>
-              <div className="w-8 h-px mx-auto mb-8" style={{ backgroundColor: WINE, opacity: 0.4 }} />
-              <blockquote className="font-serif font-light italic leading-[1.55] mb-8 m-0 p-0"
-                style={{ fontSize: 'clamp(18px, 2.5vw, 32px)', color: 'rgba(12,12,10,0.72)' }}>
-                {suite.testimonial.text}
-              </blockquote>
-              <figcaption>
-                <cite className="not-italic font-sans text-[9px] uppercase tracking-[0.55em] block mb-1" style={{ color: INK }}>{suite.testimonial.author}</cite>
-                <span className="font-sans text-[8px] uppercase tracking-[0.40em] block" style={{ color: 'rgba(53,20,33,0.40)' }}>{suite.testimonial.origin}</span>
-              </figcaption>
-            </motion.figure>
-          </div>
-        </section>
-      )}
-
       {/* ── ACCORDÉON ── */}
-      <section className="max-w-container mx-auto px-6 md:px-14 lg:px-20 py-12 md:py-20">
+      <section className="max-w-[1600px] mx-auto px-6 md:px-12 pt-4 md:pt-8 pb-12 md:pb-20">
         <motion.div
           initial={{ opacity: 0, y: reducedMotion ? 0 : 24, filter: 'blur(4px)' }}
           whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }} viewport={{ once: true, margin: '-80px' }}
@@ -787,15 +757,45 @@ function SuiteContent({ suite }) {
       {/* ── RÉSERVATION ── */}
       <ReservationPanel suite={suite} />
 
+      {/* ── TÉMOIGNAGE (après réservation) ── */}
+      {suite.testimonial && (
+        <section aria-label="Témoignage" className="py-16 md:py-24 text-center"
+          style={{ backgroundColor: '#FFFFFF', borderTop: `1px solid ${BONE}`, borderBottom: `1px solid ${BONE}` }}>
+          <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'Review',
+            itemReviewed: { '@id': `https://myrasociety.com/${locale}/hebergement/${suite.name}#suite` },
+            reviewBody: suite.testimonial.text,
+            author: { '@type': 'Person', name: suite.testimonial.author },
+          }) }} />
+          <div className="max-w-[1600px] mx-auto px-6 md:px-12">
+            <motion.figure className="max-w-[680px] mx-auto m-0"
+              initial={{ opacity: 0, y: reducedMotion ? 0 : 20, filter: 'blur(4px)' }}
+              whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }} viewport={{ once: true }}
+              transition={{ duration: 1.4, ease: EXPO }}>
+              <div className="w-8 h-px mx-auto mb-8" style={{ backgroundColor: WINE, opacity: 0.4 }} />
+              <blockquote className="font-sans font-light italic leading-[1.4] mb-8 m-0 p-0"
+                style={{ fontSize: 'clamp(18px, 2.5vw, 32px)', letterSpacing: '-0.01em', color: 'rgba(12,12,10,0.72)' }}>
+                {suite.testimonial.text}
+              </blockquote>
+              <figcaption>
+                <cite className="not-italic font-serif text-[10px] uppercase tracking-[0.40em] block mb-1" style={{ color: INK }}>{suite.testimonial.author}</cite>
+                <span className="font-serif text-[9px] uppercase tracking-[0.30em] block" style={{ color: 'rgba(53,20,33,0.40)' }}>{suite.testimonial.origin}</span>
+              </figcaption>
+            </motion.figure>
+          </div>
+        </section>
+      )}
+
       {/* ── AUTRES SUITES ── */}
-      <section id="autres-suites" aria-labelledby="autres-label" className="max-w-container mx-auto px-6 md:px-14 lg:px-20 py-16 md:py-24">
+      <section id="autres-suites" aria-labelledby="autres-label" className="max-w-[1600px] mx-auto px-6 md:px-12 py-16 md:py-24">
         <motion.div
           initial={{ opacity: 0, y: reducedMotion ? 0 : 24, filter: 'blur(4px)' }}
           whileInView={{ opacity: 1, y: 0, filter: 'blur(0px)' }} viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 1.4, ease: EXPO }}>
           <div className="flex items-center gap-4 mb-10">
             <div className="w-4 h-px" style={{ backgroundColor: WINE, opacity: 0.4 }} />
-            <h2 id="autres-label" className="font-sans text-[11px] uppercase tracking-[0.55em] m-0" style={{ color: 'rgba(12,12,10,0.35)' }}>Autres suites</h2>
+            <h2 id="autres-label" className="font-serif text-[11px] uppercase tracking-[0.55em] m-0" style={{ color: 'rgba(12,12,10,0.35)' }}>{t('other_suites')}</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {Object.values(SUITES).filter(s => s.name !== suite.name).map((s) => (
@@ -811,19 +811,19 @@ function SuiteContent({ suite }) {
                   </div>
                   <div className="py-4 flex items-end justify-between">
                     <div>
-                      <h3 id={`other-suite-${s.name}-name`} className="font-serif font-light italic mb-1"
-                        style={{ fontSize: '28px', color: INK }}>{s.name}</h3>
+                      <h3 id={`other-suite-${s.name}-name`} className="font-sans font-light italic mb-1"
+                        style={{ fontSize: '28px', letterSpacing: '-0.01em', color: INK }}>{s.name}</h3>
                       <div className="flex items-center gap-3">
-                        <span className="font-sans text-[9px] uppercase tracking-[0.35em]"
+                        <span className="font-serif text-[9px] uppercase tracking-[0.35em]"
                           style={{ color: 'rgba(12,12,10,0.30)' }}>{s.surface}</span>
                         <span className="w-px h-3" style={{ backgroundColor: BONE }} />
-                        <span className="font-sans text-[9px] uppercase tracking-[0.35em]"
+                        <span className="font-serif text-[9px] uppercase tracking-[0.35em]"
                           style={{ color: 'rgba(12,12,10,0.30)' }}>{s.capacity}</span>
                       </div>
                     </div>
                     <div className="flex items-center gap-2 opacity-60 group-hover:opacity-100 transition-opacity duration-500">
-                      <span className="font-sans text-[9px] uppercase tracking-[0.40em]"
-                        style={{ color: 'rgba(12,12,10,0.40)' }}>Voir</span>
+                      <span className="font-serif text-[9px] uppercase tracking-[0.40em]"
+                        style={{ color: 'rgba(12,12,10,0.40)' }}>{t('see')}</span>
                       <svg width="10" height="10" fill="none" stroke="rgba(12,12,10,0.40)" strokeWidth="1.3" viewBox="0 0 24 24"
                         className="transition-transform duration-500 group-hover:translate-x-1">
                         <path d="M5 12h14M12 5l7 7-7 7" strokeLinecap="round" />
@@ -852,7 +852,7 @@ export default function SuiteDetailPage({ params }) {
       <div className="h-screen flex items-center justify-center" style={{ backgroundColor: GROUND }}>
         <div className="flex flex-col items-center gap-4">
           <div className="w-px h-12 animate-pulse" style={{ backgroundColor: 'rgba(53,20,33,0.3)' }} />
-          <span className="font-sans text-[8.5px] uppercase tracking-[0.55em]" style={{ color: 'rgba(12,12,10,0.3)' }}>Chargement</span>
+          <span className="font-serif text-[9px] uppercase tracking-[0.55em]" style={{ color: 'rgba(12,12,10,0.3)' }}>Chargement</span>
         </div>
       </div>
     }>
